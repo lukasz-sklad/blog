@@ -1,5 +1,5 @@
 {
-  "name": "nextjs-blog-theme",
+  "name": "blog",
   "description": "A customizable Next.js and Tailwind blog starter. Designed by the Bejamas agency.",
   "author": "Bejamas and Netlify Inc.",
   "contributors": [
@@ -40,5 +40,9 @@
     "eslint-config-prettier": "^8.3.0",
     "postcss": "^8.4.4",
     "tailwindcss": "^3.0.0"
-  }
+  },
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/lukasz-sklad/blog.git",
+  "license": "MIT"
 }
