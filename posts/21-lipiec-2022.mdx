@@ -1,0 +1,100 @@
+---
+title: Repozytorium na githubie
+description: 'Takie proste'
+date: Lipiec July 21 2022
+---
+
+<h2>Zakładanie repozytorium na githubie</h2>
+
+Na swoim koncie klikamy +New repository
+
+Podajemy Repository Name: Wyszukiwarka-samolotow-test
+
+opcjonalnie możemy uzupełnić Description lub zostawiamy puste pole
+
+wybór między public a private 
+
+zalecam zostawienie public i tak stronę będziemy publikować 
+
+Mamy jeszcze zapytanie o plik README i .gitignore
+
+polecam wybrać
+
+jeżeli działamy w javascripcie polecam 
+.gitignore template: Node
+
+co do licencji można wybrać The Unlicense
+
+Tworzymy nasze repozytorium Create repository
+
+<h3>Teraz przechodzimy do konsoli i wpisujemy:</h3>
+
+```git clone https://github.com/lukasz-sklad/Wyszukiwarka-samolotow-test.git```
+
+Utworzył nam się folder z zawartością
+```
+drwxr-xr-x   6 terg  staff   192 20 lip 20:34 .
+drwxr-xr-x  19 terg  staff   608 20 lip 20:34 ..
+drwxr-xr-x  12 terg  staff   384 20 lip 20:34 .git
+-rw-r--r--   1 terg  staff  1610 20 lip 20:34 .gitignore
+-rw-r--r--   1 terg  staff  1211 20 lip 20:34 LICENSE
+-rw-r--r--   1 terg  staff    29 20 lip 20:34 README.md
+```
+Przeinicjonowanie poleceniem:
+
+```git init```
+
+do katalogu dodajemy nasze pliki
+
+poleceniem sprawdzamy co się stało:
+
+```git status```
+```
+Nieśledzone pliki:
+  (użyj „git add <plik>...”, żeby uwzględnić, co zostanie złożone)
+    .DS_Store
+    favicon/
+    index.html
+    script.js
+    style.css
+
+Musimy nasze pliki dodać do gita poleceniem:
+```
+```git add favicon/* index.html script.js style.css```
+
+użytkownicy macosx powinni plik .DS_Store dodać do ignorowanych nie śledzonych, w tym celu wykonamy komendy:
+
+```nano .gitignore```
+dopisujemy plik lub określone pliki a następnie:
+
+```git add .gitignore```
+
+git status dla świętego spokoju
+<h3>I tworzymy commita:</h3>
+
+```git commit -m "Pierwsza próba"```
+```git status```
+Na gałęzi main
+Twoja gałąź jest do przodu względem „origin/main” o 1 zapis.
+  (użyj „git push”, aby opublikować swoje zapisy)
+
+nic do złożenia, drzewo robocze czyste
+
+ja łącze się poprzez ssh z repozytorium więc wydam jeszcze poniższą komendę:
+
+```git remote set-url origin git@github.com:lukasz-sklad/Wyszukiwarka-samolotow-test.git```
+
+<h3>Wysyłymy na serwer:</h3>
+
+```git push origin main```
+
+publikujemy nasze repozytorium na stronie wwww
+przechodzimy do naszego repozytorium link poniżej
+
+https://github.com/lukasz-sklad/Wyszukiwarka-samolotow-test
+i odszukujemy Setting => GitHub Pages
+zmieniamy none na main i wciskamy save
+ i powinniśmy otrzymać nasz adres:
+
+Your site is ready to be published at 
+https://lukasz-sklad.github.io/Wyszukiwarka-samolotow-test/
