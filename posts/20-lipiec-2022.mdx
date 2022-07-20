@@ -1,0 +1,64 @@
+---
+title: GitHub i SSh
+description: 'Takie proste'
+date: Lipiec July 20 2022
+---
+
+<h2>Generowanie klucza SSH</h2>
+
+`ssh-keygen -t rsa -b 4096 -C "lukasz.sklad@gmail.com"`
+
+<h3>Teraz zostaniemy poproszenie o wskazanie lokalizacji zapisania klucza:</h3> 
+Enter a file in which to save the key ~/.ssh/id_rsa):
+
+Najlepiej jeżeli wciśniemy Enter bez podawania lokalizacji i zostawimy to pole puste. Klucz zostanie wygenerowany w domyślnej lokalizacji jaką jest ~/.ssh/id_rsa):
+
+W ostatnim kroku generator zapyta nas o passphrase czyli hasło szyfrujące klucz, nie musimy go podawać. Natomiast jeżeli je wpiszemy to przy, każdej próbie połączenia będziemy musieli je podać.
+
+Enter passphrase (empty for no passphrase): *
+Enter same passphrase again: *
+
+*Hasło, które będziemy wpisywać będzie niewidoczne.
+
+<h3>Dodanie klucza SSH do ssh-agent:</h3>
+
+```eval $(ssh-agent -s)```
+```ssh-add ~/.ssh/id_rsa```
+
+<h3>KLucz podejrzymy wydając polecenie należy go skopiować:</h3>
+
+```cat ~/.ssh/id_rsa.pub```
+
+<h3>Dodanie klucza SSH do konta GitHub:</h3>
+
+https://github.com/settings/keys
+
+Klucza SSH dodajemy, wybierając 'New SSH key’. Pokaże nam się pole 'Title’ oraz 'Key’. W pierwsze wpisujemy nazwę, a w drugie wklejamy nasz klucz ze schowka. Na końcu za pomocą przycisku 'Add SSH key’ zapisujemy klucz.
+
+<h3>Krótki Test naszego połączenia:</h3>
+
+```ssh -T git@github.com```
+
+W odpowiedzi powinniśmy otrzymać:
+
+Hi lukasz-sklad! You've successfully authenticated, but GitHub does not provide shell access.
+
+<h3>Ustawienie gita aby działał przez ssh:</h3>
+
+```git remote set-url origin git@github.com:lukasz-sklad/blog.git```
+
+<h3>main lokalny wypchnołem na zdalny origin</h3>
+
+```git push origin main```
+
+<h3>I o to chodziło:</h3>
+
+Wymienianie obiektów: 15, gotowe.
+Zliczanie obiektów: 100% (15/15), gotowe.
+Kompresja delt z użyciem do 12 wątków
+Kompresowanie obiektów: 100% (9/9), gotowe.
+Zapisywanie obiektów: 100% (9/9), 1.12 KiB | 1.12 MiB/s, gotowe.
+Razem 9 (delty 5), użyte ponownie 0 (delty 0), paczki użyte ponownie 0
+remote: Resolving deltas: 100% (5/5), completed with 5 local objects.
+To github.com:lukasz-sklad/blog.git
+   c2e5bf7..49991e0  main -> main
