@@ -1,0 +1,105 @@
+---
+title: mocp jackd w tle
+description: 'moc jackd'
+date: Sierpień August 30 2022
+---
+
+# Uruchamianie oprogramowania w tle mocp
+
+### Trening lokalny
+
+Uruchamiami program mc w tle
+
+```mc &```
+
+```
+[1] 50421
+tera@5K ~ %
+[1]  + suspended (tty output)  mc
+```
+
+Działa sobie a teraz jak przywrócić go
+Odpalamy konsole:
+
+```jobs```
+
+```fg %1```
+
+Przywracamy na pierwszy plan ta 1 to proces spisany z wydania komendy jobs
+
+```fg %nazwa```
+
+```bg %1```
+
+zamykanie procesu w tle
+
+ale znaczków mi się pojawiło w konsoli może mc to zły program to wysyłania w ciemność i z powrotem
+
+ale tak naprawdę to chcę wysłać w ciemność jeden proces który nie musi powrócić
+
+```jackd -d coreaudio &```
+
+Wynik:
+
+```tera@5K ~ % jobs
+[1]  + running    jackd -d coreaudio```
+
+Powiem jedno caramba
+
+```
+tera@5K ~ % jackd -d coreaudio &
+[1] 50968
+tera@5K ~ % jackdmp 1.9.21
+Copyright 2001-2005 Paul Davis and others.
+Copyright 2004-2016 Grame.
+Copyright 2016-2022 Filipe Coelho.
+jackdmp comes with ABSOLUTELY NO WARRANTY
+This is free software, and you are welcome to redistribute it
+under certain conditions; see the file COPYING for details
+JACK server starting in realtime mode with priority 10
+self-connect-mode is "Don't restrict self connect requests"
+Default input and output devices are not the same !!
+Cannot open default device in duplex mode, so aggregate default input and default output
+Separated input = 'Mikrofon (iMac)'
+Separated output = 'Głośniki (iMac)'
+Input channel = 0 ==> JACK input port = 0
+JACK output port = 0 ==> output channel = 0
+JACK output port = 1 ==> output channel = 1
+CoreAudio driver is running...
+```
+
+Udało się ale czy jestem z efektu zadowolony hmm załączyło się za 10 razem
+
+odpalamy mocp i słuchamy audiobooka albo ulubioną muzykę.
+...
+
+Powrócimy do tego!!!
+
+```mc & > /dev/null
+````
+
+W skrócie bo się zakręciłem
+Wysyłam:
+
+```
+jackd -d coreaudio &
+```
+
+Samo
+
+```fg```
+
+fg przywraca aby wyłączyć proces ctr + c
+
+Wysyłam:
+
+```
+jackd -d coreaudio &
+```
+
+jobs sprawdzam
+bg samo bg nic
+```bg %1 ```
+czyli fg i ctr + c zamyka proces
+
+inny program, wystarczy :D
