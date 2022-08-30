@@ -19,6 +19,7 @@ tera@5K ~ %
 ```
 
 Działa sobie a teraz jak przywrócić go
+
 Odpalamy konsole:
 
 ```jobs```
@@ -41,15 +42,16 @@ ale tak naprawdę to chcę wysłać w ciemność jeden proces który nie musi po
 
 Wynik:
 
-```tera@5K ~ % jobs
-[1]  + running    jackd -d coreaudio```
+```jobs [1]  + running  jackd -d coreaudio```
 
 Powiem jedno caramba
 
+```jackd -d coreaudio &```
+
+```[1] 50968```
+
 ```
-tera@5K ~ % jackd -d coreaudio &
-[1] 50968
-tera@5K ~ % jackdmp 1.9.21
+jackdmp 1.9.21
 Copyright 2001-2005 Paul Davis and others.
 Copyright 2004-2016 Grame.
 Copyright 2016-2022 Filipe Coelho.
@@ -68,6 +70,7 @@ JACK output port = 1 ==> output channel = 1
 CoreAudio driver is running...
 ```
 
+
 Udało się ale czy jestem z efektu zadowolony hmm załączyło się za 10 razem
 
 odpalamy mocp i słuchamy audiobooka albo ulubioną muzykę.
@@ -75,8 +78,7 @@ odpalamy mocp i słuchamy audiobooka albo ulubioną muzykę.
 
 Powrócimy do tego!!!
 
-```mc & > /dev/null
-````
+```mc & > /dev/null```
 
 W skrócie bo się zakręciłem
 Wysyłam:
