@@ -1,0 +1,21 @@
+---
+title: Konfigurowanie czcionki w gimpie w macOS
+description: 'Gimp takie proste'
+date: Wrzesień September 24 2022
+---
+
+# Konfigurowanie czcionki w gimpie w macOS
+
+Musimy dostać się do pliku z ustawieniami np. **tutaj:**
+
+/Applications/GIMP-2.10.app/Contents/Resources/share/gimp/2.0/themes/Dark
+_przykładowa ścieżka_
+
+**Edytujemy plik:** gtkrc
+
+```
+style "gimp-dark-default-style"{ font_name = "Sans 13"
+```
+_tutaj zmieniamy_
+
+Powyżej jest # gtk-font-name = "Sans 14" **tu nie zmieniamy.**

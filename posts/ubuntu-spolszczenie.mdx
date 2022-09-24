@@ -1,0 +1,35 @@
+---
+title: Ubuntu spolszczenie
+description: 'Ubuntu takie proste'
+date: Wrzesień September 24 2022
+---
+
+# Ubuntu spolszczenie
+
+Wykonaj poniższe zalecenia:
+
+```
+sudo dpkg-reconfigure locales
+locale
+sudo dpkg-reconfigure keyboard-configuration
+```
+
+Instalowanie pakietów:
+
+```
+sudo apt-get install language-pack-pl
+sudo apt-get install language-pack-pl-base
+sudo apt-get install language-pack-gnome-pl-base
+```
+
+a przy okazji wszystkie kodeki ;-)
+
+sudo apt install ubuntu-limited-extras
+
+Czyszczenie systemu:
+
+```
+sudo apt-get autoclean
+sudo apt-get clean
+sudo apt-get autoremove
+```
