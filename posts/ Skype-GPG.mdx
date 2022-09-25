@@ -1,0 +1,49 @@
+---
+title: Skype for Linux błąd podpisu GPG
+description: 'Skype błąd GPG'
+date: Wrzesień September 25 2022
+---
+
+#  Skype for Linux błąd podpisu GPG
+
+Od kilku dni po wpisaniu w terminalu komendy:
+
+**apt update**
+
+Pojawiał mi się następujący komunikat o błędzie podpisu GPG 
+
+```
+Błąd:7 https://repo.skype.com/deb stable InRelease
+
+  Następujące podpisy były błędne: EXPKEYSIG 1F3045A5DF7587C3 Skype Linux Client Repository <se-um@microsoft.com>
+```
+
+Czyli apt nie może zweryfikować pakietów podpisów, a co za tym idzie leży cały proces aktualizacji Skype for Linux
+
+Jak to naprawić?
+
+W terminalu wykonałem polecenie:
+
+```wget -O - https://repo.skype.com/data/SKYPE-GPG-KEY | sudo apt-key add -```
+
+Sprawdzenie systemu:
+
+```
+sudo update
+sudo apt list --upgradable -a
+```
+
+```
+skypeforlinux/stable 8.88.0.401 amd64 [upgradable from: 8.87.0.403]
+skypeforlinux/stable 8.87.0.406 amd64
+skypeforlinux/stable,now 8.87.0.403 amd64 [installed,upgradable to: 8.88.0.401]
+skypeforlinux/stable 8.86.0.407 amd64
+skypeforlinux/stable 8.85.0.409 amd64
+```
+
+Aktualizacja Skype:
+```
+sudo apt install skypeforlinux
+```
+
+Teraz działa ;-)
