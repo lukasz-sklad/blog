@@ -4,7 +4,7 @@ description: 'Brew...homebrew'
 date: Październik October 19 2022
 ---
 
-#  Brew nie tylko macos
+# Brew nie tylko macos
 
 Bardzo znane narzędzie z systemu macos instalujące oprogramowanie linux
 
@@ -19,18 +19,18 @@ Usuwamy brew z systemu macos
 Pojedyncze polecenie odinstalowania homebrew wygląda następująco, w zależności od wersji macos:
 
 macos Catalina, macos Big Sur i macos Mojave:
-```/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall.sh)"```
+`/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall.sh)"`
 
 macos High Sierra, Sierra, El Capitan:
-```ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall)"```
+`ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall)"`
 
 ## Aktualizacja:
 
-```brew update && brew upgrade```
+`brew update && brew upgrade`
 
-ale brew można doskonale wykorzystywać nawet w systemie linux, brewlinux pozwala na na używanie choćby dowolnej wersji oprogramowania. Innaczej mówiąc jest świetnym menadzerem do zarządzania oprogramowaniem
+ale brew można doskonale wykorzystywać nawet w systemie linux, brewlinux pozwala na używanie choćby dowolnej wersji oprogramowania. Inaczej mówiąc jest świetnym menadżerem do zarządzania oprogramowaniem
 
-## Insalacja w linux
+## Instalacja w linux
 
 Instalujemy dodatkowe i niezbędne oprogramowanie dla Debian i pochodnych:
 
@@ -46,13 +46,13 @@ curl -fsSL -o install.sh https://raw.githubusercontent.com/Homebrew/install/HEAD
 
 ściągnięty plik
 
-```less install.sh``` możemy przejżeć
+`less install.sh` możemy przejżeć
 
 ```
 /bin/bash install.sh
 ```
 
-## Ustawienie zmiennych: 
+## Ustawienie zmiennych:
 
 ```
 echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> /home/lmk/.profile
