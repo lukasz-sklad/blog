@@ -1,0 +1,163 @@
+---
+title: Znak ^$* w selektorze atrybutu
+description: 'href ^$*="."'
+date: Październik October 25 2022
+---
+
+# Znaki ^$* w selektorze atrybutu
+
+## W przypadkau znaku ^
+
+Plik CSS
+
+```
+.link {
+  text-decoration: none;
+}
+
+[href^="./"] {
+  color: red;
+}
+
+[href^="https"] {
+  color: green;
+}
+```
+
+Plik HTML
+
+```
+<ul>
+  <li>
+    <a href="./index.html">Main page</a>
+  </li>
+  <li>
+    <a href="./about.html">About us</a>
+  </li>
+  <li>
+    <a href="./contaсts.html">Contacts</a>
+  </li>
+</ul>
+
+<ul>
+  <li>
+    <a class="link" target="_blank" href="https://www.google.com">Google</a>
+  </li>
+  <li>
+    <a class="link" target="_blank" href="https://developer.mozilla.org/pl/docs/web/css"
+      >MDN + CSS</a
+    >
+  </li>
+  <li>
+    <a class="link" target="_blank" href="https://stackoverflow.com/questions/tagged/css"
+      >StackOverflow + CSS</a
+    >
+  </li>
+</ul>
+```
+
+./ linki będą czerwone a https linki będą zielone.
+
+## W przypadku znaku $
+
+Plik CSS
+
+```
+.link {
+  text-decoration: none;
+}
+
+[href$="html"] {
+  color: green;
+}
+
+[href$="css"] {
+  color: orangered;
+}
+```
+
+Plik HTML
+
+```
+<ul>
+  <li>
+    <a href="./index.html">Main page</a>
+  </li>
+  <li>
+    <a href="./about.html">About us</a>
+  </li>
+  <li>
+    <a href="./contaсts.html">Contacts</a>
+  </li>
+</ul>
+
+<ul>
+  <li>
+    <a class="link" target="_blank" href="https://www.google.com">Google</a>
+  </li>
+  <li>
+    <a class="link" target="_blank" href="https://developer.mozilla.org/pl/docs/web/css"
+      >MDN + CSS</a
+    >
+  </li>
+  <li>
+    <a class="link" target="_blank" href="https://stackoverflow.com/questions/tagged/css"
+      >StackOverflow + CSS</a
+    >
+  </li>
+</ul>
+```
+
+Linki z zakończeniem html bedą zielone a css pomarańczowo-czerwony.
+
+## W przypadku znaku \* aby wybrać te wartości atrybutów, które zawierają określone znaki
+
+Plik CSS
+
+```
+.link {
+  text-decoration: none;
+}
+
+[href*="about"] {
+  color: green;
+}
+
+[href*="com"] {
+  color: orangered;
+}
+```
+
+Plik HTML
+
+```
+<ul>
+  <li>
+    <a href="./index.html">Main page</a>
+  </li>
+  <li>
+    <a href="./about-book.html">About Book</a>
+  </li>
+  <li>
+    <a href="./about-author.html">About author</a>
+  </li>
+</ul>
+
+<ul>
+  <li>
+    <a class="link" target="_blank" href="https://www.google.com/">Google</a>
+  </li>
+  <li>
+    <a class="link" target="_blank" href="https://developer.mozilla.org/pl/docs/web/css"
+      >MDN + CSS</a
+    >
+  </li>
+  <li>
+    <a class="link" target="_blank" href="https://stackoverflow.com/questions/tagged/css"
+      >StackOverflow + CSS</a
+    >
+  </li>
+</ul>
+```
+
+Linki zawierające treści about będą zielone a linki kończące się na com będą pomarańczowo-czerwony.
