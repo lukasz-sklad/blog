@@ -1,0 +1,49 @@
+---
+title: FFmpeg ogólnie
+description: 'ffmpeg .avi .ts .vob .mp4 AAC'
+date: Październik October 26 2022
+---
+
+# FFmpeg ogólnie
+
+Aby Firefox albo inna przeglądarka wyświetliła nam materiał video, potrzebny jest odpowiedni kodek.
+Firefox nie wyświetli nam wszystkich materiałów video, jest kilka kodeków do wyboru jednym z takich kodeków to mp4.
+
+Jak przygotować materiał, aby był w mp4?
+
+Należy zainstalować ffmpeg w zależności od os pobrać ze strony producenta.
+
+Na dzień dzisiejszy aktualna wersja to:
+ffmpeg version 5.1.2 Copyright (c) 2000-2022 the FFmpeg developers
+
+Ja zainstaluje na macos:
+
+```
+brew install ffmpeg
+```
+
+na Ubuntu i Debianie będzie:
+
+```
+apt install ffmpeg
+```
+
+Przerobienie matateriału .avi na .mp4
+
+```
+ffmpeg -i 123.avi -strict -2 123.mp4
+```
+
+-strick -2 określa dzwięk AAC, jest to jeden z popularniejszych kodeków audio i jest odtwarzany przez większość odtwarzaczy audio/video, współczesnych telefonów
+.mp4 określa, że takiego kodeka użyjemy na wyjściu
+
+jeżeli chcielibyśmy wszystkie filmy w danym katalogu przerobić na mp4 najlepiej napisać sobie skrypt w bashu
+
+```
+#!/bin/bash
+
+for file in *.AVI
+do
+ffmpeg -i "$file" -strict -2 "${file%.*}_kali".mp4
+done
+```
