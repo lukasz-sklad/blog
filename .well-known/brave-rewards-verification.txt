@@ -1,0 +1,4 @@
+This is a Brave Rewards publisher verification file.
+
+Domain: blog-lmk.netlify.app
+Token: ad9b20787af1bad39dcb0cd99d1a162c1d650a7725ad89fdb1b0c0dec09bea0f
