@@ -47,3 +47,28 @@ do
 ffmpeg -i "$file" -strict -2 "${file%.*}_kali".mp4
 done
 ```
+
+Rozwiązanie problemu:
+
+```
+Metadata:
+    ENCODER         : Lavf59.27.100
+  Duration: 01:44:37.03, start: 0.000000, bitrate: 638 kb/s
+  Stream #0:0(eng): Video: vp9 (Profile 0), yuv420p(tv, bt709), 2560x1080, SAR 1:1 DAR 64:27, 25 fps, 25 tbr, 1k tbn (default)
+    Metadata:
+      DURATION        : 01:44:36.960000000
+  Stream #0:1: Audio: aac (LC), 44100 Hz, stereo, fltp (default)
+    Metadata:
+      HANDLER_NAME    : ISO Media file produced by Google Inc.
+      VENDOR_ID       : [0][0][0][0]
+      DURATION        : 01:44:37.027000000
+Stream mapping:
+  Stream #0:0 -> #0:0 (vp9 (native) -> h264 (libx264))
+  Stream #0:1 -> #0:1 (aac (native) -> aac (native))
+```
+
+kodek Google (wywala błąd ale przełącznik experimental działa)
+
+```
+ffmpeg -strict experimental -i 123.mkv 123.mp4
+```
