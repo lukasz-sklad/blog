@@ -1,0 +1,38 @@
+---
+title: Netlify-DNS
+description: 'DNS dla Netlify'
+date: Grudzień December 14 2022
+---
+
+# Ustawienie DNS na netlify
+
+```
+Nazwa hosta: lmk.one
+Typ: A
+TTL: 1 godzina lub 3600s
+Dane: 75.2.60.5
+```
+
+IP DNS bierzemy z dokumentacji jest dostępna na stronie
+
+```
+Nazwa hosta: www.lmk.one
+Typ: CNAME	
+TTL: 1 godzina	
+Dane: lmk.one.
+```
+
+powyższe dane wpisujemy tam gdzie zakupiliśmy daomenę np.: home, linux.pl, Google.
+
+Ustawienia wystarczą do wyświetlania i otrzymania darmowego certyfikatu ssl.
+
+Inne DNS aby zidentyfikować twórców np.:
+
+```
+Nazwa hosta: lmk.one	
+Typ: TXT	
+TTl: 1 godzina	
+Dane: "brave-ledger-verification=daf8dc1d2004a22271f7072a405eaea254056b562849863357aa59410d874d72"
+```
+
+To chyba wszystko no można jeszcze na hoście ustawić DNS dla IP6, jakby ktoś potrzebował DNS poczty to typ MX.
