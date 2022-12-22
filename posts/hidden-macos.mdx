@@ -1,0 +1,43 @@
+---
+title: Ukryte pliki macos
+description: 'hidden files'
+date: Grudzień December 16 2022
+---
+
+# Ukryte pliki w Finderze
+
+Ukryte pliki nie bez powodu pozostają ukryte przed zwykłym użytkownikiem. Czasem jednak trzeba się do nich dostać. Jest na to sposób:
+
+w Terminalu za pomocą komendy:
+
+```
+defaults write com.apple.finder AppleShowAllFiles -bool true; killall Finder
+```
+
+pokzuje ukryte pliki,
+
+```
+defaults write com.apple.finder AppleShowAllFiles -bool false; killall Finder
+```
+
+Ukrywa ukazane pliki. 
+
+Wymaga to jednak otwarcia wspomnianego już terminala, wpisanie w jego oknie powyższej komendy i wciśnięcia klawisza Enter. W przypadku chęci ponownego ich ukrycia trzeba jeszcze zmienić tzw. flagę we wspomnianej komendzie z 
+
+```
+true 
+```
+
+na 
+
+```
+false
+```
+
+Nie jest to, może specjalnie trudne, ale jest sposób o wiele łatwiejszy i szybszy, przy którym otwieranie terminala wydaje się wiecznością.
+
+Aby odkryć i ponownie ukryć tzw. ukryte pliki w Finderze wystarczy posłużyć się następującym skrótem klawiszowym:
+
+**⌘ + ⇧ + . (command + shift + kropka).**
+
+W ten sposób dowolną ilość razy można ukryte pliki bardzo szybko odkrywać i ponownie ukrywać.
