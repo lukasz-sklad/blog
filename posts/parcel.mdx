@@ -1,0 +1,142 @@
+---
+title: Instalujemy i używamy PARCEL
+description: 'PARCEL SCSS'
+date: Styczeń January 01 2023
+---
+
+# Instalujemy i używamy PARCEL
+
+Oszałamiająco szybki, niewymagający konfiguracji program tworzący pakiety. Jest webpackiem i nie tylko, tu można więcej przeczytać:
+
+https://pl.parceljs.org/
+
+Strona domowa wersja EN:
+
+https://parceljs.org/
+
+Aby zainstalować PARCEL, każdy musi mieć już w systemie zainstalowany Node.js
+
+Sprawdzamy, czy mamy już zainstalowany
+
+```
+node -v
+```
+
+Jeżeli nie, to musimy zainstalować w zależności od systemu:
+
+Mamy dwie wersję do wyboru **LTS** i **Current**, zalecam **LTS**
+
+Robie to na macu więc wydałem polecenie:
+
+```
+brew install node
+```
+
+Polecam przy okazji zrobić brew update && upgrade && outdated
+
+Ponieważ PARCEL lubi się wywalić na starej wersji
+
+```
+node -v
+v19.4.0
+```
+
+Jak już wiemy, że mamy zainstalowany możemy przejść dalej.
+
+Otwieramy konsolę w zależności od systemu Linux terminal, Windows linia komend cmd możemy też skorzystać z konsoli w vscodzie
+
+Tworzymy sobie jakiś folder np. 123, wchodzimy do katalogu i wykonujemy polecenie:
+
+```
+npm init -y
+```
+
+Jest to instalator paczek, modułów a y oznacza, że na wszystkie pytania odpowiemy TAK
+W katalogu zobaczymy plik o nazwie package.json
+
+Cały katalog najlepiej wrzucić do vscoda i tam edytować swoje pliki
+
+Tak lub podobnie, będzie wyglądał nasz plik package.json
+
+```
+{
+	"name": "123",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC"
+}
+```
+
+Stworzymy sobie teraz plik index.html i katalog styles w katalogu stworzymy sobie plik main.scss
+
+W pliku html stworzymy sobie stronę, a w pliku main będziemy ostylować. I podepniemy go jako plik css w index html.
+
+`<link rel="stylesheet" href="styles/main.scss">`
+
+Html nie czyta plików proprocesora SCSS, aby mogły, być odczytywane instalujemy parcel:
+
+```
+npm i parcel --save-dev
+```
+
+W pliku package.json pojawiły się nowe linie w stylu:
+
+```
+"devDependencies": {
+		"@parcel/transformer-sass": "^2.8.2"
+	},
+```
+
+Aby uruchomić parcel, możemy to zrobić za pomocą komendy lub wybrać inną opcję, czyli w package.json mamy scripts i tutaj sobie dopiszemy linijkę
+
+Uruchamianie będzie wyglądać następująco
+
+**npm run 123**
+
+Nasz script będzie wyglądał:
+
+```
+{
+	"name": "123",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	},
+	"devDependencies": {
+		"@parcel/transformer-sass": "^2.8.2"
+	},
+	"scripts": {
+		"start": "parcel index.html --no-cache",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC"
+}
+```
+
+Parcel widząc nasz plik html ze wpisem, że chodzi o plik scss, będzie wiedział dalej co z nim zrobić.
+
+Uruchamiamy:
+
+```
+npm run start
+```
+Widzimy, że teraz nam wystartował parcel
+
+```
+> 123@1.0.0 start
+> parcel index.html --no-cache
+
+Server running at http://localhost:1234
+✨ Built in 813ms
+```
+
+I to wszystko teraz możemy ostylować i oglądać wynik w naszej przeglądarce np. Mozilla, Brave.
