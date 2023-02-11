@@ -1,0 +1,90 @@
+---
+title: Hotjar
+description: 'Hotjar mapy cieplne'
+date: Luty February 11 2023
+---
+
+# Hotjar
+
+Narzędziu do monitorowania zachowania użytkowników.
+
+Strona projektu:
+
+https://www.hotjar.com/
+
+Po zarejestrowaniu się otrzymamy plik do zainsatlowania
+
+Install Hotjar
+```
+Paste this code into the <head> of every page where you want to track user behavior or collect feedback.
+```
+```
+<!-- Hotjar Tracking Code for https://www.lmk.one -->
+<script>
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:3339999,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+</script>
+```
+
+ale co gdy nie mamy tak zwanego html w projekcie, pokażę to na plikach z tego blogu
+opartym na Next.js
+
+Instalujemy zależności:
+
+```
+yarn add react-hotjar
+```
+
+można uzyć
+
+```
+npm install react-hotjar --save
+```
+
+Z otrzymanego pliku do instalacji będzie nam potrzebne hjid i hjsv
+
+Edytujemy plik _app.js
+
+i importujemy do niego moduły react-hotjar
+
+```
+import { hotjar } from 'react-hotjar'
+import { useEffect } from 'react'
+```
+
+Po ich zaimportowaniu musisz dodać hak do użycia w komponencie z pustą tablicą zależności:
+
+```
+useEffect(() => {
+  hotjar.initialize(HJID, HJSV)
+}, [])
+```
+
+Po zakończeniu komponent powinien wyglądać mniej więcej tak:
+
+```
+import '../styles/globals.css';
+import 'prismjs/themes/prism-tomorrow.css';
+import { hotjar } from 'react-hotjar'
+import { useEffect } from 'react'
+
+function MyApp({ Component, pageProps }) {
+  useEffect(() => {
+    hotjar.initialize(3339999, 6)
+  }, [])
+  return (
+    <>
+      <span className="theme-bejamas" />
+      <Component {...pageProps} />
+    </>
+  );
+}
+
+export default MyApp;
+```

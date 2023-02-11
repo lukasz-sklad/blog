@@ -1,0 +1,33 @@
+---
+title: Ternary operator
+description: 'Warunkowy(ternary) operator'
+date: Luty February 11 2023
+---
+
+# Ternary operator
+
+Ternary operator to operator skrótu, który pozwala na kondensację kodu i zastępowanie pełnej instrukcji if...else jednym zapisem. Składa się z trzech części: warunku, wyrażenia, które jest wykonywane w przypadku spełnienia warunku oraz wyrażenia, które jest wykonywane w przypadku jego niespełnienia.
+
+Jego składnia to następująca:
+
+```
+(warunek) ? wyrażenie_true : wyrażenie_false;
+```
+
+Gdy warunek jest prawdziwy, operator ternary wywołuje wyrażenie po lewej stronie :, a gdy jest fałszywy wywołuje wyrażenie po prawej stronie :.
+
+Na przykład, następujący kod:
+
+```
+if (x > 0) {
+  result = "x jest większe od zera";
+} else {
+  result = "x jest mniejsze lub równe zeru";
+}
+```
+
+można zapisać za pomocą operatora ternary w następujący sposób:
+
+```
+result = (x > 0) ? "x jest większe od zera" : "x jest mniejsze lub równe zeru";
+```
