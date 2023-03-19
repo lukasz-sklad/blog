@@ -1,0 +1,43 @@
+---
+title: Ffmpeg łączenie..dzielenie
+description: 'ffmpeg łączenie .WebM'
+date: Marzec March 19 2023
+---
+
+# FFmpeg łączenie..dzielenie
+
+Potniemy materiał na 3 części a następnie połączymy
+
+Cały materiał 00:00:00 - 01:59:41; 1.webm
+
+Przejdź do folderu, w którym znajdują się plik WebM.
+
+Wykonaj następujące komendy
+
+```
+ffmpeg -i 1.webm -ss 00:01:51 -t 00:09:12 -c copy 1-3.webm
+ffmpeg -i 1.webm -ss 00:10:08 -t 00:59:01 -c copy 2-3.webm
+ffmpeg -i 1.webm -ss 01:02:51 -t 01:59:27 -c copy 3-3.webm
+```
+
+Otrzymamy pocięty materiał
+
+```
+00:01:51 - 00:09:12 1.3.webm
+00:10:08 - 00:59:01 2.3.webm
+01:02:51 - 01:59:27 3.3.webm
+```
+
+Łączenie materiału
+
+```
+ffmpeg -i 1-3.webm -i 2-3.webm -i 3-3.webm -filter_complex "[0:v] [0:a] [1:v] [1:a] [2:v] [2:a] concat=n=3:v=1:a=1 [v] [a]" -map "[v]" -map "[a]" Super.webm
+```
+
+Ta komenda używa opcji "-filter_complex", która umożliwia połączenie trzech plików w jeden plik. Opcja "concat" oznacza konkatenację (połączenie) i ustawia parametry wideo i audio.
+
+Jeśli wszystkie pliki mają takie same właściwości wideo i audio (takie jak rozmiar klatki i częstotliwość próbkowania), możesz dodać opcję "-c copy" przed nazwą pliku wyjściowego, aby skopiować strumienie bez konwersji, co przyspieszy proces:
+
+```
+ffmpeg -i 1-3.webm -i 2-3.webm -i 3-3.webm -filter_complex "[0:v] [0:a] [1:v] [1:a] [2:v] [2:a] concat=n=3:v=1:a=1 [v] [a]" -map "[v]" -map "[a]" -c copy Super2.webm
+```
