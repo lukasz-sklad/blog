@@ -1,0 +1,23 @@
+---
+title: Instalujemy niepodpisane oprogramowanie macos
+description: 'niepodpisane app'
+date: Marzec March 26 2023
+---
+
+# Instalujemy niepodpisane oprogramowanie macos
+
+Jak chcemy zainstalować jakieś oprogramowanie, nie ze sklepu Apple to wyskakuje nam komunikat, że program niepodpisany i czy wyrzucić do kosza. Wtedy musimy anulować i szukać w opcjach ustawień o Prywatności (biała rączka na niebieskim tle) i dopiero wtedy kliknąć "Pozwól na instalację". Po takim zabiegu możesz ponownie spróbować uruchomić program.
+
+Czy jest szybszy sposób, jest?
+
+Ściągamy jakieś oprogramowanie np.:
+
+https://sourceforge.net/projects/player432hz/files/
+
+Po ściągnięciu wykonujemy polecenie
+
+```
+xattr -d com.apple.quarantine Player432hz.app 
+```
+
+lub prościej spróbuj uruchomić ze wciśniętym klawiszem ctr.
