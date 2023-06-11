@@ -1,0 +1,124 @@
+---
+title: Clonezilla uruchamianie z dysku
+description: 'Clonezilla...grub.cfg, hdd'
+date: Czerwiec July 11 2023
+---
+
+# Clonezilla uruchamianie z dysku HDD
+
+Opracowane na podstawie dokumentacji ze strony producenta:
+
+https://clonezilla.org/
+
+## I. Pierwsz krok - Przygotowywujemy partycję
+
+Będziemy potrzebować partycji na pliki, iso zawiera około ~481 MB danych, utworzymy sobie partycję 1 GB tak dla przyszłych pokoleń lub modyfikacji.
+
+Wybór systemu plików, ja wybiorę FAT16, bo myślę, że nie będzie z tym problemu (obsługą).
+
+W gparted wybrałem FAT16 i dopisałem sobie etykietę Clonozilla.
+
+Moja partycja to /dev/sda3.
+
+## II. Drugi krok - Montujemy partycję
+
+Montujemy naszą partycję /dev/sda3.
+
+```
+mount /dev/sda3 /mnt
+```
+
+Sprawdzamy poleceniem:
+
+```
+df -h
+```
+
+Wynik:
+
+/dev/sda3 1,1G 0 1,1G 0% /mnt
+
+## III. Trzeci krok - Pobieramy, rozpakowywujemy
+
+Pobieramy potrzebne pliki (archiwum .zip):
+
+```
+sudo wget -c https://free.nchc.org.tw/osdn//clonezilla/78863/clonezilla-live-20230608-lunar-amd64.zip
+```
+
+Po pobraniu przechodzimy do rozpakowywania:
+
+```
+sudo 7z x clonezilla-live-20230608-lunar-amd64.zip
+```
+
+Lub zalecane:
+
+```
+sudo unzip clonezilla-live-20230608-lunar-amd64.zip -d /mnt
+```
+
+Zmieniamy nazwę katalogu live.
+
+```
+sudo mv live live-hd
+```
+
+## III. Czwarty krok - Umieszczamy wpis w grub
+
+Sprawdzamy pliki konfiguracyjne naszego systemu:
+
+```
+ls /etc/grub.d/
+```
+
+```
+.rwxr-xr-x 8,9k root 14 kwi 23:16 00_header
+.rwxr-xr-x  13k root 14 kwi 23:16 10_linux
+.rwxr-xr-x  14k root 14 kwi 23:16 20_linux_xen
+.rwxr-xr-x  12k root  2 maj 00:23 30_os-prober
+.rwxr-xr-x 1,2k root 14 kwi 23:16 30_uefi-firmware
+.rwxr-xr-x  722 root 13 maj 16:00 35_fwupd
+.rwxr-xr-x  540 root 11 cze 12:41 40_custom
+.rwxr-xr-x  215 root 14 kwi 23:16 41_custom
+.rwxr-xr-x  27k root 19 gru  2022 41_snapshots-btrfs
+.rwxr-xr-x 1,2k root  7 maj 19:57 60_memtest86+
+.rwxr-xr-x  754 root 11 cze 12:48 61_custom_leave_options
+.rw-r--r--  483 root 14 kwi 23:16 README
+```
+
+Jeżeli będziemy mieć:
+
+/etc/grub.d/40_custom
+
+To wpisujemy tu:
+
+```
+menuentry "Clonezilla Lunar 2023-06-08" {
+set root=(hd0,3)
+linux /live-hd/vmlinuz boot=live union=overlay username=user config components quiet noswap nolocales edd=on nomodeset ocs_live_run=\"ocs-live-general\" ocs_live_extra_param=\"\" keyboard-layouts= ocs_live_batch=\"no\" locales= vga=788 ip=frommedia nosplash live-media-path=/live-hd bootfrom=/dev/sda3 toram=live-hd,syslinux,EFI
+initrd /live-hd/initrd.img
+}
+```
+
+Dotyczy pliku iso:
+
+```
+menuentry "clonezilla-live" {
+ISO="/clonezilla-live-2.7.2-39-amd64.iso"
+search --set -f $ISO
+loopback loop $ISO
+linuxefi (loop)/live/vmlinuz boot=live union=overlay username=user config components quiet noswap edd=on nomodeset locales= keyboard-layouts= ocs_live_run="ocs-live-general" ocs_live_extra_param="" ocs_live_batch="no" vga=791 ip= net.ifnames=0 splash i915.blacklist=yes radeonhd.blacklist=yes nouveau.blacklist=yes vmwgfx.enable_fbdev=1 findiso=$ISO
+initrdefi (loop)/live/initrd.img
+}
+```
+
+I pozostaje wydać ostatnie polecenie:
+
+```
+grub-mkconfig -o /boot/grub/grub.cfg
+```
+
+Link do zdjęcia:
+
+https://my.opendesktop.org/s/E4TFk3NNmQGnDSi
