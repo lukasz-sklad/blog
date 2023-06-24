@@ -101,6 +101,16 @@ initrd /live-hd/initrd.img
 }
 ```
 
+Dla dysków nvme (trochę było trudności, set root nie chciał zostać przyjęty, na kilku forach znalazłem, problemy z zużyciem nvme w grub.conf, ale za x 15 :-)( razem udało się 24.06.2023 )
+
+```
+menuentry "Clonezilla Lunar 2023-06-08" {
+search.fs_uuid 5C67-3FBD root hd0,gpt3 
+linux /live-hd/vmlinuz disk=/dev/nvme0n1p3 boot=live union=overlay username=user config components quiet noswap nolocales edd=on nomodeset ocs_live_run=\"ocs-live-general\" ocs_live_extra_param=\"\" keyboard-layouts=NONE ocs_live_batch=\"no\" locales="pl_PL.UTF-8" vga=788 ip=frommedia nosplash live-media-path=/live-hd bootfrom=/dev/nvme0n1p3 toram=live-hd,syslinux,EFI
+initrd /live-hd/initrd.img
+}
+```
+
 Dotyczy pliku iso:
 
 ```
