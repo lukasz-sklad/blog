@@ -1,0 +1,78 @@
+---
+title: Mysz Razer Viper V2 Pro, przycinanie linux
+description: 'przycinanie linux'
+date: Czerwiec June 24 2023
+---
+
+# Mysz Razer Viper V2 Pro, przycinanie linux
+
+Pomyślałem może się przyda, pytanie jest czy się uda.
+
+Zainsatlowałem kilka kerneli, wyłączyłem Waylanda, sterowniki open-razer zainstalowane, headers, dkms.
+
+Sprawdzamy naszą mysz, wydając polecenie:
+
+```
+xinput list
+```
+
+```
+λ xinput list
+⎡ Virtual core pointer                    	id=2	[master pointer  (3)]
+⎜   ↳ Virtual core XTEST pointer              	id=4	[slave  pointer  (2)]
+⎜   ↳ NOVATEK USB Keyboard                    	id=17	[slave  pointer  (2)]
+⎜   ↳ Razer Razer Viper V2 Pro                	id=19	[slave  pointer  (2)]
+⎜   ↳ YICHIP Wireless Device Consumer Control 	id=20	[slave  pointer  (2)]
+⎜   ↳ YICHIP Wireless Device Mouse            	id=22	[slave  pointer  (2)]
+⎜   ↳ Razer Razer Viper V2 Pro                	id=11	[slave  pointer  (2)]
+⎣ Virtual core keyboard                   	id=3	[master keyboard (2)]
+    ↳ Virtual core XTEST keyboard             	id=5	[slave  keyboard (3)]
+    ↳ NOVATEK USB Keyboard                    	id=14	[slave  keyboard (3)]
+    ↳ NOVATEK USB Keyboard Consumer Control   	id=16	[slave  keyboard (3)]
+    ↳ NOVATEK USB Keyboard System Control     	id=15	[slave  keyboard (3)]
+    ↳ Video Bus                               	id=7	[slave  keyboard (3)]
+    ↳ Power Button                            	id=6	[slave  keyboard (3)]
+    ↳ Power Button                            	id=8	[slave  keyboard (3)]
+    ↳ Sleep Button                            	id=9	[slave  keyboard (3)]
+    ↳ Eee PC WMI hotkeys                      	id=18	[slave  keyboard (3)]
+    ↳ YICHIP Wireless Device Consumer Control 	id=21	[slave  keyboard (3)]
+    ↳ YICHIP Wireless Device System Control   	id=23	[slave  keyboard (3)]
+    ↳ YICHIP Wireless Device                  	id=24	[slave  keyboard (3)]
+    ↳ Razer Razer Viper V2 Pro                	id=13	[slave  keyboard (3)]
+    ↳ Razer Razer Viper V2 Pro                	id=12	[slave  keyboard (3)]
+    ↳ Razer Razer Viper V2 Pro                	id=10	[slave  keyboard (3)]
+```
+
+Widzimy że z jakiegoś powodu, system wykrywa 2 myszki, jedną usuniemy:
+
+```
+xinput disable [cyfra]
+```
+
+```
+xinput enable [cyfra]
+```
+
+Może system wyłącza zasilanie na portach usb:
+
+Otwórz plik konfiguracyjny USB do edycji:
+
+```
+sudo nano /etc/udev/rules.d/50-usb_power_save.rules
+```
+
+Dodaj następującą linię do pliku:
+
+```
+ACTION=="add", SUBSYSTEM=="usb", TEST=="power/control", ATTR{power/control}="on"
+```
+
+Zapisz zmiany i zamknij plik.
+
+Uruchom polecenie aktualizujące reguły udev:
+
+```
+sudo udevadm control --reload-rules
+```
+
+Myszkę dałem do ładowania, zobaczymy czy będzie działać normalnie :(
