@@ -1,0 +1,158 @@
+---
+title: ssh bez passwd
+description: 'passwd rsa'
+date: Lipiec July 02 2023
+---
+
+# ssh bez passwd
+
+Żeby zalogować się do SSH za pomocą pary kluczy, należy na początku je wygenerować.
+
+## Klucze ssh można wygenerować za pomocą jednej linii:
+
+```
+ssh-keygen -t rsa -b 4096 -C "mail@lmk.one"
+```
+
+Parametry oznaczają:
+
+-t metoda szyfrowania(zalecana RSA),
+-b wielkość klucza,
+-c komentarz – będzie widoczny w kluczach na serwerze, aby było łatwiej zidentyfikować do kogo należy.
+
+Teraz zostaniemy poproszenie o wskazanie lokalizacji zapisania klucza:
+
+Generating public/private rsa key pair.
+Enter file in which to save the key (~/.ssh/id_rsa):
+
+Najlepiej jeżeli wciśniemy Enter bez podawania lokalizacji i zostawimy to pole puste. Klucz zostanie wygenerowany w domyślnej lokalizacji jaką jest (~/.ssh/id_rsa):
+
+jeżeli już jakiś klucz mamy, zapyta czy nadpisać odpowiadamy: 
+
+Overwrite (y/n)? n
+
+Wydajemy ponownie polecenie
+
+```
+ssh-keygen -t rsa -b 4096 -C "mail@lmk.one"
+```
+
+I wpisujemy, jak ma się nazywać nasz klucz: lmk_one
+
+W ostatnim kroku generator zapyta nas o passphrase czyli hasło szyfrujące klucz, nie musimy go podawać. Natomiast jeżeli je wpiszemy to przy, każdej próbie połączenia będziemy musieli je podać.
+
+Enter passphrase (empty for no passphrase): Enter same passphrase again:
+
+*Hasło, które będziemy wpisywać będzie niewidoczne.
+
+```
+Generating public/private rsa key pair.
+Enter file in which to save the key (~/.ssh/id_rsa): lmk_one
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in lmk_one
+Your public key has been saved in lmk_one.pub
+The key fingerprint is:
+SHA256:smGzqcNwaWcuneoTPN8n2/DZOwi0hD8+LybHRmM8JbQ mail@lmk.one
+The key's randomart image is:
++---[RSA 4096]----+
+|                 |
+|          .      |
+|         o .     |
+|        . E .    |
+|   . ...T+ +     |
+|  . C oooo B o   |
+|   =oOo- o O +   |
+|   .=+=.= B * o  |
+|   .+*o  O.=. .o |
++----[SHA256]-----+
+```
+
+## Dodanie klucza SSH do ssh-agent:
+
+```
+eval ssh-agent
+```
+
+```
+SSH_AUTH_SOCK=/var/folders/v4/7tdg_zf93h3fn4_t4xfzx91w0000gn/T//ssh-eIQfVGqqm55L/agent.15397; export SSH_AUTH_SOCK;
+SSH_AGENT_PID=15398; export SSH_AGENT_PID;
+echo Agent pid 15498;
+```
+
+```
+ssh-add ~/.ssh/lmk_one
+```
+
+```
+Identity added: ~/.ssh/lmk_one (mail@lmk.one)
+```
+
+Gotowe klucze są wygenerowane i zapisane we wskazanym miejscu. Jeśli nie podałeś ścieżki, tylko samą nazwę pliku, to kluczyki znajdziesz w katalogu .ssh użytkownika.
+
+
+We wskazanej lokalizacji masz wygenerowane 2 pliki. W moim przypadku jest to katalog .ssh oraz pliki ‘lmk_one’ i ‘lmk_one.pub‘.
+
+## Klucz prywatny
+
+Plik bez rozszerzenia w moim przypadku plik o nazwie lmk_one to klucz prywatny. Jak tylko otworzysz plik to pierwsza i ostatnia linia cię o tym poinformuje:
+
+
+```
+-----BEGIN RSA PRIVATE KEY-----
+...
+...
+...
+-----END RSA PRIVATE KEY-----
+```
+
+Plik ten trzymasz u siebie na komputerze, albo w maszynie z której następuje połączenie i nikomu go nie udostępniasz. Jeśli wybrałeś tworzenie kluczyka z passphrase to plik wygląda w taki sposób:
+
+```
+-----BEGIN RSA PRIVATE KEY-----
+Proc-Type: 4,ENCRYPTED
+DEK-Info: AES-128-CBC,E6A043B96361C3403079010BDB08DD66
+.
+```
+
+## Klucz publiczy
+
+Plik o rozszerzeniu .pub to klucz publiczny. Jeśli go otworzysz to na jego początku powinieneś mieć wpis ssh-rsa, a na końcu komentarz który wpisałeś w moim przypadku wygląda to tak:
+
+```
+ssh-rsa ... mail@lmk.one
+```
+
+Ten kluczyk przesyłasz na serwer do którego zamierzasz się połączyć. Możemy to zrobić poleceniem podając login i adres servera:
+
+```
+ssh-copy-id lmk@192.168.1.93
+```
+
+Innym sposobem jest wykonanie polecenia w którym wskazujemy nasz publiczny klucz oraz podajemy login i adres docelowego serwera:
+
+```
+cat ~/.ssh/lmk_one.pub | ssh lmk@192.168.1.93 "mkdir -p ~/.ssh && chmod 700 ~/.ssh && cat >>  ~/.ssh/authorized_keys"
+```
+
+Można zrobić to także ręcznie, czyli w katalogu użytkownika który będzie logował się kluczem tworzymy katalog .ssh z uprawnieniami 700 a w nim plik o nazwie authorized_keys z uprawnieniami 600 i zawartości naszego klucza prywatnego:
+
+```
+mkdir $HOME/$User/.ssh;
+chmod 700 $HOME/$User/.ssh;
+touch $HOME/$User/.ssh/authorized_keys
+chmod 600 $HOME/$User/.ssh/authorized_keys
+echo "ssh-rsa ... ... mail@lmk.one" >> $HOME/$User/.ssh/authorized_keys
+```
+
+Znak >> oznacza że klucz zostanie dopisany do pliku. Czyli kolejne klucze dodajemy w taki sam sposób i będą one dopisywane jeden pod drugim.
+
+## Zgubiłeś public key?
+
+Na koniec mała porada. Jeśli zaginoł ci klucz publiczny to nie panikuj, łatwo możesz go odtworzyć z klucza prywatnego.
+
+Jeśli ktoś np. admin chce dodać twój klucz publiczny do serwera, a Ty nie wiesz, co z nim zrobiłeś, to możesz w prosty sposób go odtworzyć. Przechodzisz do katalogu, w którym trzymasz klucz prywatny (zazwyczaj katalogu .ssh w profilu użytkownika ~/.ssh/) i używasz polecenia poniżej. Podajesz nazwę klucza prywatnego np. lmk_one i nazwę, pod jaką ma być odtworzony klucz publiczny np. lmk_one.pub
+
+```
+ssh-keygen -y -f lmk_one > lmk_one.pub
+```

@@ -6,7 +6,7 @@ date: Lipiec July 20 2022
 
 <h1>Generowanie klucza SSH</h1>
 
-`ssh-keygen -t rsa -b 4096 -C "lukasz.sklad@gmail.com"`
+`ssh-keygen -t rsa -b 4096 -C "mail@lmk.one"`
 
 <h3>Teraz zostaniemy poproszenie o wskazanie lokalizacji zapisania klucza:</h3> 
 Enter a file in which to save the key ~/.ssh/id_rsa):
@@ -41,11 +41,11 @@ Klucze SSH dodajemy, wybierając 'New SSH key’. Pokaże nam się pole 'Title�
 
 W odpowiedzi powinniśmy otrzymać:
 
-Hi lukasz-sklad! You've successfully authenticated, but GitHub does not provide shell access.
+Hi mail! You've successfully authenticated, but GitHub does not provide shell access.
 
 <h3>Ustawienie gita aby działał przez ssh:</h3>
 
-```git remote set-url origin git@github.com:lukasz-sklad/blog.git```
+```git remote set-url origin git@github.com:mail/blog.git```
 
 <h3>main lokalny wypchnołem na zdalny origin</h3>
 
