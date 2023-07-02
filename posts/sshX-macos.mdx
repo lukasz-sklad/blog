@@ -1,0 +1,53 @@
+---
+title: ssh -X Garuda Linux - macos
+description: 'ssh -X'
+date: Lipiec July 02 2023
+---
+
+#ssh -X Garuda Linux - macos
+
+Upewnij się, że masz zainstalowany serwer X11 na swoim macOS. Możesz zainstalować XQuartz, popularny serwer X11 dla macOS, korzystając z ich strony internetowej lub narzędzi do zarządzania pakietami, takich jak Homebrew.
+
+Strona domowa:
+
+https://www.xquartz.org/
+
+Skonfiguruj SSH na Garuda Linux, aby umożliwić przekierowanie X11. Upewnij się, że w pliku konfiguracyjnym SSH na Garuda Linux (/etc/ssh/sshd_config) ustawione są następujące opcje:
+
+```
+X11Forwarding yes
+X11DisplayOffset 10
+X11UseLocalhost yes
+```
+
+Uruchom terminal na macos i połącz się przez SSH z Garuda Linux, używając polecenia:
+
+```
+ssh -X $USER@192.168.1.93
+```
+
+Przeładujemy usługi poleceniem:
+
+```
+sudo systemctl daemon-reload
+```
+
+Sprawdzamy, czy nasza usługa działa:
+
+```
+systemctl list-units --type=service
+```
+
+robimy restart:
+
+```
+sudo systemctl restart sshd
+```
+
+Odpalamy program:
+
+```
+codium
+```
+
+Działa teraz możemy zdalnie kodować ;)
