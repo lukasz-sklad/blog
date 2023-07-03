@@ -1,0 +1,92 @@
+---
+title: Sharp w konsoli
+description: 'sharp console'
+date: Lipiec July 03 2023
+---
+
+# Sharp w konsoli
+
+Strona projektu:
+
+https://github.com/lovell/sharp
+
+Sharp to szybkie i wielofunkcyjne narzędzie do przetwarzania obrazów w wierszu poleceń. Może być używane do zmiany rozmiaru, kadrowania, konwersji formatu i innych operacji na obrazach. Można go zainstalować za pomocą polecenia:
+
+```
+sudo npm i -g sharp
+```
+
+Aby użyć narzędzia Sharp do konwersji wszystkich plików .png na .jpg w folderze, możesz wykorzystać skrypt w języku javascript. Oto przykładowy skrypt, który można uruchomić za pomocą Node.js:
+
+```
+const fs = require('fs');
+const sharp = require('sharp');
+
+const inputFolder = './';
+const outputFolder = './';
+
+fs.readdir(inputFolder, (err, files) => {
+  if (err) {
+    console.error('Błąd odczytu folderu:', err);
+    return;
+  }
+
+  files.forEach(file => {
+    if (file.endsWith('.png')) {
+      const inputPath = inputFolder + file;
+      const outputPath = outputFolder + file.replace('.png', '.jpg');
+
+      sharp(inputPath)
+        .toFormat('jpeg')
+        .toFile(outputPath)
+        .then(() => console.log(`Plik ${file} został przekonwertowany.`))
+        .catch(err => console.error(`Błąd konwersji pliku ${file}:`, err));
+    }
+  });
+});
+```
+
+Uruchom skrypt, wpisując w terminalu node nazwa_pliku.js
+
+Jeżeli zobaczysz taki błąd lub podobny:
+
+```
+node:internal/modules/cjs/loader:1075
+  throw err;
+  ^
+
+Error: Cannot find module 'sharp'
+Require stack:
+- /Users/terg/Downloads/sharp-png.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1072:15)
+    at Module._load (node:internal/modules/cjs/loader:925:27)
+    at Module.require (node:internal/modules/cjs/loader:1139:19)
+    at require (node:internal/modules/helpers:121:18)
+    at Object.<anonymous> (/Users/terg/Downloads/sharp-png.js:2:15)
+    at Module._compile (node:internal/modules/cjs/loader:1257:14)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1311:10)
+    at Module.load (node:internal/modules/cjs/loader:1115:32)
+    at Module._load (node:internal/modules/cjs/loader:962:12)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:83:12) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/Users/terg/Downloads/sharp-png.js' ]
+}
+
+Node.js v20.3.1
+```
+
+Wykonaj w tym katalogu gdzie się znajdują pliki png następujące komendy:
+
+```
+npm i sharp
+```
+
+```
+npm install
+```
+
+A na końcu to co lubią tygryski:
+
+```
+node nazwa_pliku.js
+```
