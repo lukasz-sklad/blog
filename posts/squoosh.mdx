@@ -1,0 +1,78 @@
+---
+title: Squoosh w konsoli
+description: 'squoosh cli'
+date: Lipiec July 03 2023
+---
+
+# Squoosh w konsoli
+
+Strona domowa wersji web:
+https://squoosh.app/
+
+Strona na github:
+https://github.com/GoogleChromeLabs/squoosh
+
+Ale nas interesuje projekt CLI jest już w paczce npm i z niej skorzystamy:
+
+Strona domowa projektu:
+https://www.npmjs.com/package/@squoosh/cli?activeTab=readme
+
+Projekt jest zamrożony z powodów kadrowych ale jeszcze da się uruchomić.
+
+Są też inne:
+https://github.com/ErKeLost/unplugin-imagemin
+
+Ale wróćmy do tematu:
+
+W Debianie i podobnych:
+
+```
+sudo apt install nodejs
+sudo apt install npm
+```
+
+W Archu i podobnych
+
+```
+sudo pacman -Sy nodejs
+sudo pacman -Sy npm
+```
+
+```
+$ sudo npm i -g @squoosh/cli
+```
+
+Małe wyjaśnienie:
+
+ npm to skrót od Node Package Manager. Jest to menedżer pakietów używany w środowisku Node.js. 
+ i to skrót od install, czyli polecenie instalacji pakietu.
+ -g oznacza, że pakiet ma zostać zainstalowany globalnie, co oznacza, że będzie dostępny jako polecenie wiersza poleceń w całym systemie.
+
+Przerabiamy wszystko co jest w katalogu:
+
+```
+squoosh-cli --mozjpeg '{quality:75}' -d out ./
+```
+
+i coś bardziej skomplikowanego:
+
+```
+squoosh-cli --mozjpeg {quality:75,baseline:false,arithmetic:false,progressive:true,optimize_coding:true,smoothing:0,color_space:3,quant_table:3,trellis_multipass:false,trellis_opt_zero:false,trellis_opt_table:false,trellis_loops:1,auto_subsample:true,chroma_subsample:2,separate_chroma_quality:false,chroma_quality:75} -d out ./
+```
+
+jakby nie zadziałało to:
+
+npm i squoosh
+
+npm install
+
+Samo, aby zaktualizował czy nam czegoś nie brakuje. Npm automatycznie zainstaluje wszystkie wymagane zależności z pliku package.json.
+
+Inne linki
+https://www.cnblogs.com/luoxian1011/p/16994664.html
+
+Jakby nie działało zapraszam do innego artykułu
+
+Sharp w konsoli
+
+Wnioski działa tylko na Debianie i debiano podobnych: Ubuntu, Q4OS. I widziałem że działało na windowsie.
