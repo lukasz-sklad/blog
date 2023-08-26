@@ -1,0 +1,69 @@
+---
+title: Instalujemy w VS Code i podobnych pliki .vsix
+description: 'Na przykładzie Postmana'
+date: Sierpień August 26 2023
+---
+
+# Instalujemy w VS Code i podobnych pliki .vsix
+
+Będziemy instalować Postmana
+
+Strona domowa projektu:
+
+https://www.postman.com/
+
+Strona pomocy VSC:
+
+https://code.visualstudio.com/docs/editor/extension-marketplace#_install-from-a-vsix
+
+Ściągamy przykładowy plik .vsix na komputer np.: z linku
+
+https://marketplace.visualstudio.com/items?itemName=Postman.postman-for-vscode
+
+Odpalamy sobie IDE poleceniem:
+
+VS code to będzie:
+
+```
+code
+```
+
+VSCodium to będzie:
+
+```
+codium
+```
+
+w programie odpalamy nowy terminal macos (option + shift+ `)
+
+przechodzimy do katalogu gdzie mamy plik .vsix
+
+lub wyszukujemy go
+
+```
+find /Users/ -name "*.vsix"
+```
+
+lub
+
+```
+sudo /usr/libexec/locate.updatedb
+```
+
+```
+locate *.vsix
+```
+
+Po znalezieniu pliku wydajemy polecenie:
+
+```
+codium --install-extension Postman.postman-for-vscode-0.6.1.vsix
+```
+
+i
+
+```
+code --install-extension Postman.postman-for-vscode-0.6.1.vsix
+```
+
+Jest to niby wersja beta, w codium nie działa (brak autoryzacji), w VSC zainstalowało się poprawnie.
