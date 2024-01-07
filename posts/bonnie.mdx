@@ -1,0 +1,153 @@
+---
+title: Test wydajności Bonnie++
+description: 'dysku, partycji, systemu plików'
+date: Październik October 19 2023
+---
+
+# Test wydajności dysku, partycji, systemu plików Bonnie++
+
+Gdzie znajdziemy bonnie++ (2) w dystrybucji SystemRescueCD (1)
+
+## Można program odpalić w terminalu, wpisując polecenie:
+
+```shell
+bonnie++
+```
+
+**bonnie++ Writing a byte at a time...done Writing intelligently...Can't write block.: No space left on device Can't write block 3240825.**
+
+Taki komunikat oznacza brak miejsca na dysku a potrzeba go dosyć dużo.
+
+Test przeprowadzimy na macos i nietypowo bo na partycji ntfs.
+
+Jak już zauważyliśmy w wpisie brakuje miejsca więc test przeprowadzimy na jednej partycji która ostatnio szwankowała i nie wiedziałem co z tym fantem zrobić może teraz sprawa się wyjaśni.
+
+Wyedytujmy sobie partycje:
+
+```shell
+df -h 
+```
+
+to jest mac więc przełączniki -t -T nie działają.
+
+```shell
+/dev/disk3s1     932Gi   121Gi   811Gi    13%    239k  850M    0%   /Users/X/.mounty/NTFS
+```
+
+i polecenie też nie zadziała:
+
+```shell
+bonnie++ -d /Volumes/disk3s1
+```
+
+ale możemy stworzyć w odpowiednim miejscu folder i na nim przeprowadzić test
+
+```shell
+mkdir /Users/X/.mounty/NTFS/test_directory
+```
+
+i teraz wykonamy polecenie które nas najbardziej interesuje:
+
+```shell
+bonnie++ -d /Users/X/.mounty/NTFS/test_directory
+```
+
+Czekamy.....po 2 h
+
+```shell
+/dev/disk3s1     932Gi   196Gi   736Gi    21%    239k  772M    0%   /Users/X/.mounty/NTFS
+```
+
+Writing a byte at a time...done
+
+Writing intelligently...
+
+Czekamy....
+
+```shell
+/dev/disk3s1     932Gi   227Gi   705Gi    25%    239k  739M    0%   /Users/X/.mounty/NTFS
+```
+
+> 🎉 Dla przypomnienia:
+
+**Upewnij się, że masz wystarczająco dużo miejsca na dysku** `/dev/disk3s1`**, aby przeprowadzić test, ponieważ testy wydajności mogą generować duże ilości danych.**
+>
+
+## Wynik:
+
+To jest długi test  \~20 h 😄 
+
+```shell
+Writing a byte at a time...done
+
+Writing intelligently...done
+
+Rewriting...done
+
+Reading a byte at a time...done
+
+Reading intelligently...done
+
+start 'em...done...done...done...done...done...
+
+Create files in sequential order...done.
+
+Stat files in sequential order...done.
+
+Delete files in sequential order...done.
+
+Create files in random order...done.
+
+Stat files in random order...done.
+
+Delete files in random order...done.
+
+Version  2.00       ------Sequential Output------ --Sequential Input- --Random-
+
+                    -Per Chr- --Block-- -Rewrite- -Per Chr- --Block-- --Seeks--
+
+Name:Size etc        /sec %CP  /sec %CP  /sec %CP  /sec %CP  /sec %CP  /sec %CP
+
+5K.local       144G    3k   8 5500k   2 7340k   3 1148k  87 14.7m   1  76.8  10
+
+Latency              2504ms     125ms     403ms     185ms     357ms     261ms
+
+Version  2.00       ------Sequential Create------ --------Random Create--------
+
+5K.local            -Create-- --Read--- -Delete-- -Create-- --Read--- -Delete--
+
+              files  /sec %CP  /sec %CP  /sec %CP  /sec %CP  /sec %CP  /sec %CP
+
+                 16 16384   5 16384  32 16384  13 16384   5 16384  32 16384   3
+
+Latency               117ms     160us   58150us   81791us     268us     111ms
+
+1.98,2.00,5K.local,1,1697605760,144G,,8192,5,3,8,5500,2,7340,3,1148,87,15059,1,76.8,10,16,,,,,446,5,26379,32,1588,13,471,5,23950,32,315,3,2504ms,125ms,403ms,185ms,357ms,261ms,117ms,160us,58150us,81791us,268us,111ms
+```
+
+*Oto, jak zrozumieć wyniki:*
+
+- **Sequential Output: Odczyt sekwencyjny (zapis) danych z dysku.**
+- **Sequential Input: Odczyt sekwencyjny danych na dysk.**
+- **Sequential Rewrite: Ponowne zapisywanie danych na dysk w trybie sekwencyjnym.**
+- **Sequential Create: Tworzenie plików sekwencyjnie.**
+- **Random Create: Tworzenie plików w losowej kolejności.**
+
+*Wyniki są przedstawione w kilku kategoriach, w których mierzone są różne operacje dyskowe (zapisy, odczyty, tworzenie plików) w różnych trybach (sekwencyjnym i losowym). Oto, co oznaczają niektóre z tych wartości:*
+
+- `/sec`**: Ilość operacji na sekundę (np. odczyty lub zapisy na sekundę).**
+- `%CP`**: Procent obciążenia procesora podczas operacji (im niższa wartość, tym lepiej).**
+- `Block`**: Wydajność zapisu w blokach danych na sekundę.**
+- `Latency`**: Średni czas oczekiwania w milisekundach podczas operacji.**
+
+## Wnioski:
+
+**Przykładowo, w pierwszym wierszu wyników dla "Sequential Output," możemy zauważyć, że wydajność zapisu wynosi około 3 kilobajty na sekundę, a procesor jest wykorzystywany w 8% podczas tych operacji.**
+
+**Wartości te są istotne, gdy chcesz ocenić wydajność dysku i mogą pomóc zidentyfikować, czy dysk działa w optymalny sposób. Im wyższa wydajność i im niższa latencja, tym lepiej. Jednak wartości te mogą być różne w zależności od rodzaju dysku i sprzętu, na którym jest wykonywany test.**
+
+### Przypisy:
+
+(1) <https://www.system-rescue-cd.org/Download>
+
+(2) <https://www.coker.com.au/bonnie++/>
