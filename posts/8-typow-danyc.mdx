@@ -1,0 +1,126 @@
+---
+title: 8 typów danych w JavaScript
+description: 'number, string, boolean, null, undefined, Object, Symbol, BigInt'
+date: Styczeń Januaryay 7 2024
+---
+
+# 8 typów danych w JavaScript
+
+JavaScript jest językiem dynamicznie typowanym oznacza to, że typy danych mogą być przypisywane zmiennym dynamicznie w trakcie działania programu. Oznacza to, że ta sama zmienna może przyjmować różne typy danych w różnych momentach działania programu.
+
+**Zmienna Variable**
+
+let
+
+const
+
+var
+
+1. **Number**.
+
+   ```javascript
+   let a = 1; 
+   let b = -1; 
+   let c = 0;
+   let d = 3.14;
+   ```
+
+3 specjalne ∞ -∞, not number, NAN (hello / 2) dzielenie nie ma sensu.
+
+1. **String**.
+
+   ```javascript
+   let name = "Tom";
+   let city = 'Warsaw';
+   ```
+
+gravis - backtick
+
+1. **Boolean** typ logiczny.
+
+   ```javascript
+   let isProgramingFun = true; 
+   let isProgramingBoring = false;
+   ```
+2.  **Null** pusta lub nieznana wartość. 
+
+   ```javascript
+   let address = null;
+   ```
+3. **Undefined** reprezentuje zmienną, której nie przypisano wartości.
+
+   ```javascript
+   let nameUser;
+   console.log(nameUser); 
+   
+   let city = undefined; // niezalecane rozwiązanie
+   console.log(city);
+   ```
+4. Object   
+   6\.1 **Object** reprezentuje złożone dane i funkcje w postaci obiektu.
+
+   ```javascript
+   let person = new Object();
+   person.name = "Lucas";
+   person.age = 42;
+   ```
+
+   or
+
+   ```javascript
+   let person2 ={
+   name: "Lucas",
+   age: 42
+   }
+   ```
+
+   ```javascript
+   console.log(person.name); // Wyświetli: Lucas
+   console.log(person2.age); // Wyświetli: 42
+   ```
+
+   6\.2  **Array** reprezentuje uporządkowaną kolekcję elementów.
+
+   ```javascript
+   // Przykład tablicy
+   let fruits = ["apple", "banana", "orange"];
+   ```
+
+   ```javascript
+   // Dostęp do elementów tablicy
+   console.log(fruits[0]); // Wyświetli: apple
+   console.log(fruits[1]); // Wyświetli: banana 
+   ```
+
+   6\.3 **Function** reprezentuje funkcje.
+
+   ```javascript
+   // Przykład funkcji
+   function add(a, b) {
+   return a + b;
+   }
+   ```
+
+   ```javascript
+   // Przypisanie funkcji do zmiennej
+   let sum = add(5, 3);
+   console.log(sum); // Wyświetli: 8
+   ```
+
+   ```javascript
+   // Przykład traktowania funkcji jak obiektu
+   let add1 = function(a, b) {
+   return a + b;
+   };
+   ```
+
+   ```javascript
+   console.log(add1 instanceof Function); // true
+   console.log(add1 instanceof Object);   // true
+   ```
+5. **Symbols** identyfikator dla obiektu.
+
+   ```javascript
+   let id = Symbol ("id");
+   ```
+6. **BigInt** reprezentuje liczby całkowite o dowolnej precyzji, wprowadzony e ECMAScript 2020.
