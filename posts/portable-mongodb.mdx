@@ -1,0 +1,49 @@
+---
+title: Portable Mongodb
+description: 'portable, mongodb, mongod, mongosh'
+date: Marzec March 5 2024
+---
+
+# Portable Mongodb na systemie macos Sonoma 14.2.1
+
+Zainstalujemy MongDB 
+
+Pobieramy odpowiednie binaria i uruchamiamy:
+
+[MongoDB](https://www.mongodb.com/try/download/community) v6.0.14
+
+Wypakowywujemy pobrany plik
+
+Po wypakowaniu naszym oczom powinien ukazać się katalog z mongodb przechodzimy do katologu bin:
+
+```shell
+cd /bin
+```
+
+W podkatalogu bin tworzymy katalog na dane 
+
+```shell
+mkdir db
+```
+
+Uruchamiamy bazę danych:
+
+```shell
+mongod --dbpath db
+```
+
+Jeśli pierwszy raz używasz Mongo to możesz otrzymać komunikat o zablokowaniu procesu przez Apple (niezidentyfikowany developer)
+
+W takim przypadku musisz zezwolić na działanie procesu mongod z poziomu sekcji Privacy & Security w ustawieniach:
+
+Pozwól teraz
+
+Po odblokowaniu spróbuj ponownie uruchomić bazę danych:
+
+```shell
+mongod --dbpath db
+```
+
+Standardowo baza nasłuch na porcie 27017.(https://filedn.eu/lPq6O1K7j8DR1n7JwTuYjYz/img/mongodb.jpg)
+
+Wyłączenie bazy poprostu wciśnij ctr+c.
