@@ -1,7 +1,6 @@
-import { SitemapStream, streamToPromise } from 'sitemap';
+import { SitemapStream } from 'sitemap';
 import { createGzip } from 'zlib';
-import { Readable } from 'stream';
-import { getPosts } from '../utils/mdx-utils'; // Importuj funkcję do uzyskiwania postów
+import { getPosts } from '../../utils/mdx-utils'; // Importuj funkcję do uzyskiwania postów
 
 export default async function generateSitemap(req, res) {
   try {
