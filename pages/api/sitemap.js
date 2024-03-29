@@ -2,6 +2,7 @@ import { SitemapStream } from 'sitemap';
 import { createGzip } from 'zlib';
 import { getPosts } from '../../utils/mdx-utils'; // Importuj funkcję do uzyskiwania postów
 
+// Pierwsza funkcja
 export default async function generateSitemap(req, res) {
   try {
     const smStream = new SitemapStream({ hostname: 'https://lmk.one' });
@@ -23,6 +24,15 @@ export default async function generateSitemap(req, res) {
     pipeline.pipe(res).on('error', (e) => {
       throw e;
     });
+  } catch (e) {
+    res.status(500).end();
+  }
+}
+
+// Druga funkcja
+export async function generateSitemapSecond(req, res) {
+  try {
+    // Twój kod generowania sitemap
   } catch (e) {
     res.status(500).end();
   }
