@@ -1,0 +1,249 @@
+---
+title: Przenoszenie Brew na zewnętrzny dysk
+description: 'brew du'
+date: Kwiecień April 13 2024
+slug: brew
+---
+
+# Przenoszenie Brew na zewnętrzny dysk
+
+Przeniesienie brew na zewnętrzny dysk to doskonały sposób na zarządzanie przestrzenią dyskową w systemach macOS. Oto krok po kroku, jak to zrobić.
+
+## Sprawdzenie rozmiaru Homebrew
+
+Pierwszym krokiem jest sprawdzenie, ile miejsca na dysku zajmuje brew. Aby to zrobić, użyj poniższej komendy w terminalu:
+
+Ta komenda pokaże łączny rozmiar zainstalowanych pakietów w brew.
+
+```bash
+du -sh /usr/local/Cellar
+```
+
+```
+Last login: Sat Apr 13 15:18:05 on ttys014
+➜  ~ du -sh /usr/local/Cellar
+6,3G	/usr/local/Cellar
+```
+
+Istnieje te polecenie brew, ile miejsca zajmuje:
+
+```
+brew info
+```
+
+Wiemy ile miejsca jest nam potrzebne i ile miejsca zaoszczędzimy na głóenej partycji.
+
+## Przygotowanie zewnętrznego dysku
+
+Przed przeniesieniem brew upewnij się, że zewnętrzny dysk ma odpowiedni system plików (np. HFS+ lub APFS dla macOS) i jest wystarczająco duży, aby pomieścić wszystkie pliki brew. Zaleca się również zrobienie kopii zapasowej danych.
+
+
+## Kopiowanie plików brew
+
+Następnie skopiuj cały katalog brew na zewnętrzny dysk. Załóżmy, że dysk jest zamontowany w /Volumes/APFS. Użyj następującej komendy:
+
+```bash
+rsync -avh /usr/local/Cellar /Volumes/APFS/brew
+```
+
+```
+Cellar/zstd/1.5.6/share/doc/zstd/
+Cellar/zstd/1.5.6/share/doc/zstd/zstd_manual.html
+Cellar/zstd/1.5.6/share/man/
+Cellar/zstd/1.5.6/share/man/man1/
+Cellar/zstd/1.5.6/share/man/man1/unzstd.1 -> zstd.1
+Cellar/zstd/1.5.6/share/man/man1/zstd.1
+Cellar/zstd/1.5.6/share/man/man1/zstdcat.1 -> zstd.1
+Cellar/zstd/1.5.6/share/man/man1/zstdgrep.1
+Cellar/zstd/1.5.6/share/man/man1/zstdless.1
+
+sent 6.32G bytes  received 3.79M bytes  22.72M bytes/sec
+total size is 6.31G  speedup is 1.00
+```
+
+## Aktualizacja ścieżki Homebrew
+
+Po skopiowaniu plików musisz poinformować brew, gdzie teraz znajdują się jego pliki. Otwórz plik .bash_profile, .bashrc lub .zshrc (w zależności od używanej powłoki) i dodaj poniższe linie:
+
+```
+export HOMEBREW_CELLAR="/Volumes/APFS/brew/Cellar"
+export HOMEBREW_REPOSITORY="/Volumes/APFS/brew"
+```
+
+Wykonaj polecenie, wklej powyrzsze linie:
+
+```
+nano ~/.zshrc
+``` 
+
+Następnie, odśwież konfigurację powłoki:
+
+```
+source ~/.bash_profile  # Dla Bash
+# lub
+source ~/.zshrc  # Dla Zsh
+# lub
+source ~/.bashrc  # Dla Bash
+```
+
+## Sprawdzenie konfiguracji
+
+Aby upewnić się, że wszystko działa poprawnie, spróbuj zainstalować nowy pakiet lub zaktualizować istniejące.
+
+```
+brew update
+brew install hello
+```
+
+## Podsumowanie:
+
+Po wykonaniu powyższych kroków brew oraz wszystkie jego pakiety będą przechowywane i zarządzane z zewnętrznego dysku. To doskonały sposób na zarządzanie przestrzenią dyskową i możliwość łatwego przenoszenia konfiguracji brew między różnymi maszynami.
+
+Zachęcamy do regularnego robienia kopii zapasowych katalogu na zewnętrznym dysku, aby uniknąć utraty danych.
+
+Fajnie by było ale to nie koniec:
+
+```
+echo $HOMEBREW_CELLAR
+/Volumes/APFS/brew/Cellar
+```
+
+
+```
+brew --repository
+
+/usr/local/Homebrew
+```
+
+Skoro wynik polecenia brew --repository pokazuje /usr/local/Homebrew, oznacza to, że główne repozytorium Homebrew (gdzie przechowywane są skrypty i konfiguracje) wciąż znajduje się na głównym dysku systemowym. Jeśli twoim celem jest przeniesienie całkowite Homebrew, włącznie z jego repozytorium, na zewnętrzny dysk, możesz postępować zgodnie z poniższymi krokami:
+
+## Przeniesienie głównego repozytorium Homebrew
+
+```
+rsync -avh /usr/local/Homebrew /Volumes/APFS/brew/Homebrew
+```
+
+```
+Homebrew/package/resources/CONCLUSION.rtf
+Homebrew/package/resources/Homebrew.png
+Homebrew/package/resources/WELCOME.rtf
+Homebrew/package/scripts/
+Homebrew/package/scripts/postinstall
+Homebrew/package/scripts/preinstall
+
+sent 1.64G bytes  received 411.68K bytes  31.81M bytes/sec
+total size is 1.64G  speedup is 1.00
+```
+
+## Zaktualizuj zmienne środowiskowe:
+
+Po skopiowaniu repozytorium, musisz zaktualizować zmienne środowiskowe w pliku konfiguracyjnym powłoki (np. .zshrc), aby Homebrew wiedział, gdzie teraz szukać swoich skryptów i konfiguracji:
+
+```
+echo 'export HOMEBREW_REPOSITORY="/Volumes/APFS/Homebrew/Homebrew"' >> ~/.zshrc
+source ~/.zshrc
+```
+
+Pójdziemy inną sciezka ln dowiazania:
+
+## Usuń stare katalogi
+
+Najpierw musisz usunąć stare katalogi, które chcesz zastąpić dowiązaniami symbolicznymi. Upewnij się, że wszystkie dane zostały już przeniesione do nowych lokalizacji na zewnętrznym dysku.
+
+```
+sudo rm -rf /usr/local/Homebrew
+sudo rm -rf /usr/local/Cellar
+```
+
+## Stwórz dowiązania symboliczne
+
+Następnie, utwórz dowiązania symboliczne wskazujące z oryginalnych lokalizacji na nowe ścieżki na zewnętrznym dysku:
+
+```
+sudo ln -s /Volumes/APFS/brew/Homebrew/Homebrew /usr/local/Homebrew
+sudo ln -s /Volumes/APFS/brew/Cellar /usr/local/Cellar
+```
+
+Powyższe komendy stworzą dowiązania symboliczne:
+
+/usr/local/Homebrew będzie dowiązaniem do /Volumes/APFS/brew/Homebrew/Homebrew,
+/usr/local/Cellar będzie dowiązaniem do /Volumes/APFS/brew/Cellar.
+
+## Sprawdź dowiązania
+
+Możesz sprawdzić, czy dowiązania zostały poprawnie utworzone, używając polecenia ls -l:
+
+```
+ls -l /usr/local | grep Homebrew
+ls -l /usr/local | grep Cellar
+```
+
+Te komendy pokażą, że /usr/local/Homebrew i /usr/local/Cellar są teraz dowiązaniami do nowych lokalizacji na zewnętrznym dysku.
+
+## Testuj działanie Homebrew
+
+```
+brew doctor
+brew update
+```
+
+brew doctor pomoże zdiagnozować ewentualne problemy po przeniesieniu i ustawieniu dowiązań. To jest dobra praktyka, aby upewnić się, że wszystkie aspekty konfiguracji są prawidłowe.
+
+## Ustawienie zmiennej HOMEBREW_TEMP:
+
+Skoro Cellar i katalog TEMP są na różnych dyskach, warto ustawić zmienną HOMEBREW_TEMP na dysk, na którym znajduje się Cellar:
+
+```
+export HOMEBREW_TEMP=/Volumes/APFS/tmp  # lub inna ścieżka na tym samym dysku co Cellar
+```
+
+Dodaj to do pliku .zshrc lub .bash_profile.
+
+## KONIEC THE END
+
+
+yt-dlp przestał działać 
+
+```
+yt-dlp -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/mp4' https://youtu.be/XxX  >> info.txt
+zsh: /usr/local/bin/yt-dlp: bad interpreter: /usr/local/Cellar/yt-dlp/2024.4.9_1/libexec/bin/python: no such file or directory
+```
+
+To pomogło:
+
+```
+ln -sf /usr/local/bin/python3 /usr/local/Cellar/yt-dlp/2024.4.9_1/libexec/bin/python
+```
+
+Znowu ...
+
+```
+yt-dlp -U
+```
+
+ERROR: Unable to obtain version info ([SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)); Please try again later or visit  https://github.com/yt-dlp/yt-dlp/releases/latest
+
+Obejście:
+
+```
+yt-dlp --no-check-certificate -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/mp4' https://youtu.be/XxX
+```
+
+lub
+
+```
+export SSL_CERT_FILE=/usr/local/etc/openssl@1.1/cert.pem
+export SSL_CERT_DIR=/usr/local/etc/openssl@1.1/certs
+```
+
+Podsumowanie do pliku .zsh.rc dodaj:
+
+```
+export PATH="/Volumes/APFS/brew/Cellar/yt-dlp/2024.4.9_1/libexec/bin:$PATH"
+export HOMEBREW_PREFIX="/Volumes/APFS/brew"
+export HOMEBREW_CELLAR="/Volumes/APFS/brew/Cellar"
+export HOMEBREW_REPOSITORY="/Volumes/APFS/brew/Homebrew/Homebrew"
+export HOMEBREW_TEMP="/Volumes/APFS/tmp"
+```
+
+## I TO JUŻ NAPRAWDĘ KONIEC THE END
