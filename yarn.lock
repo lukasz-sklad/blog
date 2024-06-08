@@ -4827,10 +4827,10 @@ react-dom@^17.0.2:
     object-assign "^4.1.1"
     scheduler "^0.20.2"
 
-react-hotjar@^5.4.1:
-  version "5.4.1"
-  resolved "https://registry.yarnpkg.com/react-hotjar/-/react-hotjar-5.4.1.tgz#9729e30c57a5a01417f46f578791e6ad1e7cb869"
-  integrity sha512-2205ONuPZzAFAQaIG2BQf/l8nePf5ir16vF7S/RT937JYvw3c7WSH65XRnL3sT4GMpU4eDzesB964xNE5wjGPQ==
+react-hotjar@^6.3.1:
+  version "6.3.1"
+  resolved "https://registry.yarnpkg.com/react-hotjar/-/react-hotjar-6.3.1.tgz#cce120c0fc5160056937fd646fc11a8b925b7294"
+  integrity sha512-EwMqL+ROSlKzatMhT/aqRq7XWWfzlnHynSBSTJh5M2O78mBiPohiSl4Ysls3HOQkkD9y6L22BW0c9bxK2JguwQ==
 
 react-is@^16.13.1:
   version "16.13.1"
