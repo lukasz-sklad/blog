@@ -16,6 +16,7 @@
 /build
 
 # misc
+Icon?
 .DS_Store
 *.pem
 .idea
