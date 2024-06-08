@@ -25,12 +25,18 @@ import { hotjar } from 'react-hotjar'
 
 // import { hotjar } from 'react-hotjar';
 
-const HOTJAR_ID = 3339999; // Twoje rzeczywiste ID Hotjar
-const HOTJAR_VERSION = 6;  // Twoja wersja Hotjar
+const HOTJAR_ID = 3339999; // rzeczywiste ID Hotjar
+const HOTJAR_VERSION = 6;  // wersja Hotjar
 
 function MyApp({ Component, pageProps }) {
   useEffect(() => {
+    console.log('Inicjalizacja Hotjar');
     hotjar.initialize(HOTJAR_ID, HOTJAR_VERSION);
+    console.log('Hotjar zainicjalizowany');
+    console.log('HOTJAR_ID:', HOTJAR_ID);
+    console.log('HOTJAR_SV:', HOTJAR_VERSION);
+    hotjar.initialize(HOTJAR_ID, HOTJAR_VERSION);
+
   }, []);
 
   return (
@@ -43,3 +49,5 @@ function MyApp({ Component, pageProps }) {
 }
 
 export default MyApp;
+
+
