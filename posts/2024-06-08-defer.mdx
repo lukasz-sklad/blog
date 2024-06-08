@@ -1,0 +1,77 @@
+---
+title: Zrozumieć "defer" w JavaScript
+description: 'defer JavaScript, async vs defer'
+date: Czerwiec June 08 2024
+slug: defer
+---
+
+# Zrozumieć "defer" w JavaScript
+
+![Defer JavaScript](https://filedn.eu/lPq6O1K7j8DR1n7JwTuYjYz/img/blog/defer.svg)
+*Defer w JavaScript - Klucz do optymalizacji ładowania stron*
+
+## Wprowadzenie
+
+Kiedy tworzysz strony internetowe, optymalizacja ładowania skryptów JavaScript jest kluczowa dla zapewnienia szybkiego i responsywnego doświadczenia użytkownika. Jednym z narzędzi, które może Ci w tym pomóc, jest atrybut `defer`. W tym artykule omówimy, czym jest atrybut `defer`, jak działa i kiedy warto go używać.
+
+## Co to jest atrybut `defer`?
+
+Atrybut `defer` jest atrybutem HTML, który można dodać do tagu `<script>` w celu opóźnienia wykonania skryptu do momentu, aż cała zawartość strony zostanie w pełni załadowana. Skrypty oznaczone atrybutem `defer` są ładowane równocześnie z analizą dokumentu HTML, ale ich wykonanie jest odłożone do momentu zakończenia ładowania całej strony.
+
+### Przykład użycia atrybutu `defer`:
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My HTML-page</title>
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <!-- Zawartość strony -->
+</body>
+</html>
+```
+
+W powyższym przykładzie skrypt script.js zostanie załadowany w tle, ale jego wykonanie nastąpi dopiero po pełnym załadowaniu dokumentu HTML.
+
+## Jak działa atrybut defer?
+Kiedy przeglądarka napotyka skrypt z atrybutem defer, natychmiast rozpoczyna jego pobieranie, ale nie przerywa procesu parsowania HTML. Po zakończeniu parsowania dokumentu, wszystkie skrypty z atrybutem defer są wykonywane w kolejności, w jakiej występują w dokumencie.
+
+## Zaletą tego podejścia są:
+Optymalizacja czasu ładowania strony: Ponieważ skrypty są pobierane równocześnie z analizą dokumentu, zmniejsza się czas oczekiwania na pełne załadowanie strony.
+Bezpieczeństwo: Skrypty defer są zawsze wykonywane w takiej samej kolejności, w jakiej zostały umieszczone w dokumencie, co zapobiega problemom z zależnościami między skryptami.
+Ulepszona wydajność: Wykonanie skryptów po załadowaniu całego dokumentu zapewnia, że interfejs użytkownika jest w pełni responsywny, zanim skrypty zaczynają działać.
+Kiedy używać atrybutu defer?
+Atrybut defer jest szczególnie przydatny w przypadku skryptów, które nie są krytyczne dla początkowego renderowania strony. Przykłady takich skryptów obejmują:
+
+## Skrypty analityczne
+Skrypty obsługujące formularze
+Skrypty dodające interaktywność do już załadowanej treści
+Jeśli skrypt jest niezbędny do natychmiastowego działania strony, lepiej jest użyć atrybutu async lub umieścić skrypt na końcu dokumentu HTML.
+
+## Różnice między defer a async
+Atrybuty defer i async mają podobny cel, ale działają nieco inaczej:
+
+defer: Skrypt jest ładowany równocześnie z parsowaniem HTML, ale wykonuje się po pełnym załadowaniu strony, w kolejności występowania.
+async: Skrypt jest ładowany równocześnie z parsowaniem HTML i wykonuje się natychmiast po zakończeniu ładowania, bez względu na kolejność występowania.
+
+### Przykład użycia atrybutu async:
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My HTML-page</title>
+    <script src="script.js" async></script>
+</head>
+<body>
+    <!-- Zawartość strony -->
+</body>
+</html>
+```
+
+## Podsumowanie
+Atrybut defer jest potężnym narzędziem, które pomaga zoptymalizować ładowanie skryptów JavaScript, poprawiając w ten sposób wydajność i responsywność strony internetowej. Poprzez zrozumienie i właściwe wykorzystanie tego atrybutu, możesz znacznie poprawić doświadczenie użytkowników Twojej witryny.
+
+Pamiętaj, aby zawsze testować swoje strony po wprowadzeniu zmian w ładowaniu skryptów, aby upewnić się, że wszystko działa zgodnie z oczekiwaniami.
