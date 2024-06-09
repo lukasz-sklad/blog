@@ -1,10 +1,8 @@
+'use strict';
 import '../styles/globals.css';
 import 'prismjs/themes/prism-tomorrow.css';
-import { useEffect } from 'react'
-import { hotjar } from 'react-hotjar'
-
-
-
+import { useEffect } from 'react';
+import { hotjar } from 'react-hotjar';
 
 // function MyApp({ Component, pageProps }) {
 //   useEffect(() => {
@@ -19,14 +17,10 @@ import { hotjar } from 'react-hotjar'
 // }
 
 // export default MyApp;
-
-
-
-
 // import { hotjar } from 'react-hotjar';
 
 const HOTJAR_ID = 3339999; // rzeczywiste ID Hotjar
-const HOTJAR_VERSION = 6;  // wersja Hotjar
+const HOTJAR_VERSION = 6; // wersja Hotjar
 
 function MyApp({ Component, pageProps }) {
   useEffect(() => {
@@ -36,18 +30,13 @@ function MyApp({ Component, pageProps }) {
     console.log('HOTJAR_ID:', HOTJAR_ID);
     console.log('HOTJAR_SV:', HOTJAR_VERSION);
     hotjar.initialize(HOTJAR_ID, HOTJAR_VERSION);
-
   }, []);
 
   return (
     <>
-      
       <Component {...pageProps} />
-
     </>
   );
 }
 
 export default MyApp;
-
-
