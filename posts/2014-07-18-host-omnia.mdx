@@ -19,11 +19,11 @@ Modyfikacja pliku `hosts` na routerze Omnia Wi-Fi 6 pozwala na centralne blokowa
 
 ### Krok 1: Przygotowanie środowiska
 
-Zaloguj się do routera przez SSH lub bezpośrednio przez interfejs webowy. Upewnij się, że masz uprawnienia administratora.
+Zaloguj się do routera przez SSH. Upewnij się, że masz uprawnienia administratora.
 
 ### Krok 2: Kopiowanie pliku hosts
 
-Tutaj utworzymy kopię Twojego pliku /etc/hosts i zapiszemy go w Twoim katalogu domowym w ukrytym pliku o nazwie .hosts.base, ale możesz go zapisać w dowolnym miejscu. Pamiętaj tylko o zmianie skryptu, aby okresqlić lokalizację pliku.
+Tutaj utworzymy kopię Twojego pliku /etc/hosts i zapiszemy go w Twoim katalogu domowym w ukrytym pliku o nazwie .hosts.base, ale możesz go zapisać w dowolnym miejscu. Pamiętaj tylko o zmianie skryptu, aby określić lokalizację pliku.
 
 ```shell
 cp /etc/hosts ~/.hosts.base
@@ -36,7 +36,7 @@ Utwórz skrypt o nazwie update_hosts.sh używając edytora tekstowego, np. vi:
 ```shell
 vi /root/scripts/update_hosts.sh
 ```
-a wciskamy i wklejamy poniższy skrypt:
+Literkę ```a``` wciskamy i wklejamy poniższy skrypt:
 
 ```shell
 #!/bin/bash
@@ -46,11 +46,11 @@ cat /root/.hosts.base > /etc/hosts
 cat hosts.txt >> /etc/hosts
 ```
 
-ESC wciskamy, :wq - zapisz, wyjdź.
+```ESC``` wciskamy, ```:wq``` - zapisz, wyjdź.
 
-:q! - wyjść bez zapisywania pliku.
+```:q!``` - wyjść bez zapisywania pliku.
 
-Szybko tworzymy folder mkdir scripts, plik touch update_hosts.sh
+Szybko tworzymy folder ```mkdir scripts```, plik ```touch update_hosts.sh```
 
 Sprawdzamy uprawnienia:
 
