@@ -62,6 +62,23 @@ są uprawnienia do zapisu.
 
 Wklejamy nasz skrypt.
 
+Porawiamy nasz skrypt i dodajemy jeszcze jedną linijkę (20.07.2024)
+
+```shell
+#!/bin/bash
+cd /tmp
+wget -O hosts.txt http://winhelp2002.mvps.org/hosts.txt
+cat /root/.hosts.base > /etc/hosts
+cat hosts.txt >> /etc/hosts
+sed -i 's/\r$//' /etc/hosts
+```
+
+wyjaśnienie plik hosts.txt jest stworzony w windows, reszta wyjaśnienia na zdjęciu widać konwersację z ai zainstalowanym na dysku twardym. Rozmowa w terminalu z llama3:70b
+
+![ollama run llama3:70b](https://filedn.eu/lPq6O1K7j8DR1n7JwTuYjYz/img/blog/sed-hosts.jpg)
+*Widok llama3:70b w terminalu*
+
+
 #### Nadaj skryptowi prawa do wykonania:
 
 ```shell
@@ -98,7 +115,7 @@ To zadanie cron będzie uruchamiać skrypt codziennie o 4:00 rano.
 
 
 
-![Defer JavaScript](https://filedn.eu/lPq6O1K7j8DR1n7JwTuYjYz/img/blog/turris.png)
+![Widok z WebGui LuCI](https://filedn.eu/lPq6O1K7j8DR1n7JwTuYjYz/img/blog/turris.png)
 *Widok z WebGui LuCI*
 
 
