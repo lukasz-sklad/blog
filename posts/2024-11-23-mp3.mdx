@@ -1,0 +1,84 @@
+---
+title: Łączenie plików MP3 za pomocą FFmpeg
+description: 'mp3, audiobook, ffmpeg'
+date: Listopad November 23 2024
+slug: map3, ffmpeg, audiobook
+---
+
+# 🎧 Łączenie plików MP3 za pomocą FFmpeg – idealne dla audiobooków 📚
+
+Posiadanie audiobooka podzielonego na wiele plików MP3 może być niewygodne, szczególnie gdy plików jest dużo. Dzięki narzędziu **FFmpeg** możemy łatwo połączyć je w jeden plik, zachowując jakość dźwięku oraz metadane, takie jak okładka książki. W tym artykule pokażę, jak krok po kroku to zrobić. 🚀
+
+---
+
+## 🔧 Dlaczego FFmpeg?
+FFmpeg to potężne narzędzie open-source, które pozwala na konwersję, nagrywanie i edycję plików audio oraz wideo. Jedną z jego zalet jest możliwość łączenia plików MP3 **bez ponownej kompresji**, co oszczędza czas i zachowuje oryginalną jakość dźwięku. 💡
+
+---
+
+## 🛠️ Instrukcja krok po kroku
+
+### 1️⃣ Przygotowanie listy plików
+Najpierw upewnij się, że Twoje pliki MP3 są poprawnie nazwane, aby ich kolejność była logiczna. Na przykład:
+
+```markdown
+1. Rozdział.mp3  
+2. Rozdział.mp3  
+3. Rozdział.mp3
+```
+
+Następnie użyj polecenia w terminalu, aby utworzyć listę plików:
+
+```bash
+ls | grep "Rozdział" | sort -V > file_list.txt
+```
+
+👉 To polecenie:
+
+ls – wyświetla listę plików w bieżącym katalogu,
+grep "Rozdział" – wybiera tylko pliki zawierające słowo „Rozdział”,
+sort -V – sortuje pliki w kolejności naturalnej (np. 1, 2, 10).
+Plik file_list.txt będzie zawierał listę plików w odpowiedniej kolejności. ✅
+
+### 2️⃣ Sformatowanie listy plików
+Aby FFmpeg poprawnie odczytał listę, musimy ją sformatować:
+
+```bash
+awk '{print "file \x27" $0 "\x27"}' file_list.txt > files.txt
+```
+
+W pliku `files.txt` znajdziesz linie w formacie:
+
+```arduino
+file '1. Rozdział.mp3'
+file '2. Rozdział.mp3'
+file '3. Rozdział.mp3'
+```
+
+### 3️⃣ Łączenie plików z zachowaniem metadanych
+Aby połączyć pliki w jeden, zachowując metadane (np. okładkę z pierwszego pliku), wykonaj następujące polecenie:
+
+```bash
+ffmpeg -f concat -safe 0 -i files.txt -i "1. Rozdział.mp3" -map_metadata 1 -c copy Audiobook.mp3
+```
+
+🎯 **Wyjaśnienie polecenia:**
+- **-f concat -safe 0** – wskazuje FFmpeg, że chcemy połączyć pliki na podstawie listy,
+- **-i files.txt** – plik wejściowy z listą MP3,
+- **-i "1. Rozdział.mp3"** – plik, z którego zostaną przejęte metadane (np. okładka),
+- **-map_metadata 1** – wskazuje, że metadane pochodzą z drugiego pliku wejściowego (czyli `1. Rozdział.mp3`),
+- **-c copy** – kopiuje dane audio bez ponownej kompresji.
+
+Po wykonaniu tego polecenia otrzymasz plik Audiobook.mp3, który zawiera połączoną zawartość wszystkich plików oraz okładkę z pierwszego pliku. 🎵
+
+### 4️⃣ Usunięcie plików tymczasowych
+Na koniec usuń tymczasowe pliki, aby zachować porządek:
+
+```bash
+rm file_list.txt files.txt
+```
+
+### ✨ Podsumowanie
+Dzięki FFmpeg możesz łatwo połączyć dowolną liczbę plików MP3 w jeden, co jest szczególnie przydatne przy audiobookach. Zachowanie metadanych, takich jak okładka, pozwala na estetyczny wygląd pliku wynikowego w odtwarzaczach. 📀
+
+Nie musisz już nosić ze sobą setek plików – wystarczy jeden, wygodny plik MP3. 😊
