@@ -1,0 +1,128 @@
+---
+title: Jak zmienić rozmiar czcionki w Thunderbirdzie
+description: 'userChrome, layout.css.devPixelsPerPx, toolkit.legacyUserProfileCustomizations.stylesheets'
+date: Grudzień December 14 2024
+slug: thunderbird, userChrome, userContent, layout.css.devPixelsPerPx, toolkit.legacyUserProfileCustomizations.stylesheets
+---
+
+# Jak zmienić rozmiar czcionki w Thunderbirdzie 🚀
+
+## Część 1: Zmiana DPI
+
+Czasami standardowy rozmiar czcionki w Thunderbirdzie może okazać się zbyt mały lub zbyt duży, co wpływa na komfort korzystania z programu. Na szczęście, Thunderbird oferuje możliwość zmiany skalowania interfejsu i tekstu poprzez modyfikację ukrytego ustawienia layout.css.devPixelsPerPx. W tym artykule pokażę, jak to zrobić krok po kroku. 
+## <center>✨</center>
+
+## Krok 1: Otwórz ustawienia zaawansowane 🤔
+
+1️⃣ Uruchom program Thunderbird.
+
+2️⃣ W górnym pasku menu wybierz Ustawienia lub kliknij ikonę Ustawienia.
+
+3️⃣ Wybierz edytor ustawień.
+
+## Krok 2: Znajdź ustawienie layout.css.devPixelsPerPx
+
+1️⃣ W oknie konfiguracji wpisz w pole wyszukiwania: layout.css.devPixelsPerPx.
+
+2️⃣ Powinna pojawić się opcja z wartością domyślną ustawioną na -1. Oznacza to automatyczne skalowanie zgodne z systemowym DPI.
+
+## Krok 3: Zmień wartość
+
+1️⃣ Kliknij dwukrotnie na znalezioną opcję.
+
+2️⃣ Zmień wartość z -1 na inną, np. 1.2 (dla powiększenia) lub 0.8 (dla pomniejszenia).
+
+3️⃣ Kliknij OK, aby zatwierdzić zmianę.
+
+Uwaga: Wartość 1 oznacza 100% skalowania. Większe wartości, takie jak 1.2 lub 1.5, zwiększają rozmiar czcionki, a mniejsze, np. 0.8, zmniejszają go.
+
+## Krok 4: Uruchom ponownie Thunderbirda
+
+Aby zmiana została w pełni zastosowana, zamknij program Thunderbird i uruchom go ponownie. Po ponownym otwarciu zauważysz, że interfejs i czcionki mają nowy rozmiar. 
+Problemy mogą występować na różnych monitorach z DPI, spróbujemy to rozwiązać w części drugiej.
+
+## Część 2: Personalizacja za pomocą plików userChrome.css i userContent.css
+
+Jeśli chcesz dostosować wygląd elementów interfejsu Thunderbirda bardziej szczegółowo, możesz skorzystać z plików userChrome.css i userContent.css.
+
+## Krok 1: Włącz obsługę stylów użytkownika 🤔
+
+1️⃣ Przejdź do edytora ustawień (tak jak w części pierwszej).
+
+2️⃣ Znajdź opcję toolkit.legacyUserProfileCustomizations.stylesheets.
+
+3️⃣ Zmień jej wartość na `true`.
+
+## Krok 2: Utwórz folder i pliki stylów
+
+1️⃣ Otwórz folder profilu Thunderbirda. Aby go odnaleźć, możesz skorzystać z opcji Pomoc -> Informacje do rozwiązywania problemów. Na otwartej stronie znajdź sekcję Folder profilu i kliknij przycisk `Pokaż w Finder` w macosx (lub ikona Ustawanie => Ustawienia kont => Lokalne foldery => Katalog lokalny).
+
+2️⃣ W folderze profilu utwórz nowy folder o nazwie chrome.
+
+3️⃣ Wewnątrz folderu `chrome` utwórz dwa pliki tekstowe i nazwij je:
+
+```
+userChrome.css
+
+userContent.css
+```
+
+## Krok 3: Dodaj styl dla nazw skrzynek
+
+W pliku userChrome.css możesz dodać poniższy kod, aby zwiększyć rozmiar czcionki dla nazw skrzynek pocztowych:
+
+```css
+.name {
+    font-size: 14px !important;
+}
+```
+
+## Krok 4: Testuj zmiany w trybie deweloperskim
+
+Aby dostosować inne elementy interfejsu, możesz przejść do trybu deweloperskiego (F12) i odnaleźć odpowiednie klasy, a następnie dodać je do pliku userChrome.css lub userContent.css.
+
+
+## Część 3: Jak zmodyfikować Firefoksa, aby wyglądał jak Safari w macosx.
+
+
+Jeśli jesteś fanem minimalistycznego stylu Safari, możesz dostosować wygląd Firefoksa, aby przypominał przeglądarkę z macOS. Oto jak to zrobić:
+
+## Krok 1: Znajdź folder profilowy
+
+1️⃣ Wpisz w pasku adresu Firefoksa: about:profiles.
+
+2️⃣ Otwórz folder profilu, w którym chcesz wprowadzić zmiany.
+
+## Krok 2: Skorzystaj z gotowych stylów
+
+https://github.com/yoasif/firefox-safari-style/tree/master
+
+Pobierz po ssh
+
+```bash
+git clone git@github.com:yoasif/firefox-safari-style.git
+```
+
+## Krok 3: Skopiuj pliki do folderu chrome
+
+1️⃣ Utwórz folder chrome w swoim folderze profilowym (jeśli już go nie masz).
+
+2️⃣ Skopiuj pobrane pliki userChrome.css i userContent.css do folderu chrome.
+
+## Krok 4: Dostosuj styl do swoich potrzeb
+
+Możesz edytować pliki CSS, aby jeszcze bardziej spersonalizować wygląd przeglądarki.
+
+## Podsumowanie
+
+Dzięki tym krokom możesz nie tylko dostosować wygląd Thunderbirda, ale także Firefoksa. 
+## <center>✨</center>
+
+* Thunderbird: Skalowanie interfejsu i szczegółowa personalizacja.
+* Firefox: Minimalistyczny styl Safari na każdym systemie operacyjnym.
+
+ Wszystko to możesz zrobić dzięki prostym zmianom w plikach konfiguracyjnych i CSS. Powodzenia! 🚀
+
+<button onClick={() => alert("Dziękuję za przeczytanie artykułu o shebangu!")}>
+  Mam nadzieję, że ten artykuł rozjaśnił wam temat skalowania interfejsu i szczegółowej personalizacji! Do zobaczenia w kolejnym poście! 👋
+</button>
