@@ -1,0 +1,82 @@
+---
+title: Jak Zmienić Nazwy Zrzutów Ekranów na Macu
+description: 'ZrzutEkranu, defaults write com.apple.screencapture name, command + Shift + F4'
+date: Luty February 22 2025
+slug: defaults write com.apple.screencapture name, command + Shift + F4
+---
+
+# Jak Zmienić Nazwy Zrzutów Ekranów na Macu! 🌟 Prosty Przewodnik
+
+Czy kiedykolwiek zastanawialiście się, dlaczego wasze zrzuty ekranu na Macu mają takie długie i skomplikowane nazwy? "Zrzut Ekranu 2025-02-22 18.10.11.png"? Brzmi to jak kod do jakiejś tajnej bazy danych, prawda? 😅 
+
+Jeśli marzysz o prostszych nazwach, które pomogą Ci zorganizować Twoje pliki, ten artykuł jest właśnie dla Ciebie! Zobaczmy, jak można to osiągnąć za pomocą kilku prostych komend w Terminalu. 🚀
+
+## Dlaczego warto zmieniać nazwy zrzutów?
+
+1. **Łatwiejsza organizacja**: Proste i zrozumiałe nazwy ułatwiają odnajdywanie potrzebnych plików.
+2. **Szybkość**: Mając zrzuty o numerach, szybciej znajdziesz to, czego szukasz, bez przeszukiwania długich tabelek.
+3. **Personalizacja**: To Twój komputer! Dostosuj go tak, jak lubisz. 🎨
+
+## Jak to zrobić?
+
+### Kroki do sukcesu:
+
+### 1. Zmiana prefiksu zrzutów
+
+Możesz zmienić domyślną nazwę plików zrzutów ekranów przy pomocy Terminala. Wpisz następujące polecenie, aby ustawić prefiks zrzutów:
+
+```bash
+defaults write com.apple.screencapture name "ZrzutEkranu"
+```
+
+### 2. Ustawienie katalogu (opcjonalnie)
+Jeżeli chcesz zmienić lokalizację, w której zapisują się zrzuty ekranu:
+
+```bash
+defaults write com.apple.screencapture location ~/Desktop
+```
+
+### 3. Zastosowanie zmian
+Aby zastosować wprowadzone zmiany, wpisz:
+
+```bash
+killall SystemUIServer
+```
+
+**4. Zrób zrzut ekranu**:
+
+Aby wykonać zrzut ekranu, naciśnij `Cmd + Shift + 4` i wybierz obszar, który chcesz uchwycić. Zrzut zostanie zapisany na pulpicie (lub w Twoim wybranym folderze). 💻
+
+**5. Przejdź do folderu zrzutów**:
+
+Musisz przemieścić się do folderu, w którym zapisujesz swoje zrzuty ekranów. W tym przypadku wpisz:
+
+```bash
+cd /Volumes/__Nagrania/Zrzuty_Ekranu  #twoja ścieżka
+```
+
+6. Uruchom skrypt do zmiany nazw:
+
+Następnie skorzystaj z poniższego skryptu, żeby zmienić nazwy plików:
+
+```bash
+a=1
+for i in ZrzutEkranu*.png; do
+  mv "$i" "$a.png"
+  let a=a+1
+done
+```
+
+7. Gotowe! 🎉
+Po wykonaniu tych kroków Twoje zrzuty ekranów będą nazywane po prostu "1.png", "2.png", itd. Niesamowite, prawda?
+
+Podsumowanie
+Teraz, gdy znasz sztuczkę, możesz lepiej zarządzać swoimi zrzutami ekranów w Macu. Oszczędzisz czas i nerwy, a Twoje pliki będą bardziej przejrzyste. 
+
+Nie wahaj się eksperymentować i dostosować skrypt do własnych potrzeb! 😊
+
+
+
+<button onClick={() => alert("Dziękuję za przeczytanie artykułu o jak zmienić nazwy zrzutów ekranów na Macu!")}>
+  Mam nadzieję, że ten artykuł rozjaśnił wam temat numerowania zrzutów ekranów na macos! Do zobaczenia w następnym wpisie! 🌈
+</button>
