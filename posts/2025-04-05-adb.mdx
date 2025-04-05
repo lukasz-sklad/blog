@@ -1,0 +1,239 @@
+---
+title: ADB 🧙‍♂️ Magiczne zaklęcia, które ożywią Twojego Androida! ✨
+description: 'adb, android'
+date: Kwiecień April 05 2025
+slug: adb, android
+---
+
+# ADB: Magiczne zaklęcia, które ożywią Twojego Androida! 🧙‍♂️✨
+
+Czy kiedykolwiek czułeś frustrację, gdy Twój telefon z Androidem odmawiał posłuszeństwa? Chciałeś zainstalować aplikację spoza Sklepu Play, ale bałeś się, że zepsujesz urządzenie? A może po prostu pragnąłeś poczuć się jak haker, kontrolując swój telefon z poziomu komputera? Jeśli tak, to ten artykuł jest dla Ciebie!
+
+ADB, czyli Android Debug Bridge, to potężne narzędzie, które otwiera drzwi do świata nieograniczonych możliwości. To jak magiczna różdżka, która pozwala na komunikację z Twoim Androidem z poziomu komputera. Brzmi przerażająco? Bez obaw, krok po kroku pokażę Ci, jak okiełznać to magiczne narzędzie!
+
+## Krok 1: Przygotowania do magicznej podróży 🚀
+
+Zanim zaczniemy rzucać zaklęcia, musimy przygotować nasze narzędzia.
+
+1. **Pobierz Android SDK Platform-Tools**: To magiczne pudło, w którym kryje się ADB. Znajdziesz je na [stronie](https://developer.android.com/tools/releases/platform-tools?hl=pl) dla programistów Androida.
+
+dla maca:
+
+```bash
+brew install --cask android-platform-tools
+```
+
+2. **Włącz debugowanie USB**: Udaj się do "Ustawień" swojego telefonu, a następnie do "Opcji programisty". Jeśli nie widzisz tej opcji, dotknij siedem razy "Numer kompilacji". Włącz "Debugowanie USB". Uważaj, to miejsce, w którym zaczyna się prawdziwa magia!
+3. **Podłącz telefon do komputera**: Użyj kabla USB. Na telefonie wybierz "Przesyłanie plików" lub "MTP".
+
+## Krok 2: Pierwsze zaklęcia 🪄
+
+Otwórz wiersz poleceń na swoim komputerze i sprawdź, czy Twój telefon jest widoczny. Wpisz:
+
+```bash
+adb devices
+```
+
+Jeśli widzisz swoje urządzenie na liście, to znaczy, że magia działa! Gratulacje, właśnie stałeś się czarodziejem Androida!
+
+## Krok 3: Rzucamy potężne zaklęcia! 💥
+
+Oto kilka przykładów, które sprawią, że Twój telefon zatańczy tak, jak mu zagrasz:
+
+**Instalacja aplikacji**:
+
+```shell
+adb install app.apk
+```
+
+Właśnie zainstalowałeś aplikację spoza Sklepu Play! Poczuj tę moc!
+
+**Deinstalacja aplikacji**:
+
+```bash
+adb uninstall app.package
+```
+
+Pozbądź się zbędnych aplikacji jednym prostym zaklęciem!
+
+**Przesyłanie plików**:
+
+```bash
+adb push plik_lokalny /sdcard/folder_docelowy
+adb pull /sdcard/plik_na_telefonie plik_lokalny
+```
+
+Przesyłaj pliki między telefonem a komputerem jak za dotknięciem czarodziejskiej różdżki!
+
+## Krok 4: Sztuczki dla zaawansowanych magów 🎩
+
+**Zrzut ekranu**:
+
+```bash
+adb shell screencap /storage/emulated/0/Download/112.png
+adb pull /storage/emulated/0/Download/112.png
+```
+
+Uwiecznij te magiczne chwile z Androidem!
+
+***Prima Aprilis z ADB!*** 🤣
+
+```bash
+adb shell am start -a android.intent.action.VIEW
+-d file:///storage/emulated/0/Download/112.png -t image/png
+```
+
+**Nagrywanie ekranu**:
+
+```bash
+adb shell screenrecord /sdcard/nagranie.mp4
+adb pull /sdcard/nagranie.mp4
+```
+
+Nagrywaj swoje magiczne poczynania na ekranie!
+
+**Restart telefonu**:
+
+```bash
+adb reboot
+```
+
+Kiedy magia zaczyna szwankować, użyj tego zaklęcia!
+
+
+
+#### Podstawowe informacje o urządzeniu: ####
+
+```shell
+adb shell
+```
+
+```shell
+adb shell ls
+```
+
+```bash
+adb shell getprop ro.build.version.sdk 
+# Wyświetla wersję SDK Androida
+```
+```bash
+adb shell getprop ro.build.version.release
+# Wyświetla wersję Androida (np. 12, 13)
+```
+```bash
+adb shell getprop ro.build.fingerprint
+# Wyświetla odcisk palca kompilacji
+```
+
+```bash
+adb shell getprop ro.product.manufacturer
+# Wyświetla producenta urządzenia
+```
+
+```bash
+adb shell getprop ro.product.name
+# Wyświetla nazwę produktu
+```
+
+```bash
+adb shell dumpsys battery 
+# Wyświetla informacje o baterii
+```
+
+#### Zarządzanie aplikacjami: ####
+
+```bash
+adb shell pm list packages 
+# Wyświetla listę aplikacji
+```
+
+```bash
+adb shell pm clear nazwa.pakietu
+# Czyści dane aplikacji
+```
+
+```bash
+adb shell pm disable nazwa.pakietu
+# Wyłącza aplikację
+```
+
+```bash
+adb shell pm enable nazwa.pakietu
+# Włącza aplikację
+```
+
+```bash
+adb shell pm uninstall -k nazwa.pakietu
+# Odinstalowuje aplikację, zachowując dane
+```
+
+```bash
+adb shell pm grant nazwa.pakietu android.permission.NAZWA_PERMISJI 
+# Nadaje aplikacji uprawnienie
+```
+
+```bash
+adb shell pm revoke nazwa.pakietu android.permission.NAZWA_PERMISJI 
+# Odbiera aplikacji uprawnienie
+```
+* pm odnosi się do package manager
+
+#### System plików i sieć: ####
+
+```bash
+adb shell mkdir /sdcard/nowy_folder
+# Tworzy nowy folder na karcie SD
+```
+
+```bash
+adb shell rm /sdcard/plik.txt
+# Usuwa plik z karty SD
+```
+
+```bash
+adb shell rm -r /sdcard/folder
+# Usuwa folder i jego zawartość (rekurencyjnie)
+```
+
+```bash
+adb shell ifconfig wlan0
+# Wyświetla konfigurację interfejsu Wi-Fi
+```
+
+#### Różne: ####
+
+```bash
+adb shell input text "tekst"
+# Wprowadza tekst na ekranie. 
+# Przy włączonej funkcji ułatwień dostępu
+# reakcja może być inna z oczekiwaną
+```
+
+```bash
+adb shell input keyevent KOD_KLUCZA
+# Symuluje naciśnięcie klawisza (np. KEYCODE_HOME, KEYCODE_BACK)
+```
+
+```bash
+adb shell reboot recovery
+# Uruchamia urządzenie w trybie recovery
+```
+
+**Uwaga**: Pamiętaj, aby zawsze używać tych poleceń z rozwagą, ponieważ mogą one mieć wpływ na działanie urządzenia.
+
+### Co robi nasz Android: ###
+
+```bash
+adb logcat
+```
+
+
+## Podsumowanie: Twoja magiczna podróż dopiero się zaczyna! ✨
+
+ADB to potężne narzędzie, które daje Ci kontrolę nad Twoim Androidem. Nie bój się eksperymentować, odkrywaj nowe możliwości i stań się prawdziwym mistrzem Androida!
+
+**Uwaga**: Pamiętaj jednak, że z wielką mocą wiąże się wielka odpowiedzialność. Używaj ADB z rozwagą i zawsze zachowuj ostrożność.
+
+<button onClick={() => alert("Dziękuję za przeczytanie artykułu o ADB 👍")}>
+  Mam nadzieję, że ten artykuł rozbudził Twoją ciekawość i zainspirował Cię do odkrywania magicznego świata ADB! 😊 Do zobaczenia w następnym wpisie! 🧙‍♂️🌟
+</button>
