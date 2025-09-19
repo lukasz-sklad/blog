@@ -1,0 +1,127 @@
+---
+title: Samba na Debianie - Zbuduj Własny Serwer Plików w Mgnieniu Oka! 🧙‍♂️
+description: 'Odkryj, jak łatwo zainstalować i skonfigurować serwer Samba na Debianie, aby stworzyć centralne miejsce dla Twoich plików. Prosty przewodnik krok po kroku!'
+summary: 'samba debian serwer plików udostępnianie linux'
+date: 'Wrzesień 19 2025'
+slug: samba-na-debianie-serwer-plikow
+---
+
+# Samba na Debianie: Zbuduj Własny Serwer Plików w Mgnieniu Oka! 🧙‍♂️
+
+Czy masz dość żonglowania plikami między komputerami? Pendrive wiecznie ginie, a wysyłanie plików do samego siebie e-mailem to droga donikąd. Czas na profesjonalne, domowe rozwiązanie! Pokażę Ci, jak w kilku prostych krokach zamienić Twój komputer z Debianem w prawdziwy serwer plików przy użyciu Samby.
+
+Samba to potężne narzędzie, które pozwala na udostępnianie plików i drukarek w sieci lokalnej, tworząc most między systemami Linux, Windows i macOS. Koniec z problemami kompatybilności!
+
+## Krok 1: Instalacja Samby
+
+Zaczynamy od aktualizacji listy pakietów, uaktualnienia systemu i instalacji Samby. Wszystko za pomocą kilku komend.
+
+```bash
+# Aktualizujemy listę pakietów i system
+sudo apt update
+sudo apt upgrade -y
+
+# Instalujemy pakiet Samba
+sudo apt install samba -y
+```
+
+Po zakończeniu instalacji, serwer Samba będzie już działał w tle. Możemy to sprawdzić poleceniem:
+
+```bash
+sudo systemctl status smbd
+```
+
+Jeśli widzisz status `active (running)`, tak jak na poniższym zrzucie, wszystko poszło zgodnie z planem!
+
+![Status usługi smbd](https://raw.githubusercontent.com/lukasz-sklad/blog/main/posts/920/2025-09-19-samba-na-debianie-1.jpg)
+
+## Krok 2: Tworzenie Czystej i Stabilnej Konfiguracji
+
+Domyślny plik konfiguracyjny Samby zawiera wiele opcji, które mogą powodować konflikty, zwłaszcza przy dostępie dla gości i z komputerów Mac (np. pojawianie się "dziwnego" udziału `nobody`). Dlatego najlepszym podejściem jest stworzenie własnej, minimalistycznej i w pełni kontrolowanej konfiguracji.
+
+1.  **Stwórz kopię zapasową oryginalnego pliku:**
+    ```bash
+    sudo cp /etc/samba/smb.conf /etc/samba/smb.conf.bak
+    ```
+
+2.  **Wyczyść i zastąp konfigurację:**
+    Otwórz plik w edytorze:
+    ```bash
+    sudo nano /etc/samba/smb.conf
+    ```
+    Usuń całą jego zawartość (`Ctrl+K` w nano) i wklej poniższy, sprawdzony szablon. Zawiera on tylko niezbędne minimum do stabilnego działania i sekcję dla naszego publicznego udziału.
+
+    ```ini
+    [global]
+       workgroup = server
+       server string = %h server (Samba)
+       log file = /var/log/samba/log.%m
+       max log size = 1000
+       server role = standalone server
+       map to guest = bad user
+       guest account = nobody
+
+    [Publiczny]
+       comment = Ogólnodostępny folder na pliki
+       path = /srv/samba/publiczny
+       browseable = yes
+       writable = yes
+       guest ok = yes
+       force user = nobody
+       force group = nogroup
+       
+       # --- Zaawansowane opcje dla pełnej kompatybilności z macOS ---
+       
+       # Zapewnia spójność uprawnień dla nowo tworzonych plików
+       inherit permissions = yes
+       
+       # Kluczowe moduły dla współpracy z Finderem i systemem plików Apple
+       vfs objects = fruit streams_xattr
+       
+       # Dodatkowe wsparcie dla rozszerzonych atrybutów (ważne dla macOS)
+       ea support = yes
+    ```
+
+Po wklejeniu nowej zawartości zapisz plik (`Ctrl+O`, `Enter`) i wyjdź (`Ctrl+X`).
+
+## Krok 3: Tworzenie Folderu Udziału
+
+Teraz stworzymy folder na serwerze, który wskazaliśmy w naszej konfiguracji w `path`.
+
+> **Ważna uwaga:** Zdecydowanie unikaj tworzenia folderów do udostępniania w swoim katalogu domowym (np. `/home/twoja_nazwa`). Systemy Linux mają bardzo restrykcyjne uprawnienia dla katalogów domowych, co często prowadzi do problemów z dostępem dla usług takich jak Samba i może powodować błędy lub niestabilne działanie, co zaobserwowaliśmy podczas testów.
+
+Użyjemy standardowej, zalecanej lokalizacji `/srv/samba`.
+
+```bash
+# Tworzymy katalog dla naszego udziału (możesz go nazwać inaczej, np. share)
+sudo mkdir -p /srv/samba/publiczny
+
+# Zmieniamy właściciela na 'nobody:nogroup', aby gość sieciowy miał dostęp
+sudo chown -R nobody:nogroup /srv/samba/publiczny
+
+# Nadajemy odpowiednie uprawnienia do odczytu/zapisu dla właściciela i grupy
+sudo chmod -R 775 /srv/samba/publiczny
+```
+
+## Krok 4: Restart serwera i weryfikacja
+
+Aby wszystkie nasze zmiany zostały załadowane, musimy zrestartować obie kluczowe usługi Samby.
+
+```bash
+sudo systemctl restart smbd nmbd
+```
+
+I to wszystko! Twój serwer plików jest gotowy.
+
+## Jak uzyskać dostęp do udostępnionego folderu?
+
+*   **W systemie Windows:** Otwórz Eksplorator Plików i w pasku adresu wpisz `\NAZWA_TWOJEGO_KOMPUTERA_LUB_IP`, a następnie naciśnij Enter.
+*   **W systemie macOS:** Otwórz Findera, z menu wybierz `Idź` > `Połącz z serwerem...` i wpisz `smb://NAZWA_TWOJEGO_KOMPUTERA_LUB_IP`.
+*   **W systemie Linux:** W menedżerze plików poszukaj opcji "Połącz z serwerem" lub "Sieć".
+
+Adres IP swojego komputera z Debianem możesz sprawdzić komendą `ip a`.
+
+<button onClick={() => alert("Dziękuję za przeczytanie artykułu o Sambie 👍")}>
+  To narzędzie zmieniło mój workflow na zawsze. Daj mu szansę, a gwarantuję, że zmieni też Twój.
+ 😊 Do zobaczenia w następnym wpisie! 🧙‍♂️🌟
+</button>
