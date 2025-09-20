@@ -1,0 +1,124 @@
+---
+title: 'Sieciowa Odyseja: Jak Złamałem Mur Między Linuksem a Sambą na macOS VM 🤯'
+description: 'Myślisz, że routing między VM a hostem to bułka z masłem? Ta historia pokaże Ci, jak niewinna prośba o dostęp do Samby zamieniła się w epicką bitwę z firewallem pf na macOS, by udostępnić zasoby Linuksowi.'
+summary: 'macos samba vmware pf routing nat debian linux openwrt'
+date: Wrzesień September 20 2025
+slug: sieciowa-odyseja-macos-linux-samba-pf
+---
+
+# Sieciowa Odyseja: Jak Złamałem Mur Między Linuksem a Sambą na macOS VM 🤯
+
+Inżynieria to nie tylko pisanie kodu. To sztuka rozwiązywania problemów, upór w obliczu porażki i ta czysta, niepodrabialna radość, gdy po wielu godzinach walki wreszcie coś... po prostu działa. ✨ To jest historia jednej takiej walki. Odysei, w którą wyruszyłem, by połączyć trzy światy: hosta macOS, wirtualną maszynę z Debianem i klienta z Linuksem.
+
+## Prolog: Niewinna Prośba
+
+Wszystko zaczęło się od świetnego poradnika [Samba na Debianie](https://lmk.one/posts/2025-09-19-samba-na-debianie). Użytkownik starannie odtworzył konfigurację na swojej wirtualnej maszynie postawionej na macOS. Stanął jednak przed murem – udział Samby był idealnie widoczny na hoście (macOS), ale kompletnie niewidzialny dla drugiego komputera w sieci z Linuksem. To była zagadka, która dała początek naszej przygodzie.
+
+
+## Rozdział I: Budujemy Plan (i Pierwsze Mury)
+
+Główny cel: uzyskać dostęp do udziału Samby na wirtualnej maszynie (`172.17.156.146`) z komputera z Linuksem (`192.168.1.4`) w tej samej sieci, w której był Mac-host (`192.168.1.3`).
+
+Pierwszy, logiczny plan zakładał dwa kroki:
+
+1.  **Na routerze (potężnym OpenWrt):** Dodamy trasę statyczną. Trzeba było powiedzieć routerowi: "Drogi routerze, jeśli ktokolwiek w sieci zapyta o drogę do `172.17.156.0/24`, wskaż mu Maca pod adresem `192.168.1.3` jako bramę". Bez tego pakiety z Linuksa nigdy by nie wiedziały, gdzie szukać tej odległej podsieci.
+
+2.  **Na komputerze-hoście (macOS):** Miał on stać się przewodnikiem dla zagubionych pakietów, czyli routerem.
+
+Niestety, zanim na dobre zaczęliśmy, pojawiły się komplikacje - najpierw blokada SSH przez `/etc/hosts.deny`, a potem... zrozumienie, że w grze jest jeszcze jeden, ukryty gracz.
+
+> "...bo tam jest **cloudflare tunel** dla nexclouda..."
+
+Zamarłem. 😱 To oznaczało, że proste trasowanie nie wystarczy. Musieliśmy sięgnąć po cięższe działa.
+
+## Rozdział II: Droga Wojownika - Zmuszamy Maca, by został Routerem
+
+Zamiast prostej drogi (tryb mostka w VM), wybraliśmy ścieżkę wiedzy: zmusimy macOS, by stał się pełnoprawnym routerem NAT dla naszej sieci. Naszą bronią stał się `pf` (Packet Filter), potężna zapora sieciowa wbudowana w macOS.
+
+### Krok 1: Włączenie Przekazywania Pakietów (IP Forwarding)
+
+Zanim `pf` zacznie swoją magię, system macOS musi w ogóle zgodzić się na przekazywanie pakietów między interfejsami sieciowymi. Bez tego jest jak zamknięty szlaban. Aby go otworzyć na stałe, wykonaliśmy polecenie:
+
+```bash
+# Uczynienie zmiany trwałą po restarcie
+echo "net.inet.ip.forwarding=1" | sudo tee -a /etc/sysctl.conf
+
+# Aktywacja "od zaraz" bez restartu
+sudo sysctl -w net.inet.ip.forwarding=1
+```
+
+Teraz nasz Mac był gotów, by stać się przewodnikiem.
+
+### Krok 2: Taniec z `pf` - Magia Maskarady
+
+Następnie stworzyliśmy regułę dla `pf`, która miała "maskować" pakiety z Linuksa, tak aby wirtualna maszyna myślała, że rozmawia tylko ze swoim hostem (macOS).
+
+```bash
+# Plik /tmp/pf.rules - nasza magiczna różdżka
+nat on bridge102 from 192.168.1.0/24 to 172.17.156.0/24 -> (bridge102)
+```
+
+Załadowaliśmy ją do `pf`...
+
+```bash
+sudo pfctl -E
+sudo pfctl -f /tmp/pf.rules
+```
+
+...i wtedy nadszedł moment prawdy. `ping` z komputera z Linuksem.
+
+```
+PING cloud.lmk.one (172.17.156.146) 56(84) bytes of data.
+64 bytes from cloud.lmk.one (172.17.156.146): icmp_seq=1 ttl=63 time=2.25 ms
+...
+--- cloud.lmk.one ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss...
+```
+
+**Zwycięstwo!** 🎉 Czyste, techniczne zwycięstwo.
+
+## Rozdział III: Ostatnia Bitwa - Nieśmiertelność Konfiguracji
+
+Radość była wielka, ale krótka. Konfiguracja `pf` i `sysctl` była ulotna. Musieliśmy uczynić ją nieśmiertelną. Rozwiązaniem okazał się sprytny skrypt startowy i odpowiednie uprawnienia.
+
+1.  **Inteligentny skrypt**, który cierpliwie czeka na start VM i konfiguruje wszystko za jednym zamachem:
+
+    ```bash
+    #!/bin/bash
+    # Włączamy forwarding
+    sudo sysctl -w net.inet.ip.forwarding=1
+
+    # Czekamy na interfejs VM
+    VIRTUAL_INTERFACE="bridge102"
+    echo "Czekam na interfejs ${VIRTUAL_INTERFACE}..."
+    while ! ifconfig | grep -q "^${VIRTUAL_INTERFACE}:"; do
+        sleep 10
+    done
+
+    # Konfigurujemy PF
+    echo "OK. Konfiguruję pf..."
+    PF_RULES_FILE="/tmp/pf.rules.vm"
+    echo "nat on ${VIRTUAL_INTERFACE} from 192.168.1.0/24 to 172.17.156.0/24 -> (${VIRTUAL_INTERFACE})" > "${PF_RULES_FILE}"
+    sudo pfctl -E
+    sudo pfctl -f "${PF_RULES_FILE}"
+    echo "Gotowe! Magia się dokonała. ✨"
+    ```
+
+2.  **Precyzyjna reguła w `sudoers`** (pamiętaj o `sudo visudo`!):
+
+    ```
+    # W pliku /etc/sudoers (edytowanym przez sudo visudo)
+    NAZWA_UŻYTKOWNIKA   ALL=(ALL) NOPASSWD: /Users/NAZWA_UŻYTKOWNIKA/bin/start_maskarada.sh
+    ```
+
+3.  **Aplikacja w Automatorze**, która uruchamiała nasz skrypt przy starcie systemu.
+
+I to był koniec. Ostateczne, zautomatyzowane, piękne zwycięstwo.
+
+## Epilog
+
+Ta podróż nauczyła mnie, że najprostsza droga nie zawsze jest tą, którą wybieramy. Czasem wybieramy drogę trudniejszą, bo to na niej uczymy się najwięcej. I nie ma nic bardziej satysfakcjonującego niż rozwikłanie sieciowego labiryntu.
+
+<button onClick={() => alert("Dzięki za wspólną podróż! 🚀")}>
+  Ta przygoda to dowód, że z odrobiną uporu (i magii `pf`) wszystko jest możliwe. Do zobaczenia w następnym wpisie! 🧙‍♂️🌟
+</button>
