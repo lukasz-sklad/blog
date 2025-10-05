@@ -60,6 +60,10 @@ I... to wszystko! 🎉 Ten plugin został stworzony, aby opakować NVM w sposób
 
 Po wykonaniu tych dwóch komend i ponownym uruchomieniu terminala, Twoje polecenia `nvm` będą działać w `fish` dokładnie tak, jak oczekujesz. Możesz teraz cieszyć się elegancją `fish` i mocą NVM jednocześnie!
 
+Dzięki temu rozwiązaniu 👇 możesz korzystać z tych samych poleceń NVM zarówno w bashu, jak i w fish – Twoje środowisko pracy pozostaje spójne i wygodne, niezależnie od wybranej powłoki! 👇👇👇
+
+![NVM w akcji – zarządzaj Node.js jak mistrz!](https://raw.githubusercontent.com/lukasz-sklad/blog/main/posts/920/nvm.gif)
+
 ## Podsumowanie ✨
 
 Zrozumienie, jak działają Twoje narzędzia, to potężna umiejętność. Tajemniczy skrypt NVM to po prostu sposób na wstrzyknięcie jego funkcji do Twojej powłoki. Niezależnie od tego, czy jesteś weteranem `bash`, czy entuzjastą `fish`, istnieje prosta droga, by cieszyć się bezproblemowym zarządzaniem wersjami Node.js. Koduj z radością! 🚀
