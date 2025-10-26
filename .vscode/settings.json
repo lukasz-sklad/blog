@@ -99,5 +99,6 @@
     "zainstalowało",
     "znalezieniu",
     "zweryfikować"
-  ]
+  ],
+  "terminal.integrated.defaultProfile.linux": "bash"
 }
