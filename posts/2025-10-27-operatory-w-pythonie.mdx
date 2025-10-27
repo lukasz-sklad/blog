@@ -1,0 +1,114 @@
+---
+title: 'Operatory w Pythonie: Różdżki, Którymi Zaczarujesz Dane! ✨'
+description: 'Opanuj magiczne operatory w Pythonie! Naucz się dodawać, porównywać i łączyć warunki, aby tchnąć w swój kod prawdziwą moc podejmowania decyzji i wykonywania obliczeń.'
+summary: 'python operatory arytmetyczne porównania logiczne dla początkujących'
+date: Październik October 27 2025
+slug: python-operatory-magiczne-rozdzki
+---
+
+# Operatory w Pythonie: Różdżki, Którymi Zaczarujesz Dane! ✨
+
+Witaj z powrotem, młody adepcie Pythona! Znamy już magiczne składniki (typy danych) i mamy nasze pudełka do ich przechowywania (zmienne). Nadszedł czas, aby nauczyć się nimi **działać**! Czym byłyby składniki bez możliwości ich mieszania, porównywania i przekształcania? 🤔
+
+Dziś w nasze ręce trafiają **operatory** – potężne, magiczne różdżki 🪄, które pozwalają wykonywać operacje na naszych danych. To dzięki nim Twój kod ożyje, zacznie liczyć, podejmować decyzje i reagować na świat. Chwyć więc za swoją wirtualną różdżkę i zaczynajmy czarować!
+
+## 1. Operatory Arytmetyczne: Matematyczna Alchemia ⚗️
+
+To Twoja podstawowa księga zaklęć matematycznych. Dzięki tym operatorom możesz wykonywać wszystkie znane Ci obliczenia. To fundament, na którym zbudujesz bardziej złożone algorytmy.
+
+*   **Dodawanie `+`** ➕: Łączy dwie wartości.
+*   **Odejmowanie `-`** ➖: Odejmuje jedną wartość od drugiej.
+*   **Mnożenie `*`** ✖️: Mnoży wartości.
+*   **Dzielenie `/`** ➗: Dzieli i zawsze daje wynik z częścią dziesiętną (float).
+
+Ale to nie wszystko! Python ma w zanadrzu kilka bardziej wyspecjalizowanych zaklęć:
+
+*   **Dzielenie całkowite `//`**: Ile pełnych całości zmieści się w liczbie? `10 // 3` da nam `3`.
+*   **Modulo `%`**: Jaka będzie reszta z dzielenia? `10 % 3` da nam `1`, bo tyle zostanie.
+*   **Potęgowanie `**`**: Podnosi liczbę do potęgi. `10 ** 3` to 10 do potęgi 3, czyli `1000`.
+
+Zobaczmy je w akcji!
+
+```python
+a = 10
+b = 3
+
+dodawanie = a + b          # Wynik: 13
+odejmowanie = a - b         # Wynik: 7
+mnozenie = a * b           # Wynik: 30
+dzielenie = a / b          # Wynik: 3.333...
+dzielenie_calkowite = a // b  # Wynik: 3
+modulo = a % b            # Wynik: 1
+potegowanie = a ** b        # Wynik: 1000
+```
+
+## 2. Operatory Porównania: Waga Prawdy i Fałszu ⚖️
+
+To właśnie te operatory pozwalają Twojemu programowi zadawać pytania i "myśleć". Porównują dwie wartości i zawsze odpowiadają `True` (prawda) lub `False` (fałsz). To serce podejmowania decyzji w kodzie!
+
+*   `==` : Czy wartości są **równe**? 🤔
+*   `!=` : Czy wartości są **różne**? 🤨
+*   `>` : Czy lewa wartość jest **większa**? 🔼
+*   `<` : Czy lewa wartość jest **mniejsza**? 🔽
+*   `>=` : Czy lewa wartość jest **większa lub równa**?
+*   `<=` : Czy lewa wartość jest **mniejsza lub równa**?
+
+Sprawdźmy, co na to Python:
+
+```python
+a = 10
+b = 3
+
+czy_rowne = a == b          # Wynik: False
+czy_rozne = a != b          # Wynik: True
+czy_wieksze = a > b         # Wynik: True
+czy_mniejsze = a < b        # Wynik: False
+czy_wieksze_rowne = a >= 10 # Wynik: True
+czy_mniejsze_rowne = b <= 3  # Wynik: True
+```
+
+## 3. Operatory Logiczne: Łączenie Sił 🤝
+
+Co, jeśli jedno proste pytanie to za mało? Co, jeśli chcesz sprawdzić kilka warunków naraz? Tu do gry wchodzą operatory logiczne: `and`, `or` i `not`.
+
+*   **`and` (i)**: Zwróci `True` tylko wtedy, gdy **oba warunki są prawdziwe**. (Dostaniesz deser, jeśli zjesz obiad **I** posprzątasz pokój).
+*   **`or` (lub)**: Zwróci `True`, jeśli **przynajmniej jeden warunek jest prawdziwy**. (Pójdziemy na spacer, jeśli nie będzie padać **LUB** weźmiemy parasol).
+*   **`not` (nie)**: Odwraca wartość! Zmienia `True` w `False` i `False` w `True`. Prawdziwy buntownik! 😈
+
+Jak to wygląda w kodzie?
+
+```python
+a = 10
+b = 3
+
+# Sprawdzamy, czy a jest większe od 5 I b jest mniejsze od 5
+wynik_and = (a > 5) and (b < 5)   # True and True -> Wynik: True
+
+# Sprawdzamy, czy a jest większe od 15 LUB b jest mniejsze od 5
+wynik_or = (a > 15) or (b < 5)    # False or True -> Wynik: True
+
+# Odwracamy warunek: czy to NIEPRAWDA, że a jest większe od 5?
+wynik_not = not (a > 5)           # not True -> Wynik: False
+```
+
+## Ważna Zasada: Kolejność Wykonywania Działań 👑
+
+Tak jak w matematyce, Python ma swoją hierarchię. Niektóre operatory są ważniejsze od innych. Ogólna kolejność to:
+
+1.  Nawiasy `()`
+2.  Potęgowanie `**`
+3.  Mnożenie, dzielenie, modulo `* / // %`
+4.  Dodawanie i odejmowanie `+ -`
+5.  Operatory porównania `== != > < ...`
+6.  Operatory logiczne `not`, `and`, `or`
+
+Jeśli masz wątpliwości, zawsze używaj nawiasów `()`! Dzięki nim Twój kod będzie czytelniejszy i unikniesz błędów.
+
+## Podsumowanie
+
+Gratulacje! Opanowałeś właśnie potężny arsenał, który pozwala danym wchodzić ze sobą w interakcje. Operatory to absolutna podstawa, która zamienia proste zmienne w dynamiczny, reagujący na warunki program. Zacznij łączyć je ze sobą i zobacz, jakie niesamowite rezultaty możesz osiągnąć!
+
+<br/>
+<button onClick={() => alert("Dziękuję za przeczytanie artykułu o operatorach w Pythonie 👍")}>
+  Zacznij łączyć je ze sobą i zobacz, jakie niesamowite rezultaty możesz osiągnąć. Do zobaczenia w następnym wpisie! 🧙‍♂️🌟
+</button>
