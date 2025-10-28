@@ -49,7 +49,7 @@ const EchoTerminal = () => {
                 ))}
             </div>
             <div style={{ display: 'flex', alignItems: 'center' }}>
-                <span style={{ color: '#569cd6' }}>></span>
+                <span style={{ color: '#569cd6' }}>&gt;</span>
                 <input 
                     type="text" 
                     value={input}

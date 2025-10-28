@@ -11,7 +11,7 @@ const InteractiveGame = () => {
         setOutput(prev => [...prev, { text: message, color }]);
     };
 
-    const startGame = () => {
+    const startGame = React.useCallback(() => {
         const newSecret = Math.floor(Math.random() * 100) + 1;
         setSecretNumber(newSecret);
         setGameActive(true);
@@ -21,7 +21,7 @@ const InteractiveGame = () => {
             printToTerminal('--- Witaj w grze \'Zgadnij Liczbę\'! ---');
             printToTerminal('Pomyślałem sobie liczbę od 1 do 100. Spróbuj ją odgadnąć.');
         }, 0);
-    };
+    }, []); // Empty dependency array for useCallback
 
     const handleGuess = () => {
         if (!gameActive) {
@@ -49,7 +49,7 @@ const InteractiveGame = () => {
 
     useEffect(() => {
         startGame();
-    }, []);
+    }, [startGame]);
 
     useEffect(() => {
         if (outputRef.current) {
