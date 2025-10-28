@@ -1,0 +1,147 @@
+---
+title: 'Twój Pierwszy Projekt w Pythonie: Krok po Kroku Tworzymy Grę "Zgadnij Liczbę"! 🎮'
+description: 'Czas na praktykę! Zobacz, jak krok po kroku stworzyć kompletną grę "Zgadnij Liczbę" w Pythonie. Wykorzystamy całą zdobytą wiedzę: pętle, warunki, zmienne i obsługę błędów!'
+summary: 'python projekt dla początkujących tutorial gra zgadnij liczbę pętle warunki funkcje'
+date: Listopad November 09 2025
+slug: python-projekt-tutorial-gra-zgadnij-liczbe
+---
+
+# Twój Pierwszy Projekt w Pythonie: Krok po Kroku Tworzymy Grę "Zgadnij Liczbę"! 🎮
+
+Witaj na uroczystym zakończeniu naszej podstawowej serii o Pythonie! To dzień Twojej graduacji. Do tej pory poznaliśmy wszystkie kluczowe zaklęcia: typy danych, zmienne, operatory, instrukcje warunkowe, pętle i obsługę błędów. Czas połączyć całą tę wiedzę i stworzyć z niej coś namacalnego, coś, co **działa** – Twoją pierwszą, kompletną grę!
+
+Stworzymy razem klasyka gatunku: **"Zgadnij Liczbę"**. Zasady są proste:
+1.  Komputer losuje sekretną liczbę od 1 do 100.
+2.  Ty, gracz, próbujesz ją odgadnąć.
+3.  Po każdej próbie komputer daje Ci wskazówkę: "za mało", "za dużo" lub "trafiłeś!".
+
+Ten projekt to idealne ćwiczenie, które scementuje Twoją wiedzę. Krok po kroku, bez pośpiechu. Zaczynajmy!
+
+## Krok 1: Plan Bitwy i Importy
+
+Każdy dobry projekt zaczyna się od planu. Aby nasza gra działała, potrzebujemy sposobu na wylosowanie liczby. Python ma do tego wbudowaną bibliotekę (zbiór gotowych narzędzi) o nazwie `random`. Musimy ją "zaimportować" na samym początku naszego skryptu, aby móc z niej korzystać.
+
+```python
+import random
+```
+
+## Krok 2: Ustawienia Początkowe
+
+Teraz przygotujmy pole do gry. Potrzebujemy wylosować naszą sekretną liczbę i przywitać gracza.
+
+```python
+# ... poprzedni import
+
+# Komputer losuje liczbę całkowitą z przedziału od 1 do 100 włącznie
+sekretna_liczba = random.randint(1, 100)
+
+# Wyświetlamy powitanie i zasady gry
+print("--- Witaj w grze 'Zgadnij Liczbę'! ---")
+print("Pomyślałem sobie liczbę od 1 do 100. Spróbuj ją odgadnąć.")
+```
+
+## Krok 3: Główna Pętla Gry
+
+Nasza gra powinna toczyć się w kółko, dopóki gracz nie odgadnie liczby. Do tego idealnie nadaje się pętla `while True`, którą poznaliśmy w jednym z poprzednich artykułów. To pętla, która sama z siebie nigdy się nie kończy – przerwiemy ją ręcznie, gdy zajdzie taka potrzeba.
+
+```python
+# ... poprzedni kod
+
+# Ta pętla będzie sercem naszej gry
+while True:
+    # Cała logika gry znajdzie się tutaj, wewnątrz pętli
+    pass # Na razie zostawiamy puste, zaraz to uzupełnimy
+```
+
+## Krok 4: Interakcja z Graczem i Tarcza `try-except`
+
+Czas na najważniejszy element: interakcję! Musimy poprosić gracza o podanie liczby. Użyjemy do tego funkcji `input()`. Pamiętamy jednak, że `input()` zawsze zwraca tekst! A co, jeśli gracz wpisze "abc" zamiast liczby? Nasz program się zawiesi! Dlatego od razu użyjemy naszej tarczy `try-except`, aby się przed tym obronić.
+
+```python
+# Wewnątrz pętli while True:
+
+    try:
+        # Prosimy gracza o podanie liczby
+        strzal_str = input("Twoja propozycja: ")
+        # Próbujemy zamienić otrzymany tekst na liczbę całkowitą
+        strzal_int = int(strzal_str)
+
+    except ValueError:
+        # Jeśli konwersja się nie uda, bo gracz wpisał tekst, złapiemy błąd
+        print("To nie jest poprawna liczba! Spróbuj ponownie.")
+        # Instrukcja `continue` przerywa obecną iterację i wraca na początek pętli
+        continue
+```
+
+## Krok 5: Logika Gry i Wskazówki
+
+Gdy już mamy pewność, że `strzal_int` jest liczbą, możemy ją porównać z naszą sekretną liczbą. Tu do akcji wkraczają poznane wcześniej instrukcje warunkowe `if`, `elif` i `else`.
+
+```python
+# Ten kod dodajemy wewnątrz bloku `try`, zaraz po `strzal_int = int(strzal_str)`
+
+    if strzal_int < sekretna_liczba:
+        print("Za mało! Spróbuj wyżej. 🔼")
+    elif strzal_int > sekretna_liczba:
+        print("Za dużo! Spróbuj niżej. 🔽")
+    else:
+        print(f"\nBrawo! Wygrałeś! Sekretna liczba to rzeczywiście {sekretna_liczba}. 🏆")
+        # To jest moment na zakończenie gry! Używamy instrukcji `break`.
+        break
+```
+
+## Krok 6: Kompletny Kod Gry
+
+Złóżmy teraz wszystkie nasze klocki w jedną, działającą całość. Oto finalna wersja naszego programu. Możesz ją skopiować, wkleić do swojego pliku `.py` i uruchomić w terminalu!
+
+```python
+import random
+
+# Krok 2: Ustawienia początkowe
+sekretna_liczba = random.randint(1, 100)
+
+print("--- Witaj w grze 'Zgadnij Liczbę'! ---")
+print("Pomyślałem sobie liczbę od 1 do 100. Spróbuj ją odgadnąć.")
+
+# Krok 3: Główna pętla gry
+while True:
+    # Krok 4: Interakcja z graczem i obsługa błędów
+    try:
+        strzal_str = input("Twoja propozycja: ")
+        strzal_int = int(strzal_str)
+
+    except ValueError:
+        print("To nie jest poprawna liczba! Spróbuj ponownie.")
+        continue
+
+    # Krok 5: Logika gry i wskazówki
+    if strzal_int < sekretna_liczba:
+        print("Za mało! Spróbuj wyżej. 🔼")
+    elif strzal_int > sekretna_liczba:
+        print("Za dużo! Spróbuj niżej. 🔽")
+    else:
+        print(f"\nBrawo! Wygrałeś! Sekretna liczba to rzeczywiście {sekretna_liczba}. 🏆")
+        break # Krok 6: Zakończenie gry
+
+print("--- Dziękuję za grę! ---")
+```
+
+## Podsumowanie
+
+Gratulacje! Właśnie stworzyłeś swój pierwszy kompletny, interaktywny projekt w Pythonie, używając wszystkich fundamentalnych konceptów, których się nauczyliśmy. Zobacz, jak pięknie połączyliśmy tu zmienne, pętle, warunki i obsługę błędów, aby stworzyć coś, co naprawdę działa i daje frajdę.
+
+Teraz Twoja kolej na eksperymenty! Spróbuj zmodyfikować grę:
+*   Dodaj licznik prób, który poinformuje gracza, w ilu ruchach wygrał.
+*   Ogranicz liczbę prób do np. 10.
+*   Pozwól graczowi samemu wybrać zakres losowania liczb na początku gry.
+
+## Interaktywna Gra: Zagraj Teraz! 🕹️🕹️🕹️
+
+Poniżej znajduje się w pełni funkcjonalna gra "Zgadnij Liczbę", którą właśnie wspólnie omówiliśmy. Zagraj i przetestuj całą zdobytą wiedzę w praktyce! 🕹️
+
+<InteractiveGame />
+
+<br/>
+<button onClick={() => alert("Dziękuję za przeczytanie tutoriala! Gratulacje ukończenia pierwszej gry! 👍")}>
+  Gratulacje stworzenia pierwszej gry! To dowód, że potrafisz już programować. Eksperymentuj i twórz dalej! 🧙‍♂️🌟
+</button>
