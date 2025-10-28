@@ -1,0 +1,134 @@
+---
+title: 'Twój Pierwszy Projekt w Pythonie: Gra "Zgadnij Liczbę"! 🎮'
+description: 'Wykorzystaj całą zdobytą wiedzę w praktyce! Krok po kroku tworzymy kompletną grę "Zgadnij Liczbę" w Pythonie, używając pętli, warunków, funkcji i obsługi błędów.'
+summary: 'python projekt dla początkujących gra zgadnij liczbę pętle warunki funkcje'
+date: Listopad November 06 2025
+slug: python-pierwszy-projekt-gra-zgadnij-liczbe
+---
+
+# Twój Pierwszy Projekt w Pythonie: Gra "Zgadnij Liczbę"! 🎮
+
+Witaj w wielkim finale naszej serii dla początkujących czarodziejów Pythona! Do tej pory uczyliśmy się pojedynczych zaklęć: poznaliśmy typy danych, zmienne, operatory, struktury kontrolne, pętle i funkcje. Nadszedł czas, aby połączyć całą tę wiedzę, zamachać różdżką i stworzyć coś, co **działa** – naszą pierwszą, kompletną grę!
+
+Stworzymy klasyka gatunku: **"Zgadnij Liczbę"**. Zasady są proste:
+1.  Komputer losuje sekretną liczbę z określonego przedziału (np. od 1 do 100).
+2.  Gracz próbuje odgadnąć tę liczbę.
+3.  Po każdej próbie komputer daje wskazówkę: "za dużo", "za mało" lub "trafiłeś!".
+
+Ten prosty projekt to idealne pole do ćwiczeń, na którym wykorzystamy niemal wszystko, czego się nauczyliśmy. Zaczynajmy!
+
+## Krok 1: Plan Bitwy i Składniki
+
+Zanim napiszemy kod, zastanówmy się, czego potrzebujemy:
+*   Sposobu na wylosowanie liczby → moduł `random`.
+*   Miejsca na przechowywanie sekretnej liczby i próby gracza → **zmienne**.
+*   Sposobu na powtarzanie gry aż do odgadnięcia → pętla `while`.
+*   Sposobu na pobranie liczby od gracza → funkcja `input()`.
+*   Sposobu na sprawdzenie, czy gracz podał liczbę, a nie tekst → obsługa wyjątków `try-except`.
+*   Sposobu na porównanie liczb i danie wskazówki → instrukcje `if-elif-else`.
+*   Sposobu na zakończenie gry → instrukcja `break`.
+
+Mamy wszystko! Czas na kod.
+
+## Krok 2: Przygotowania i Losowanie
+
+Na początku musimy zaimportować potrzebne nam narzędzie do losowania i przygotować sekretną liczbę.
+
+```python
+import random
+
+sekretna_liczba = random.randint(1, 100)
+print("Witaj w grze 'Zgadnij Liczbę'!")
+print("Pomyślałem sobie liczbę od 1 do 100. Spróbuj ją odgadnąć.")
+```
+
+## Krok 3: Główna Pętla i Obsługa Gracza
+
+Teraz serce naszej gry. Stworzymy nieskończoną pętlę `while True`, która będzie naszym polem do gry. Będziemy z niej "uciekać" za pomocą `break`, gdy gracz odgadnie liczbę.
+
+Od razu zastosujemy też naszą tarczę `try-except`, aby zabezpieczyć się przed wpisaniem przez gracza czegoś, co nie jest liczbą.
+
+```python
+# Ta pętla będzie działać w nieskończoność, dopóki jej nie przerwiemy
+while True:
+    try:
+        # Prosimy gracza o podanie liczby
+        strzal_str = input("Twoja propozycja: ")
+        # Próbujemy zamienić tekst na liczbę całkowitą
+        strzal_int = int(strzal_str)
+
+    except ValueError:
+        # Jeśli się nie uda, informujemy o błędzie i wracamy na początek pętli
+        print("To nie jest liczba! Spróbuj ponownie.")
+        continue # Przechodzimy do następnej iteracji
+
+    # Jeśli wszystko powyżej się udało, możemy porównać liczby...
+    # (Logika gry przyjdzie tutaj w następnym kroku)
+```
+
+## Krok 4: Logika Gry i Wskazówki
+
+Uzupełnijmy naszą pętlę o najważniejszą część – sprawdzanie propozycji gracza i dawanie mu wskazówek.
+
+```python
+    # ... (poprzedni kod z try-except)
+
+    # Logika porównania
+    if strzal_int < sekretna_liczba:
+        print("Za mało! Spróbuj wyżej. 🔼")
+    elif strzal_int > sekretna_liczba:
+        print("Za dużo! Spróbuj niżej. 🔽")
+    else:
+        print(f"Brawo! Wygrałeś! Sekretna liczba to rzeczywiście {sekretna_liczba}. 🏆")
+        break # Zgadł! Przerywamy pętlę i kończymy grę.
+```
+
+## Krok 5: Kompletny Kod Gry
+
+A oto jak wygląda nasza kompletna gra po złożeniu wszystkich elementów w całość. Możesz skopiować ten kod, wkleić do swojego pliku `.py` i uruchomić!
+
+```python
+import random
+
+# 1. Ustawienia początkowe
+sekretna_liczba = random.randint(1, 100)
+
+print("--- Witaj w grze 'Zgadnij Liczbę'! ---")
+print("Pomyślałem sobie liczbę od 1 do 100. Spróbuj ją odgadnąć.")
+
+# 2. Główna pętla gry
+while True:
+    # 3. Pobieranie danych od gracza z obsługą błędów
+    try:
+        strzal_str = input("Twoja propozycja: ")
+        strzal_int = int(strzal_str)
+
+    except ValueError:
+        print("To nie jest liczba! Spróbuj ponownie.")
+        continue # Wracamy na początek pętli
+
+    # 4. Logika porównania i wskazówki
+    if strzal_int < sekretna_liczba:
+        print("Za mało! Spróbuj wyżej. 🔼")
+    elif strzal_int > sekretna_liczba:
+        print("Za dużo! Spróbuj niżej. 🔽")
+    else:
+        print(f"\nBrawo! Wygrałeś! Sekretna liczba to rzeczywiście {sekretna_liczba}. 🏆")
+        break # Zakończenie gry
+
+print("--- Dziękuję za grę! ---")
+```
+
+## Podsumowanie i Dalsze Kroki
+
+Gratulacje! Właśnie stworzyłeś swój pierwszy kompletny, interaktywny projekt w Pythonie! Zobacz, jak pięknie połączyliśmy tu wszystkie koncepcje, których uczyliśmy się do tej pory. 
+
+Co dalej? Niebo jest limitem! Spróbuj zmodyfikować grę:
+*   Dodaj licznik prób i wyświetl go na końcu.
+*   Ogranicz liczbę prób – gracz przegrywa, jeśli nie zgadnie w 10 ruchach.
+*   Pozwól graczowi samemu wybrać zakres losowania liczb.
+
+<br/>
+<button onClick={() => alert("Dziękuję za przeczytanie artykułu o Twoim pierwszym projekcie w Pythonie 👍")}>
+  Gratulacje ukończenia pierwszego projektu! To wielki krok. Eksperymentuj, zmieniaj i twórz dalej! 🧙‍♂️🌟
+</button>

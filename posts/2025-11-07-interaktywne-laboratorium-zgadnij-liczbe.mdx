@@ -1,0 +1,46 @@
+---
+title: 'Interaktywne Laboratorium: Zagraj w "Zgadnij Liczbę" w Przeglądarce! 🕹️'
+description: 'Teoria to jedno, a praktyka to drugie! Przetestuj zdobytą wiedzę i zagraj w grę "Zgadnij Liczbę" w naszym interaktywnym terminalu, osadzonym bezpośrednio w tym artykule.'
+summary: 'python interaktywny projekt gra zgadnij liczbę javascript mdx'
+date: Listopad November 07 2025
+slug: python-interaktywne-laboratorium-gra-zgadnij-liczbe
+---
+
+# Interaktywne Laboratorium: Zagraj w "Zgadnij Liczbę" w Przeglądarce! 🕹️
+
+Witaj w naszym pierwszym interaktywnym laboratorium Pythona! W poprzednim artykule, krok po kroku, stworzyliśmy kod do gry "Zgadnij Liczbę". Teoria i pisanie kodu to jedno, ale nic nie daje takiej satysfakcji, jak zobaczenie swojego dzieła w akcji.
+
+Dzięki magii nowoczesnych technologii webowych, przygotowałem dla Ciebie specjalny, symulowany terminal. Nie musisz niczego uruchamiać na swoim komputerze. Możesz zagrać w naszą grę **teraz, tutaj, bezpośrednio na tej stronie**.
+
+Zasady są proste: komputer wylosował liczbę od 1 do 100. Wpisz swoją propozycję w pole poniżej i naciśnij "Zgaduj!". Zaczynajmy!
+
+<br/>
+
+<InteractiveGame />
+
+<script dangerouslySetInnerHTML={{
+  __html: `
+    console.log("Tester script loaded. Waiting 3 seconds...");
+    setTimeout(function() {
+        console.log("Tester script: Simulating input and click.");
+        const input = document.getElementById('terminal-input');
+        const button = document.getElementById('submit-button');
+        if (input && button) {
+            console.log("Tester script: Found elements. Setting value and clicking.");
+            input.value = '1';
+            button.click();
+        } else {
+            console.error("Tester script: Could not find input or button element!");
+        }
+    }, 3000); // Wait 3 seconds
+`
+}} />
+
+## Jak to działa?
+
+Powyższy terminal to oczywiście nie jest prawdziwy Python, ale symulacja napisana w języku JavaScript, która idealnie naśladuje logikę naszego skryptu. To pokazuje, jak te same fundamentalne koncepcje programistyczne – zmienne, pętle, warunki – istnieją w różnych językach, pozwalając osiągać te same cele!
+
+<br/>
+<button onClick={() => alert("Dziękuję za wypróbowanie interaktywnego laboratorium! 👍")}>
+  Mam nadzieję, że podobała Ci się ta interaktywna forma nauki. Do zobaczenia w kolejnych artykułach! 🧙‍♂️🌟
+</button>

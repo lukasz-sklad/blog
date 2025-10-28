@@ -1,0 +1,104 @@
+---
+title: 'Struktury Danych w Pythonie: Poznaj Listy – Twoją Dynamiczną Torbę na Skarby! 🎒'
+description: 'Odkryj potęgę list w Pythonie! Naucz się tworzyć kolekcje danych, uzyskiwać do nich dostęp, modyfikować je za pomocą potężnych metod i tworzyć je w locie dzięki listom składanym.'
+summary: 'python listy struktury danych list append sort dla początkujących'
+date: Październik October 30 2025
+slug: python-listy-struktury-danych
+---
+
+# Struktury Danych w Pythonie: Poznaj Listy – Twoją Dynamiczną Torbę na Skarby! 🎒
+
+Witaj w kolejnej części naszej pythonowej sagi! Do tej pory nasze "magiczne pudełka" (zmienne) mogły przechowywać tylko jedną rzecz na raz. Ale co, jeśli mamy całą kolekcję skarbów? 💎 Chcemy trzymać razem wszystkie nasze ulubione owoce, listę zadań do zrobienia albo imiona wszystkich gości na przyjęciu. Trzymanie każdego z nich w osobnej zmiennej byłoby... cóż, niewygodne!
+
+Tu z pomocą przychodzą **struktury danych** – super-pojemniki, które pozwalają nam organizować i przechowywać wiele wartości naraz. Dziś poznamy pierwszą i najważniejszą z nich: wszechstronną i potężną **listę**!
+
+Wyobraź sobie listę jako magiczną torbę lub plecak. Możesz do niej wkładać, co chcesz, wyjmować, przekładać, a ona elastycznie się rozciąga i kurczy. Czas się spakować!
+
+## Tworzenie Listy i Dostęp do Jej Skarbów 🗺️
+
+Stworzenie listy jest dziecinnie proste. Wystarczy, że umieścisz swoje elementy w nawiasach kwadratowych `[]`, oddzielając je przecinkami.
+
+```python
+# Oto nasza pierwsza lista!
+owoce = ["🍎 jabłko", "🍌 banan", "🍊 pomarańcza"]
+liczby = [1, 2, 3, 5, 8, 13]
+mieszanka = ["tekst", 42, True, 99.9]
+```
+
+Super! Ale jak teraz dobrać się do konkretnego skarbu w naszej torbie? Używamy do tego **indeksów** – numerów, które określają pozycję elementu. Ale uwaga!
+
+> **Złota zasada programisty:** W Pythonie (i wielu innych językach) liczenie zawsze zaczyna się od **zera**! Pierwszy element ma indeks `0`, drugi `1`, i tak dalej.
+
+```python
+print(owoce[0])  # Wyświetli "🍎 jabłko"
+print(owoce[1])  # Wyświetli "🍌 banan"
+```
+
+**Sztuczka dla wtajemniczonych:** Możesz też liczyć od końca! Użyj ujemnych indeksów, aby szybko dostać się do ostatnich elementów.
+
+```python
+print(owoce[-1]) # Wyświetli ostatni element: "🍊 pomarańcza"
+print(owoce[-2]) # Wyświetli przedostatni: "🍌 banan"
+```
+
+## Magiczne Zaklęcia (Metody), Które Zmienią Twoją Listę 🪄
+
+Listy są "mutowalne", co w języku czarodziejów oznacza, że możemy je zmieniać po ich utworzeniu. Służą do tego specjalne zaklęcia, zwane **metodami**, które wywołujemy na naszej liście za pomocą kropki.
+
+*   📥 **`append(element)`**: Dodaje nowy element na sam koniec listy.
+*   📌 **`insert(indeks, element)`**: Wstawia element w dokładnie określone miejsce.
+*   🗑️ **`remove(element)`**: Usuwa pierwsze napotkane wystąpienie danego elementu.
+*   📤 **`pop(indeks)`**: Wyjmuje element z podanej pozycji (i pozwala go zapisać!). Jeśli nie podasz indeksu, wyjmie ostatni.
+*   🔀 **`sort()`**: Sortuje listę (np. alfabetycznie lub od najmniejszej do największej liczby).
+*   🔄 **`reverse()`**: Odwraca kolejność całej listy.
+
+Zobaczmy te czary w praktyce!
+
+```python
+owoce = ["jabłko", "banan", "pomarańcza"]
+
+owoce.append("gruszka")
+# owoce to teraz: ["jabłko", "banan", "pomarańcza", "gruszka"]
+
+owoce.insert(1, "winogrona")
+# owoce to teraz: ["jabłko", "winogrona", "banan", "pomarańcza", "gruszka"]
+
+owoce.remove("banan")
+# owoce to teraz: ["jabłko", "winogrona", "pomarańcza", "gruszka"]
+
+usuniety_owoc = owoce.pop(2)
+# usuniety_owoc to "pomarańcza", a owoce to ["jabłko", "winogrona", "gruszka"]
+
+owoce.sort()
+# owoce to teraz: ["gruszka", "jabłko", "winogrona"] (kolejność alfabetyczna!)
+
+owoce.reverse()
+# owoce to teraz: ["winogrona", "jabłko", "gruszka"]
+```
+
+## Sztuczka dla Mistrzów: Listy Składane 🚀
+
+To jeden z najbardziej uwielbianych elementów Pythona. Pozwala tworzyć nowe listy na podstawie istniejących w jednej, zwięzłej i niezwykle czytelnej linijce. To jak zaklęcie, które tworzy nową kolekcję według Twoich precyzyjnych instrukcji.
+
+Składnia wygląda tak: `nowa_lista = [AKCJA for ELEMENT in KOLEKCJA if WARUNEK]`
+
+Stwórzmy listę kwadratów tylko dla liczb parzystych:
+
+```python
+liczby = [1, 2, 3, 4, 5, 6]
+
+# Chcemy kwadraty (x**2) dla każdej liczby (x) z listy liczb, ale tylko jeśli liczba jest parzysta (x % 2 == 0)
+kwadraty_parzystych = [x**2 for x in liczby if x % 2 == 0]
+
+print(kwadraty_parzystych) # Wyświetli: [4, 16, 36]
+```
+Eleganckie, prawda? To właśnie za takie rzeczy programiści kochają Pythona!
+
+## Podsumowanie
+
+Listy to potężne i elastyczne narzędzie w Twoim arsenale. Pozwalają przechowywać i manipulować całymi kolekcjami danych w prosty i intuicyjny sposób. Ale to dopiero początek naszej podróży po strukturach danych! W kolejnych przygodach poznamy kuzynów list: krotki (tuple), słowniki (dictionaries) i zbiory (sets), z których każdy ma swoje unikalne supermoce.
+
+<br/>
+<button onClick={() => alert("Dziękuję za przeczytanie artykułu o listach w Pythonie 👍")}>
+  Zacznij tworzyć własne kolekcje i manipulować nimi – to esencja programowania! Do zobaczenia w następnym wpisie! 🧙‍♂️🌟
+</button>

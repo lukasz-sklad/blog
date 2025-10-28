@@ -1,0 +1,97 @@
+---
+title: 'Funkcje w Pythonie: Stwórz Własne Magiczne Zaklęcia! 📜✨'
+description: 'Przestań powtarzać kod! Naucz się tworzyć własne, reużywalne funkcje w Pythonie. Odkryj, jak definiować zaklęcia, przekazywać im składniki i otrzymywać magiczne rezultaty.'
+summary: 'python funkcje def return parametry argumenty dla początkujących'
+date: Listopad November 03 2025
+slug: python-funkcje-wlasne-zaklecia
+---
+
+# Funkcje w Pythonie: Stwórz Własne Magiczne Zaklęcia! 📜✨
+
+Witaj w zaawansowanej klasie zaklinania w Pythonie! Do tej pory używaliśmy wbudowanych czarów, takich jak `print()` czy `len()`. Działają świetnie, ale prawdziwa moc czarodzieja objawia się wtedy, gdy zaczyna on tworzyć **własne, unikalne zaklęcia**.
+
+Tym właśnie są **funkcje** – blokami kodu wielokrotnego użytku, które możesz zapisać raz, a potem wywoływać (rzucać) w dowolnym momencie, po prostu podając ich nazwę. To absolutna podstawa, która sprawia, że kod staje się zorganizowany, czytelny i potężny. Koniec z powtarzaniem tych samych linijek w kółko! Czas otworzyć własną księgę czarów.
+
+## 1. Rytuał Tworzenia: `def` i `()`
+
+Aby stworzyć własne zaklęcie, musimy odprawić mały rytuał. Zaczynamy od magicznego słowa `def` (od *define* - definiuj), które mówi Pythonowi: "Uważaj, teraz tworzę nowe zaklęcie!". Potem podajemy nazwę naszego czaru i kończymy nawiasami `()` oraz dwukropkiem `:`.
+
+```python
+# Definiujemy nasze pierwsze, proste zaklęcie
+def powitanie():
+    print("Witaj, Świecie! ✨")
+
+# A teraz rzucamy nasz czar, po prostu wołając go po imieniu!
+powitanie() # Wyświetli "Witaj, Świecie! ✨"
+powitanie() # Możemy to robić, ile razy chcemy!
+```
+
+## 2. Składniki Zaklęcia: Parametry i Argumenty 🧪
+
+Niektóre zaklęcia są samowystarczalne, ale większość potrzebuje składników, aby zadziałać. W funkcjach nazywamy je **parametrami** (w definicji) i **argumentami** (podczas wywołania).
+
+*   **Parametry** to lista "oczekiwanych składników", które definiujesz w nawiasach `()`.
+*   **Argumenty** to "rzeczywiste składniki", które podajesz, gdy wywołujesz funkcję.
+
+```python
+# Ta funkcja oczekuje jednego składnika, który nazwaliśmy 'imię'
+def powitanie_osobiste(imię):
+    print(f"Witaj, {imię}! Miło Cię widzieć. 😊")
+
+# Rzucamy czar, podając konkretne składniki (argumenty)
+powitanie_osobiste("Jan")   # Wyświetli "Witaj, Jan! Miło Cię widzieć. 😊"
+powitanie_osobiste("Maria") # Wyświetli "Witaj, Maria! Miło Cię widzieć. 😊"
+```
+
+## 3. Rezultat Czarów: Słowo Kluczowe `return` 🎁
+
+Niektóre zaklęcia po prostu coś robią (jak `print`, które wyświetla tekst). Ale inne, potężniejsze, tworzą coś nowego i **zwracają** nam rezultat. Do tego służy słowo kluczowe `return`. Dzięki niemu funkcja może nam "oddać" wynik swoich obliczeń, który możemy zapisać w zmiennej.
+
+```python
+# Ta funkcja nie wyświetla wyniku, ale go ZWRACA
+def dodawanie(a, b):
+    wynik_obliczen = a + b
+    return wynik_obliczen
+
+# Rzucamy czar i łapiemy jego rezultat do zmiennej
+rezultat = dodawanie(3, 4)
+print(rezultat) # Dopiero teraz wyświetlamy wynik: 7
+
+# Możemy użyć rezultatu do dalszych obliczeń!
+print(rezultat * 2) # Wyświetli 14
+```
+
+## 4. Pradawna Wiedza: Dokumentowanie Zaklęć (Docstrings) 📖
+
+Dobrą praktyką każdego maga jest prowadzenie notatek. W Pythonie robimy to za pomocą `docstrings` (ciągów dokumentujących). To specjalny komentarz w potrójnych cudzysłowach `"""..."""` umieszczony zaraz pod linią `def`, który wyjaśnia, co robi nasza funkcja. To bezcenna pomoc dla innych programistów i dla Ciebie z przyszłości!
+
+```python
+def pole_prostokata(podstawa, wysokosc):
+    """Oblicza pole prostokąta.
+
+    Args:
+        podstawa (float): Długość podstawy prostokąta.
+        wysokosc (float): Wysokość prostokąta.
+
+    Returns:
+        float: Obliczone pole prostokąta.
+    """
+    return podstawa * wysokosc
+```
+
+## Dla Zaawansowanych Adeptów 🧙
+
+Świat funkcji ma też swoje tajne komnaty. Oto kilka z nich:
+
+*   **Zaklęcia Jednej Linijki (`lambda`)**: Czasem potrzebujesz małej, prostej funkcji "na szybko". `lambda` pozwala ją zdefiniować w jednej linijce, bez nazwy. `kwadrat = lambda x: x ** 2`.
+*   **Zasięg Lokalny i Globalny**: Zmienne stworzone wewnątrz funkcji są **lokalne** (żyją tylko w niej). Zmienne stworzone na zewnątrz są **globalne** (widoczne wszędzie). To jak różnica między notatkami w jednej księdze a ogłoszeniem na tablicy w całym zamku.
+*   **Zaklęcia z Wieloma Składnikami (`*args`)**: Chcesz stworzyć funkcję, która przyjmie dowolną liczbę argumentów? Użyj `*` przed nazwą parametru! `def zsumuj_wszystko(*liczby): ...`.
+
+## Podsumowanie
+
+Funkcje to absolutny fundament dojrzałego programowania. Pozwalają dzielić duży problem na mniejsze, zarządzalne kawałki, unikać powtarzania kodu i tworzyć własne biblioteki narzędzi. To moment, w którym stajesz się prawdziwym architektem swojego kodu.
+
+<br/>
+<button onClick={() => alert("Dziękuję za przeczytanie artykułu o funkcjach w Pythonie 👍")}>
+  Tworzenie własnych funkcji to moment, w którym stajesz się prawdziwym architektem swojego kodu. Eksperymentuj i automatyzuj! Do zobaczenia! 🧙‍♂️🌟
+</button>

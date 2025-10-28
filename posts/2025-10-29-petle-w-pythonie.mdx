@@ -1,0 +1,100 @@
+---
+title: 'Pętle w Pythonie: Zautomatyzuj Zadania i Uwolnij Swoją Moc! 🔄'
+description: 'Odkryj pętle for i while w Pythonie, które wykonają za Ciebie powtarzalną pracę! Naucz się iterować po listach, powtarzać zadania i sterować przepływem pętli za pomocą break, continue i pass.'
+summary: 'python pętle for while break continue pass dla początkujących automatyzacja'
+date: Październik October 29 2025
+slug: python-petle-automatyzacja-zadan
+---
+
+# Pętle w Pythonie: Zautomatyzuj Zadania i Uwolnij Swoją Moc! 🔄
+
+Witaj ponownie w naszej szkole magii Pythona! W ostatniej przygodzie nauczyliśmy nasz kod podejmować decyzje za pomocą instrukcji `if`. To było jak nauczenie go myślenia. Ale co, jeśli chcemy, aby nasz program zrobił coś sto razy? Albo tysiąc? 😱 Ręczne pisanie tego samego kodu byłoby koszmarem i zaprzeczeniem idei programowania!
+
+Tu na scenę wkraczają **pętle** – Twoje osobiste zaklęcia automatyzacji. To niestrudzeni pomocnicy 🤖, którzy wykonają za Ciebie każdą powtarzalną pracę, pozwalając Ci skupić się na tym, co najważniejsze. Czas uwolnić prawdziwą moc i sprawić, by komputer pracował za nas!
+
+## 1. Pętla `for`: Podróżnik po Sekwencjach 🚶‍♀️
+
+Wyobraź sobie, że masz listę zakupów 🛒, listę gości do zaproszenia lub po prostu napis. Pętla `for` to Twój osobisty asystent, który bierze każdy element z tej kolekcji po kolei i wykonuje na nim określoną czynność. To idealne narzędzie do "przechodzenia" przez rzeczy.
+
+Jej składnia jest bardzo naturalna: "Dla każdego `elementu` w mojej `kolekcji` zrób `coś`".
+
+```python
+# Nasza lista owoców
+owoce = ["🍎 jabłko", "🍌 banan", "🍊 pomarańcza"]
+
+# Pętla for odwiedzi każdy owoc
+for owoc in owoce:
+    print(f"Dziś na deser jem: {owoc}")
+```
+
+Jak widać, pętla `for` sama wie, kiedy skończyć – gdy odwiedzi już wszystkie elementy z listy. Proste i eleganckie!
+
+## 2. Pętla `while`: Wytrwały Strażnik 🛡️
+
+Pętla `while` działa inaczej. Jest jak wytrwały strażnik, który powtarza swoje zadanie, **dopóki** (ang. *while*) określony warunek jest prawdziwy. Nie interesuje jej, po czym przechodzi – interesuje ją tylko, czy ma dalej pracować.
+
+Jej składnia to: "**Dopóki** `warunek` jest prawdziwy, rób `coś`".
+
+```python
+licznik = 0
+
+# Pętla będzie działać, dopóki licznik jest mniejszy od 5
+while licznik < 5:
+    print(f"Licznik ma teraz wartość: {licznik}")
+    licznik += 1  # Niezwykle ważne: zmieniamy licznik w każdej pętli!
+
+print("Koniec pętli, licznik osiągnął 5.")
+```
+
+⚠️ **Uwaga na pułapkę nieskończoności!** W pętli `while` musisz zawsze pamiętać, aby coś w jej wnętrzu mogło wpłynąć na warunek. W naszym przykładzie jest to `licznik += 1`. Gdybyśmy o tym zapomnieli, `licznik` zawsze byłby mniejszy od 5, a pętla działałaby w nieskończoność!
+
+## Mistrzowskie Sztuczki: Jak Sterować Pętlami? 🎩
+
+Czasem standardowe zachowanie pętli to za mało. Python daje nam trzy dodatkowe różdżki do precyzyjnego sterowania ich przepływem.
+
+### `break`: Nagłe Wyjście 🚪
+
+Czasem trzeba po prostu powiedzieć "STOP!". `break` to awaryjny hamulec, który natychmiast **przerywa działanie pętli**, niezależnie od wszystkiego.
+
+```python
+licznik = 0
+while True:  # To byłaby pętla nieskończona...
+    print(licznik)
+    licznik += 1
+    if licznik == 5:
+        print("STOP! Wychodzimy z pętli.")
+        break  # ...gdyby nie ten break!
+```
+
+### `continue`: Pomiń i Idź Dalej ⏭️
+
+`continue` to jak powiedzenie: "OK, ten element mnie nie interesuje, zignoruj resztę kodu dla niego i przejdźmy od razu do następnej iteracji!". Idealne do filtrowania.
+
+```python
+# Wypiszmy tylko liczby nieparzyste
+for i in range(10):  # range(10) da nam liczby od 0 do 9
+    if i % 2 == 0:  # Jeśli liczba jest parzysta...
+        continue      # ...pomiń ją i leć dalej!
+    print(i)        # Ten kod wykona się tylko dla nieparzystych
+```
+
+### `pass`: Wrócę tu później... 🚧
+
+`pass` to najdziwniejszy z trójki. Dosłownie **nie robi nic**. Po co więc istnieje? Jest jak karteczka "w budowie" lub "wrócę tu później". Czasem składnia Pythona wymaga, aby gdzieś był kod (np. wewnątrz `if` lub pętli), ale my jeszcze nie wiemy, co tam napisać. `pass` pozwala nam zostawić to miejsce puste bez powodowania błędu.
+
+```python
+for i in range(5):
+    # TODO: W przyszłości zaimplementuję tu jakąś super logikę
+    pass
+
+print("Program działa, mimo że pętla jest pusta!")
+```
+
+## Podsumowanie
+
+Pętle to prawdziwe konie pociągowe programowania. Uwalniają Cię od nudnych, powtarzalnych zadań i pozwalają tworzyć złożone procesy za pomocą kilku linijek kodu. Połącz je z poznanymi wcześniej instrukcjami `if`, a Twój kod zyska prawdziwą supermoc!
+
+<br/>
+<button onClick={() => alert("Dziękuję za przeczytanie artykułu o pętlach w Pythonie 👍")}>
+  Zacznij automatyzować swoje zadania i poczuj prawdziwą moc, jaką daje programowanie. Do zobaczenia w następnym wpisie! 🧙‍♂️🌟
+</button>

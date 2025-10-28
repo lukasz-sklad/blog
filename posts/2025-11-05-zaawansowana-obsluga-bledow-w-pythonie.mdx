@@ -1,0 +1,90 @@
+---
+title: 'Mistrzowska Obsługa Błędów: `try`, `except`, `else` i `finally`! 🛡️✨'
+description: 'Wejdź na wyższy poziom obsługi błędów w Pythonie! Opanuj zaawansowane konstrukcje z `else` i `finally`, aby pisać kod, który nie tylko jest odporny na błędy, ale także elegancko po sobie sprząta.'
+summary: 'python try except finally else obsługa błędów dla początkujących'
+date: Listopad November 05 2025
+slug: python-zaawansowana-obsluga-bledow-finally
+---
+
+# Mistrzowska Obsługa Błędów: `try`, `except`, `else` i `finally`! 🛡️✨
+
+W poprzednim rozdziale nauczyliśmy się podstawowej obrony przed błędami za pomocą tarczy `try...except`. To była przełomowa chwila! Nasz kod nie musi już bezradnie przerywać działania przy pierwszym potknięciu. Ale prawdziwe mistrzostwo w zaklinaniu błędów polega na pełnej kontroli nad każdą sytuacją.
+
+Dziś rozwiniemy naszą tarczę, dodając do niej dwie nowe, potężne runy: `else` i `finally`. Dzięki nim nasz kod będzie nie tylko odporny na błędy, ale także niezwykle elegancki i przewidywalny. Czas zostać prawdziwym mistrzem obsługi wyjątków!
+
+## Szybkie Przypomnienie: `try` i `except`
+
+*   W bloku `try` umieszczamy kod, który może sprawić problemy.
+*   W bloku `except` umieszczamy plan awaryjny, który wykona się, jeśli w `try` wystąpi błąd.
+
+## Łapanie Konkretnych Potworów: Wiele Bloków `except`
+
+Co, jeśli nasz ryzykowny kod może wygenerować różne rodzaje błędów? Możemy przygotować osobny plan awaryjny na każdy z nich! To jak posiadanie różnych mikstur na różne klątwy.
+
+```python
+try:
+    liczba = int(input("Podaj liczbę do podzielenia 10: "))
+    wynik = 10 / liczba
+    print(f"Wynik to: {wynik}")
+
+except ValueError:
+    # Ten blok złapie tylko błąd, gdy ktoś wpisze tekst zamiast liczby
+    print("Błąd: To nie jest poprawna liczba!")
+
+except ZeroDivisionError:
+    # A ten blok zadziała tylko przy próbie dzielenia przez zero
+    print("Błąd: Nie można dzielić przez zero!")
+```
+
+## Gdy Wszystko Pójdzie Dobrze: Klauzula `else` ✅
+
+To bardzo przydatny, choć często pomijany dodatek. Blok `else` w konstrukcji `try...except` wykona się **tylko wtedy, gdy blok `try` zakończył się sukcesem** (nie wystąpił żaden błąd).
+
+To idealne miejsce na kod, który powinien się wykonać po udanej operacji, oddzielając go od "ryzykownej" części.
+
+```python
+try:
+    wiek_str = input("Podaj swój wiek: ")
+    wiek_int = int(wiek_str)
+
+except ValueError:
+    print("Ups! To nie wygląda na liczbę.")
+
+else:
+    # Ten kod wykona się tylko, jeśli konwersja na int() się powiodła
+    print(f"Sukces! Twój wiek to {wiek_int}. Za rok będziesz mieć {wiek_int + 1} lat.")
+```
+
+## Niezależnie od Wszystkiego: Magia `finally` 🧹
+
+To jest najpotężniejsza runa na naszej tarczy. Blok `finally` wykona się **ZAWSZE**. Nieważne, czy w bloku `try` był sukces, czy wystąpił błąd, który został złapany przez `except`, czy nawet jeśli wystąpił błąd, którego nie złapaliśmy – kod w `finally` musi się wykonać.
+
+Do czego to służy? Do sprzątania! To idealne miejsce, aby zamknąć pliki, zwolnić zasoby sieciowe lub wykonać inne czynności porządkowe, mając pewność, że zostaną one wykonane bez względu na wszystko.
+
+```python
+plik = None # Definiujemy zmienną plik przed blokiem try
+try:
+    print("Próbuję otworzyć plik...")
+    plik = open("nieistniejacy_plik.txt", "r")
+    print("Plik otwarty, odczytuję zawartość...")
+    print(plik.read())
+
+except FileNotFoundError:
+    print("Błąd: Plik nie został znaleziony!")
+
+finally:
+    # Ten blok wykona się ZAWSZE
+    print("Blok 'finally': Zamykanie zasobów.")
+    if plik:
+        plik.close()
+        print("Plik został zamknięty.")
+```
+
+## Podsumowanie
+
+Pełna konstrukcja `try-except-else-finally` to Twoja kompletna zbroja do walki z nieprzewidywalnością kodu. Pozwala nie tylko unikać katastrof, ale także elegancko zarządzać przepływem programu w zależności od tego, czy operacja się powiodła, czy nie, oraz gwarantuje wykonanie kluczowych operacji czyszczących.
+
+<br/>
+<button onClick={() => alert("Dziękuję za przeczytanie artykułu o obsłudze błędów w Pythonie 👍")}>
+  W następnym artykule użyjemy całej naszej wiedzy, by zbudować pierwszy kompletny projekt! Do zobaczenia! 🧙‍♂️🌟
+</button>

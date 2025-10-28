@@ -1,0 +1,95 @@
+---
+title: 'Krotki (Tuples) w Pythonie: Twoje Dane Zapisane w Kamieniu! 💎'
+description: 'Odkryj krotki (tuples) w Pythonie – niezmienne struktury danych, które gwarantują bezpieczeństwo Twoich informacji. Dowiedz się, dlaczego ich “ograniczenie” jest w rzeczywistości ich największą siłą!'
+summary: 'python tuple krotka niezmienność struktury danych dla początkujących'
+date: Październik October 31 2025
+slug: python-krotki-niezmienne-struktury-danych
+---
+
+# Krotki (Tuples) w Pythonie: Twoje Dane Zapisane w Kamieniu! 💎
+
+Witaj w kolejnej odsłonie naszej pythonowej podróży! W poprzedniej przygodzie bawiliśmy się listami – naszą elastyczną torbą na skarby 🎒, do której mogliśmy dowolnie dodawać, usuwać i przekładać elementy. Ale co, jeśli mamy skarb tak cenny, że pod żadnym pozorem nie chcemy go zmieniać? Co, jeśli potrzebujemy gwarancji, że nasze dane pozostaną nienaruszone?
+
+Tu na scenę wkracza **krotka** (ang. *tuple*). Wyobraź ją sobie nie jako torbę, ale jako skarb zamknięty w krysztale lub dane wyryte w kamiennej tablicy. Możesz je oglądać, odczytywać i używać, ale nie możesz ich zmienić. To struktura danych, która ceni sobie stałość i bezpieczeństwo ponad wszystko!
+
+## Tworzenie Krotki: Pieczętowanie Danych 📜
+
+Tworzenie krotki jest niemal identyczne jak tworzenie listy, ale jest jedna, kluczowa różnica – zamiast kwadratowych nawiasów `[]` używamy okrągłych `()`.
+
+```python
+# Oto nasza pierwsza, niezmienna krotka!
+# Współrzędne punktu na mapie
+punkt = (10, 20)
+
+# Kolor w modelu RGB
+kolor_czerwony = (255, 0, 0)
+
+# Daty, które nie powinny się zmieniać
+dni_tygodnia = ("poniedziałek", "wtorek", "środa", ...)
+```
+
+Dostęp do elementów krotki działa **dokładnie tak samo, jak w listach**, za pomocą indeksów w nawiasach kwadratowych `[]`. Pamiętamy oczywiście, że liczymy od zera!
+
+```python
+print(punkt[0])  # Wyświetli 10
+print(punkt[1])  # Wyświetli 4 (korekta z Twojego tekstu: powinno być 20)
+
+print(kolor_czerwony[-1]) # Wyświetli 0 (licząc od końca)
+```
+
+## Niezmienność: Dlaczego "Ograniczenie" to Tak Naprawdę Supermoc? 💪
+
+Możesz pomyśleć: "Po co mi struktura, której nie mogę zmieniać?". To jest jej największa zaleta! Ta niezmienność (ang. *immutability*) daje nam:
+
+*   **Bezpieczeństwo Danych:** Masz absolutną pewność, że Ty lub inna część Twojego programu przypadkowo nie nadpiszecie ważnych danych, takich jak ustawienia konfiguracyjne, współrzędne czy historyczne zapisy.
+*   **Przewidywalność:** Krotka jest jak solidna skała. Możesz na niej polegać, wiedząc, że jej zawartość jest stała.
+*   **Wydajność:** W pewnych sytuacjach Python może przetwarzać krotki nieco szybciej niż listy, właśnie dlatego, że nie musi być gotowy na ich modyfikację.
+*   **Możliwość bycia kluczem w słowniku:** To mały spoiler naszej przyszłej przygody, ale ta cecha sprawia, że krotki mogą pełnić specjalne role w bardziej zaawansowanych strukturach danych, w przeciwieństwie do list.
+
+Zobacz, co się stanie, gdy spróbujemy złamać zasady i zmienić krotkę:
+
+```python
+moja_krotka = (1, 2, 3)
+
+# Próbujemy zmienić pierwszy element
+# moja_krotka[0] = 99
+
+# Jeśli odkomentujesz powyższą linię, Python zaprotestuje!
+# TypeError: 'tuple' object does not support item assignment
+```
+Python głośno krzyczy, że nie wolno! I bardzo dobrze – pilnuje bezpieczeństwa naszych danych.
+
+## Co Możemy Zrobić z Krotką? 🧐
+
+Skoro krotek nie można zmieniać, lista ich metod jest znacznie krótsza niż w przypadku list. Nie znajdziemy tu `append` czy `remove`. Mamy za to dwa przydatne narzędzia detektywistyczne:
+
+*   **`count(element)`**: Liczy, ile razy dany element występuje w krotce.
+*   **`index(element)`**: Mówi, na której pozycji (indeksie) po raz pierwszy znajduje się dany element.
+
+Dodatkowo, możemy użyć wbudowanej funkcji `len()`, aby sprawdzić jej długość.
+
+```python
+moja_krotka = (1, 2, 3, 2, 4, 2)
+
+# Ile razy w krotce występuje liczba 2?
+print(moja_krotka.count(2))   # Wyświetli: 3
+
+# Gdzie po raz pierwszy znajduje się liczba 2?
+print(moja_krotka.index(2))   # Wyświetli: 1
+
+# Jak długa jest krotka?
+print(len(moja_krotka))       # Wyświetli: 6
+```
+
+## Podsumowanie
+
+Poznałeś właśnie elegancką i bezpieczną strukturę danych. Krotka to Twój wybór, gdy chcesz mieć pewność, że Twoje dane pozostaną nienaruszone. To kamień węgielny wielu stabilnych i przewidywalnych programów.
+
+Pamiętaj o podstawowej zasadzie wyboru:
+*   Potrzebujesz elastycznej, zmiennej kolekcji? Wybierz **listę** 🎒.
+*   Potrzebujesz gwarancji stałości i bezpieczeństwa danych? Sięgnij po **krotkę** 💎.
+
+<br/>
+<button onClick={() => alert("Dziękuję za przeczytanie artykułu o krotkach w Pythonie 👍")}>
+  Wybór odpowiedniej struktury danych to ważna umiejętność. W następnej części poznamy potężne słowniki! Do zobaczenia! 🧙‍♂️🌟
+</button>
