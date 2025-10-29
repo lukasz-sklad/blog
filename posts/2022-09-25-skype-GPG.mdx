@@ -1,0 +1,84 @@
+---
+title: Skype for Linux Błąd Podpisu GPG 🕰️
+description: 'Rozwiązanie problemu z błędem podpisu GPG podczas aktualizacji Skype for Linux na systemach Debian/Ubuntu.'
+summary: 'Skype, GPG, Linux, błąd podpisu, apt, aktualizacja'
+date: Wrzesień September 25 2022
+---
+
+# Skype for Linux: Błąd Podpisu GPG (Zarchiwizowano 🕰️)
+
+Ten artykuł opisuje rozwiązanie problemu z błędem podpisu GPG, który może pojawić się podczas próby aktualizacji Skype for Linux na systemach opartych na Debianie/Ubuntu. Błąd ten uniemożliwia prawidłową weryfikację pakietów, co blokuje proces aktualizacji aplikacji.
+
+## Diagnoza Problemu
+
+Od pewnego czasu, po wykonaniu standardowej komendy aktualizacji w terminalu:
+
+```bash
+apt update
+```
+
+Pojawiał się następujący komunikat o błędzie podpisu GPG:
+
+```
+Błąd:7 https://repo.skype.com/deb stable InRelease
+  Następujące podpisy były błędne: EXPKEYSIG 1F3045A5DF7587C3 Skype Linux Client Repository <se-um@microsoft.com>
+```
+
+Komunikat ten wskazuje, że system `apt` nie jest w stanie zweryfikować autentyczności pakietów pochodzących z repozytorium Skype, ponieważ klucz GPG użyty do ich podpisania jest nieprawidłowy lub wygasł. W konsekwencji, cały proces aktualizacji Skype for Linux zostaje zablokowany.
+
+## Rozwiązanie
+
+Aby naprawić ten problem, należy ponownie dodać lub zaktualizować klucz GPG dla repozytorium Skype. Można to zrobić za pomocą poniższego polecenia w terminalu:
+
+```bash
+wget -O - https://repo.skype.com/data/SKYPE-GPG-KEY | sudo apt-key add -
+```
+
+**Wyjaśnienie polecenia:**
+*   `wget -O - https://repo.skype.com/data/SKYPE-GPG-KEY`: Pobiera klucz GPG ze wskazanego adresu URL i przekazuje go do standardowego wyjścia (`-O -`).
+*   `|`: Przekazuje wyjście `wget` jako wejście do następnego polecenia.
+*   `sudo apt-key add -`: Dodaje pobrany klucz GPG do listy zaufanych kluczy systemu `apt`.
+
+## Weryfikacja i Aktualizacja
+
+Po dodaniu klucza GPG, należy ponownie zaktualizować listę pakietów i sprawdzić dostępność aktualizacji:
+
+1.  **Aktualizacja listy pakietów:**
+
+```shell
+sudo apt update
+```
+
+2.  **Sprawdzenie dostępnych aktualizacji dla Skype:**
+
+```bash
+sudo apt list --upgradable -a
+```
+
+Powinien pojawić się podobny wynik, wskazujący na dostępność nowszych wersji `skypeforlinux`:
+
+```
+skypeforlinux/stable 8.88.0.401 amd64 [upgradable from: 8.87.0.403]
+skypeforlinux/stable 8.87.0.406 amd64
+skypeforlinux/stable,now 8.87.0.403 amd64 [installed,upgradable to: 8.88.0.401]
+skypeforlinux/stable 8.86.0.407 amd64
+skypeforlinux/stable 8.85.0.409 amd64
+```
+
+3.  **Instalacja aktualizacji Skype:**
+
+```bash
+sudo apt install skypeforlinux
+```
+
+Po wykonaniu tych kroków, Skype for Linux powinien zostać pomyślnie zaktualizowany, a błąd podpisu GPG nie powinien już się pojawiać.
+
+## Podsumowanie
+
+Problem z błędem podpisu GPG dla Skype for Linux jest typowym przykładem, jak ważne jest zarządzanie kluczami kryptograficznymi w systemach pakietów. Szybka aktualizacja klucza pozwala na utrzymanie bezpieczeństwa i funkcjonalności systemu. Ten artykuł został zarchiwizowany i nie będzie już aktualizowany, ale jego treść pozostaje cennym źródłem informacji dla osób napotykających podobny problem.
+
+
+<button onClick={() => alert("Dziękuję za przeczytanie artykułu o Skype 👍")}>
+    Błędy się zdarzają, ale najważniejsze to umieć sobie z nimi radzić! 💪  <br />
+ 😊 Do zobaczenia w następnym wpisie! 🌟
+</button>
