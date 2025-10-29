@@ -24,10 +24,9 @@ export const sortPostsByDate = (posts) => {
 export const getPosts = () => {
   let posts = postFilePaths.map((filePath) => {
     const source = fs.readFileSync(path.join(POSTS_PATH, filePath));
-    const { content, data } = matter(source);
-
+    // const { content, data } = matter(source);
+    const { data } = matter(source);
     return {
-      content,
       data,
       filePath,
     };
