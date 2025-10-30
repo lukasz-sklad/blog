@@ -1,0 +1,152 @@
+---
+title: Gdy Stable Diffusion WebUI Odmawia Współpracy Studium Przypadku z Głębokiego Debugowania
+description: 'Zobacz, jak krok po kroku rozwiązałem serię tajemniczych błędów podczas instalacji Stable Diffusion WebUI – od problemów z GPU, przez błędy pamięci, aż po ostateczny sukces.'
+summary: 'stable diffusion automatic1111 debug pytorch gpu cpu lief triton'
+date: Listopad November 15 2025
+slug: gdy-stable-diffusion-odmawia-wspolpracy
+---
+
+# Gdy Stable Diffusion WebUI Odmawia Współpracy: Studium Przypadku z Głębokiego Debugowania
+
+Stable Diffusion WebUI od AUTOMATIC1111 to potężne narzędzie, które zdemokratyzowało dostęp do generowania obrazów AI. Pozwala na uruchomienie zaawansowanych modeli na własnym sprzęcie, dając niemal nieograniczone możliwości twórcze. Ale co się dzieje, gdy po instalacji, zamiast magicznego interfejsu, wita nas czerwony tekst błędu w konsoli?
+
+Ostatnio stanąłem przed takim wyzwaniem. Proces, który miał być prostym uruchomieniem skryptu, zamienił się w wieloetapową batalię z błędami. W tym artykule przejdziemy przez całą tę podróż — od pierwszego komunikatu o błędzie, przez serię nieoczekiwanych problemów, aż do ostatecznego sukcesu.
+
+## Etap 1: "Torch is not able to use GPU"
+
+Wszystko zaczęło się od uruchomienia skryptu startowego `./webui.sh`. Chwilę później pojawił się pierwszy, dość jasny komunikat:
+
+```bash
+RuntimeError: Torch is not able to use GPU; add --skip-torch-cuda-test to COMMANDLINE_ARGS variable to disable this check
+```
+
+**Problem:** Aplikacja wykryła, że biblioteka PyTorch nie jest w stanie komunikować się z procesorem graficznym (GPU), co jest kluczowe dla jej wydajności.
+
+**Rozwiązanie:** Zgodnie z sugestią, musiałem dodać flagę `--skip-torch-cuda-test` do argumentów startowych. W tym projekcie konfigurację użytkownika przechowuje się w pliku `webui-user.sh`.
+
+Zmodyfikowałem plik `webui-user.sh`, odkomentowując i zmieniając linię `COMMANDLINE_ARGS`:
+
+```bash
+# Stara linia
+#export COMMANDLINE_ARGS=""
+
+# Nowa linia
+export COMMANDLINE_ARGS="--skip-torch-cuda-test"
+```
+
+## Etap 2: Pliki wykonywalne i stos pamięci (libamdhip64.so)
+
+Myślałem, że to koniec problemów, ale po ponownym uruchomieniu pojawił się znacznie bardziej tajemniczy błąd:
+
+```bash
+ImportError: libamdhip64.so: cannot enable executable stack as shared object requires: Invalid argument
+```
+
+**Problem:** Ten błąd dotyczy funkcji bezpieczeństwa systemu operacyjnego. Biblioteka `libamdhip64.so`, kluczowa dla obsługi kart AMD, wymagała uprawnień do wykonywania kodu ze stosu pamięci, na co nie pozwalała domyślna konfiguracja środowiska (w tym przypadku kontenera).
+
+**Rozwiązanie:** Standardowe narzędzia jak `execstack` czy `elfedit` zawiodły z powodu ograniczeń środowiska. Rozwiązaniem okazało się użycie biblioteki Pythona o nazwie `lief`, która pozwala na modyfikację plików binarnych. Stworzyłem skrypt `fix_execstack.py`, który programowo usunął flagę wykonywalnego stosu z wadliwych bibliotek.
+
+Po chwili okazało się, że problem dotyczy nie jednego, a kilku plików. Skrypt został rozszerzony, aby naprawić je wszystkie.
+
+**Skrypt `fix_execstack.py`:**
+
+```python
+import lief
+import os
+
+def set_nx_bit(filepath):
+    try:
+        binary = lief.ELF.parse(filepath)
+        if binary is None: return
+
+        modified = False
+        for segment in binary.segments:
+            if segment.has(lief.ELF.Segment.FLAGS.X):
+                segment.remove(lief.ELF.Segment.FLAGS.X)
+                modified = True
+
+        if modified:
+            output_filepath = filepath + "_nx"
+            binary.write(output_filepath)
+            os.rename(output_filepath, filepath)
+            print(f"Naprawiono plik: {filepath}")
+
+    except Exception as e:
+        print(f"Wystąpił błąd: {e}")
+
+if __name__ == "__main__":
+    files_to_fix = [
+        "/home/deck/GIT/ai/stable-diffusion-webui/venv/lib/python3.10/site-packages/torch/lib/libamdhip64.so",
+        "/home/deck/GIT/ai/stable-diffusion-webui/venv/lib/python3.10/site-packages/triton/third_party/hip/lib/libamdhip64.so",
+        "/home/deck/GIT/ai/stable-diffusion-webui/venv/lib/python3.10/site-packages/torch/lib/libhiprtc.so"
+    ]
+    for file_path in files_to_fix:
+        set_nx_bit(file_path)
+```
+
+**Komendy:**
+
+```bash
+# Instalacja biblioteki lief
+/home/deck/GIT/ai/stable-diffusion-webui/venv/bin/python -m pip install lief
+
+# Uruchomienie skryptu naprawczego
+/home/deck/GIT/ai/stable-diffusion-webui/venv/bin/python fix_execstack.py
+```
+
+## Etap 3: "Naruszenie ochrony pamięci" (Segmentation Fault)
+
+Gdy jeden problem zniknął, pojawił się kolejny, jeszcze groźniejszy:
+
+```bash
+Naruszenie ochrony pamięci (zrzut pamięci)
+```
+
+**Problem:** To błąd typu "segmentation fault", który oznacza, że program próbował uzyskać dostęp do pamięci, do której nie miał uprawnień. To bardzo ogólny błąd, trudny do zdiagnozowania.
+
+**Rozwiązanie:** Po wielu próbach (m.in. dodawanie flag `--no-half` i `--use-cpu all`) kluczowe okazało się stworzenie minimalnego skryptu testowego, który tylko importował bibliotekę `torch`. On również powodował ten sam błąd. To potwierdziło, że problem leży w samej instalacji PyTorcha, a nie w aplikacji WebUI.
+
+Postanowiłem całkowicie zmienić wersję PyTorcha na taką, która jest przeznaczona wyłącznie dla CPU. To pozwoliło ominąć potencjalne konflikty ze sterownikami graficznymi.
+
+**Komendy:**
+
+```bash
+# Odinstalowanie starej wersji torch
+/home/deck/GIT/ai/stable-diffusion-webui/venv/bin/python -m pip uninstall -y torch torchvision torchaudio
+
+# Zmiana w pliku webui-user.sh, aby instalować wersję CPU
+export TORCH_COMMAND="pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu"
+```
+
+## Etap 4: Brakujący moduł triton
+
+Po przeinstalowaniu PyTorcha błąd krytyczny zniknął! Pojawił się za to ostatni, już znacznie prostszy problem:
+
+```bash
+ModuleNotFoundError: No module named 'triton.backends'
+```
+
+**Problem:** Nowa instalacja PyTorcha wymagała biblioteki `triton`, która nie została automatycznie doinstalowana.
+
+**Rozwiązanie:** Ręczna instalacja brakującego pakietu.
+
+```bash
+/home/deck/GIT/ai/stable-diffusion-webui/venv/bin/python -m pip install triton
+```
+
+## Sukces! Jak teraz uruchomić Stable Diffusion WebUI?
+
+Po tej długiej podróży aplikacja jest wreszcie gotowa do startu. Wszystkie problemy zostały rozwiązane, a konfiguracja jest stabilna.
+
+Aby teraz uruchomić aplikację, wystarczy wykonać jedną komendę w głównym folderze projektu:
+
+```bash
+./webui.sh
+```
+
+Aplikacja uruchomi się w trybie CPU, co może być wolniejsze niż na GPU, ale jest gwarancją stabilności, zwłaszcza w skomplikowanych lub ograniczonych środowiskach. Interfejs WebUI powinien być dostępny w przeglądarce pod adresem `http://127.0.0.1:7860`.
+
+<br/>
+<button onClick={() => alert("Dziękuję za przeczytanie artykułu o debugowaniu Stable Diffusion WebUI 👍")}>
+  Mam nadzieję, że ten opis okaże się pomocny dla każdego, kto natrafi na podobne problemy. Do zobaczenia w następnym wpisie! 🧙‍♂️🌟
+</button>
