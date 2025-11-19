@@ -4,7 +4,7 @@ export const getGlobalData = () => {
     : '&&';
   const blogTitle = process.env.BLOG_TITLE
     ? decodeURI(process.env.BLOG_TITLE)
-    : 'Dedykowany Patronowi beznadziejnych spraw';
+    : 'Wiążę mój miecz z twoją beznadziejną sprawą” – Elnor, Star Trek: Picard';
   const footerText = process.env.BLOG_FOOTER_TEXT
     ? decodeURI(process.env.BLOG_FOOTER_TEXT)
     : '';
