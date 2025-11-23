@@ -1,0 +1,105 @@
+---
+title: Próba instalacji Nero Linux 4 na nowoczesnym systemie 🕰️
+description: 'Próba instalacji Nero Linux 4'
+summary: 'nero Debian SteamOS distrobox'
+date: Listopad November 23 2025
+slug: archiwum-nero
+---
+
+# Archiwum: Próba instalacji Nero Linux 4 na nowoczesnym systemie (Zarchiwizowano 🕰️)
+
+Niniejszy dokument stanowi archiwalny zapis próby instalacji i uruchomienia pakietu `nerolinux-4.0.0.0b-x86_64.deb` na nowoczesnej dystrybucji Linuksa (SteamOS, bazujący na Arch Linux). Celem było uruchomienie klasycznego oprogramowania do nagrywania płyt w środowisku, które fundamentalnie różni się od tego, dla którego zostało ono pierwotnie zaprojektowane.
+
+## Próba 1: Instalacja lokalna w katalogu domowym
+
+Pierwszym podejściem była próba instalacji pakietu `.deb` bezpośrednio w systemie hosta.
+
+### Krok 1: Ekstrakcja pakietu
+
+Standardowe narzędzie `dpkg` nie było dostępne. Zastosowano podejście alternatywne, rozpakowując archiwum `ar` i `tar`.
+
+```bash
+mkdir -p nerolinux && ar x nerolinux-4.0.0.0b-x86_64.deb --output=nerolinux
+tar -xzvf nerolinux/data.tar.gz -C nerolinux/
+```
+
+### Krok 2: Ręczna instalacja i problemy z bibliotekami
+
+Pliki aplikacji zostały skopiowane do `~/.local/`, jednak uruchomienie programu wymagało ręcznego ustawienia `LD_LIBRARY_PATH`. Ostatecznie próba ta zatrzymała się na twardej zależności od `GTK2`, której brakowało w systemie.
+
+```bash
+rsync -a nerolinux/usr/ ~/.local/
+LD_LIBRARY_PATH=$HOME/.local/lib:$HOME/.local/lib/nero nero
+> nero: error while loading shared libraries: libgtk-x11-2.0.so.0: cannot open shared object file: No such file or directory
+```
+
+## Próba 2: Instalacja w kontenerze Debian (Distrobox)
+
+Lepszym rozwiązaniem wydawało się użycie kontenera Debian, aby zapewnić natywne środowisko dla pakietu `.deb` i jego zależności.
+
+### Krok 1: Instalacja w kontenerze
+
+Menedżer pakietów `apt` poprawnie zidentyfikował i doinstalował wszystkie brakujące zależności, w tym `gtk2`. Instalacja przebiegła pomyślnie.
+
+```bash
+distrobox enter debian -- sudo apt-get update
+distrobox enter debian -- sudo apt-get install ./nerolinux-4.0.0.0b-x86_64.deb
+```
+
+### Krok 2: Błąd zależności – HAL
+
+Próba uruchomienia `nero` w kontenerze ujawniła błędy wskazujące na brak demona **HAL (Hardware Abstraction Layer)**, przestarzałej technologii do zarządzania sprzętem.
+
+```
+sh: 1: hal-find-by-property: not found
+```
+HAL był standardem w połowie lat 2000, jednak na przełomie dekad został kompletnie zastąpiony przez **udev**. Nero 4, pochodzące z tego okresu przejściowego, polega na HAL do pełnej identyfikacji możliwości sprzętu.
+
+## Epilog: Zaskakujące zachowanie i ostateczna diagnoza
+
+Wbrew pierwotnym przypuszczeniom, że brak HAL całkowicie uniemożliwi działanie, program `nero` uruchomił się i, co zaskakujące, **poprawnie wykrył napęd DVD-ROM**.
+
+Jednakże, prawdziwa natura niekompatybilności ujawniła się podczas próby wykonania kluczowej operacji. Po wybraniu funkcji "Kopiuj Dysk", program nie rozpoczął procesu odczytu. Zamiast tego, **po prostu wysunął tackę napędu CD/DVD**.
+
+To zachowanie jest ostatecznym dowodem na głęboką niekompatybilność programu z nowoczesnym jądrem Linuksa. Stare polecenia `ioctl` wysyłane przez Nero do obsługi napędu są błędnie interpretowane przez nowe sterowniki – polecenie kopiowania jest mylone z poleceniem wysunięcia tacki.
+
+## Wnioski i sprzątanie
+
+Oprogramowanie Nero Linux 4, mimo że daje się zainstalować i uruchomić, jest **funkcjonalnie bezużyteczne** na nowoczesnym systemie. Jego wewnętrzna logika operacji na sprzęcie jest przestarzała do tego stopnia, że prowadzi do nieprzewidywalnych i błędnych działań. To "pogrzebany program", którego wskrzeszenie okazało się niemożliwe.
+
+W związku z porażką, przeprowadzono pełne sprzątanie, usuwając pliki z systemu hosta oraz odinstalowując pakiety z kontenera.
+
+---
+
+## Pełna lista użytych poleceń
+
+Poniżej znajduje się kompletna lista poleceń wykonanych podczas całej operacji.
+
+**Analiza i ekstrakcja:**
+```bash
+dpkg -x nerolinux-4.0.0.0b-x86_64.deb nerolinux
+mkdir -p nerolinux && ar x nerolinux-4.0.0.0b-x86_64.deb --output=nerolinux
+tar -xzvf nerolinux/data.tar.gz -C nerolinux/
+```
+
+**Próba instalacji lokalnej:**
+```bash
+rsync -a nerolinux/usr/ ~/.local/
+echo $PATH
+find ~/.local -name libNeroAPI.so
+LD_LIBRARY_PATH=$HOME/.local/lib:$HOME/.local/lib/nero nero
+```
+
+**Instalacja w kontenerze Distrobox:**
+```bash
+distrobox enter debian -- sudo apt-get update
+distrobox enter debian -- sudo apt-get install ./nerolinux-4.0.0.0b-x86_64.deb
+distrobox enter debian
+nero
+```
+
+**Sprzątanie:**
+```bash
+rm -rf nerolinux ~/.local/bin/nero ~/.local/bin/neroexpress ~/.local/bin/nerocmd ~/.local/lib/nero/ ~/.local/lib/libNero*.so ~/.local/share/nero/ ~/.local/share/applications/nerolinux.desktop ~/.local/share/applications/nerolinuxexpress.desktop ~/.local/share/doc/nero/ ~/.local/share/menu/nerolinux ~/.local/share/pixmaps/nerolinux.xpm ~/.local/share/man/man1/nero*.1.gz
+distrobox-enter debian -- sudo apt-get purge --autoremove -y nerolinux
+```distrobox enter debian -- sudo apt-get purge --autoremove -y nerolinux
