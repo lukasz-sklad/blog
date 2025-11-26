@@ -1,0 +1,96 @@
+---
+title: 'bash warning setlocale... Jak okiełznać polskie znaki w Debianie?'
+description: 'Widzisz denerwujące ostrzeżenia o `setlocale` w swoim nowym kontenerze Debian? Dowiedz się, co oznaczają i jak je naprawić, aby system poprawnie obsługiwał polskie znaki!'
+summary: 'debian locale lang pl_PL.UTF-8 setlocale error fix'
+date: Listopad November 28 2025
+slug: konfiguracja-locale-w-debianie
+---
+
+# `bash: warning: setlocale...` Jak okiełznać polskie znaki w Debianie? 🇵🇱
+
+Wchodzisz do świeżo postawionego kontenera lub systemu Debian, gotów do działania, a wita Cię seria niezrozumiałych ostrzeżeń:
+
+```bash
+bash: warning: setlocale: LC_CTYPE: cannot change locale (pl_PL.UTF-8): No such file or directory
+bash: warning: setlocale: LC_COLLATE: cannot change locale (pl_PL.UTF-8): No such file or directory
+```
+
+Co to u licha jest? Dlaczego system "nie może zmienić locale"? To częsty problem, który oznacza, że Twój system nie został nauczony, jak poprawnie obsługiwać i wyświetlać znaki specyficzne dla języka polskiego, mimo że zmienne środowiskowe (`LANG`) o to proszą.
+
+## Czym są te całe "locales"?
+
+W skrócie, `locales` to zestaw reguł i definicji, które mówią systemowi, jak ma obsługiwać regionalne ustawienia. To nie tylko "polskie literki" (kodowanie znaków), ale też:
+
+*   **Format daty i czasu** (`LC_TIME`)
+*   **Format liczb** (np. przecinek czy kropka jako separator dziesiętny - `LC_NUMERIC`)
+*   **Symbol waluty** (`LC_MONETARY`)
+*   **Zasady sortowania alfabetycznego** (`LC_COLLATE`)
+
+Bez poprawnie skonfigurowanego polskiego locale, system działa w domyślnym, minimalistycznym trybie "C", co prowadzi do wspomnianych błędów i potencjalnych problemów z wyświetlaniem znaków.
+
+## Krok po kroku: Uczymy Debiana polskiego!
+
+Na szczęście, rozwiązanie tego problemu jest proste i sprowadza się do kilku komend. Poniżej przeprowadzam Cię przez cały proces.
+
+### Krok 1: Aktualizacja listy pakietów
+
+Zawsze dobra praktyka przed instalacją czegokolwiek.
+
+```bash
+sudo apt-get update
+```
+
+### Krok 2: Instalacja pakietu `locales`
+
+To narzędzie jest niezbędne do zarządzania regionalizacją. W wielu minimalistycznych obrazach Debiana może go brakować, chociaż często jest już zainstalowany.
+
+```bash
+sudo apt-get install -y locales
+```
+
+### Krok 3: Włączenie polskiego locale
+
+Musimy powiedzieć systemowi, że chcemy używać polskiego zestawu znaków. Robimy to, edytując plik `/etc/locale.gen`. Zamiast otwierać go ręcznie, użyjemy magicznej komendy `sed`, która odkomentuje za nas odpowiednią linię:
+
+```bash
+sudo sed -i -e 's/# pl_PL.UTF-8 UTF-8/pl_PL.UTF-8 UTF-8/' /etc/locale.gen
+```
+
+### Krok 4: Generowanie plików locale
+
+Teraz, gdy system wie, że interesuje nas `pl_PL.UTF-8`, musimy kazać mu wygenerować odpowiednie pliki definicji.
+
+```bash
+sudo dpkg-reconfigure --frontend=noninteractive locales
+```
+
+Zobaczysz w wyniku, że generowane są locale `en_US.UTF-8` (domyślne) oraz nasze `pl_PL.UTF-8`.
+
+### Krok 5: Ustawienie domyślnego języka
+
+Ostatni krok to poinformowanie całego systemu, że `pl_PL.UTF-8` ma być od teraz domyślnym locale.
+
+```bash
+sudo update-locale LANG=pl_PL.UTF-8
+```
+
+## Weryfikacja
+
+Aby sprawdzić, czy wszystko się udało, wystarczy ponownie wejść do kontenera/terminala i wpisać komendę `locale`. Wynik powinien wyglądać mniej więcej tak:
+
+```bash
+LANG=pl_PL.UTF-8
+LANGUAGE=pl:pl
+LC_CTYPE="pl_PL.UTF-8"
+LC_NUMERIC=pl_PL.UTF-8
+LC_TIME=pl_PL.UTF-8
+LC_COLLATE="pl_PL.UTF-8"
+# ... i tak dalej
+```
+
+Błędy `setlocale` znikną, a Twój system Debian będzie w pełni gotowy na pracę z językiem polskim!
+
+<br/>
+<button onClick={() => alert("Dziękuję za przeczytanie artykułu o konfiguracji locale! 👍")}>
+  Teraz praca w terminalu będzie znacznie przyjemniejsza. Do zobaczenia w następnym wpisie! 🧙‍♂️🌟
+</button>

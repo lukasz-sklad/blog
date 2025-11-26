@@ -1,0 +1,87 @@
+---
+title: 'Distrobox na Steam Decku odmawia posłuszeństwa? Oto jak go naprawiłem!'
+description: 'Twoja ulubiona piaskownica na Steam Decku nagle przestała działać? Zobacz, jak krok po kroku rozwiązałem zagadkowy błąd „invalid internal status” i przywróciłem Distrobox do życia!'
+summary: 'distrobox steamdeck steam deck podman error fix'
+date: Listopad November 27 2025
+slug: naprawa-distrobox-na-steam-decku
+---
+
+# Distrobox na Steam Decku odmawia posłuszeństwa? 😵 Oto jak go naprawiłem! 🧙‍♂️
+
+Wyobraź sobie ten scenariusz: jesteś w trakcie ważnego projektu, polegasz na swoim skonfigurowanym środowisku w `Distrobox` na Steam Decku, a tu nagle... klops. Próba wejścia do kontenera kończy się tajemniczym błędem:
+
+```bash
+ERRO[0000] invalid internal status, try resetting the pause process with "/home/deck/.local/share/podman-static/bin/podman system migrate": could not find any running process: no such process
+```
+
+Serce zamiera na chwilę. Co się stało? Przecież wczoraj wszystko działało! To była moja sytuacja – cyfrowa katastrofa na małą skalę. Ale nie martw się, zapraszam Cię do kroniki mojego śledztwa i ostatecznego zwycięstwa nad zbuntowaną technologią.
+
+## Krok 1: Pierwsza pomoc i ślepy zaułek
+
+Pierwszą rzeczą, jaką zrobiłem, było posłuchanie rady z komunikatu błędu. Skoro sugeruje `podman system migrate`, to czemu nie spróbować?
+
+```bash
+/home/deck/.local/share/podman-static/bin/podman system migrate
+```
+
+Niestety, mimo że komenda wykonała się bez błędów, problem nie zniknął. To był pierwszy znak, że sprawa jest bardziej skomplikowana. Każda próba użycia `distrobox` kończyła się tym samym komunikatem. Coś było fundamentalnie nie tak z `podmanem`, sercem `Distroboxa`.
+
+## Krok 2: Odkrycie prawdziwego wroga – brak `slirp4netns`
+
+Postanowiłem sprawdzić, czy `podman` w ogóle działa, uruchamiając prosty kontener testowy:
+
+```bash
+/home/deck/.local/share/podman-static/bin/podman run hello-world
+```
+
+I tu nastąpił przełom! Pojawił się nowy błąd:
+
+```bash
+Error: could not find slirp4netns, the network namespace can't be configured: exec: "slirp4netns": executable file not found in $PATH
+```
+
+`slirp4netns` to kluczowy element do obsługi sieci w kontenerach bez uprawnień roota. Jego brak był jak brak silnika w samochodzie. Ale chwila, jak to możliwe, że zniknął, skoro wcześniej wszystko działało?
+
+## Krok 3: Dwa Podmany – opowieść o launcherze
+
+Po krótkim dochodzeniu odkryłem, że na moim systemie istnieją... dwa `podmany`!
+
+1.  `/home/deck/.local/bin/podman` – To tzw. `podman-launcher`, specjalny skrypt startowy.
+2.  `/home/deck/.local/share/podman-static/bin/podman` – To właściwy, statyczny plik binarny `podmana`, a obok niego, w tym samym folderze, leżał poszukiwany `slirp4netns`!
+
+Stało się jasne: `podman-launcher` jest odpowiedzialny za ustawienie odpowiednich ścieżek (`PATH`), aby `podman` mógł znaleźć swoje zależności, takie jak `slirp4netns`. Problem polegał na tym, że moje poprzednie próby naprawy omijały launcher, wołając statycznego `podmana` bezpośrednio.
+
+## Krok 4: Zwycięstwo! Właściwa komenda i porządki
+
+Uzbrojony w tę wiedzę, wróciłem do pierwotnej sugestii, ale tym razem użyłem launchera:
+
+```bash
+/home/deck/.local/bin/podman system migrate
+```
+
+Tym razem komenda zadziałała inaczej, zatrzymując jakieś "zawieszone" kontenery. To był strzał w dziesiątkę! `Podman` ożył, co potwierdził test z `hello-world` uruchomiony przez launcher.
+
+Pozostał ostatni krok – `distrobox` wciąż pamiętał o starych, zepsutych kontenerach. Lista (`distrobox list`) pokazywała je w stanie "Stopping". Rozwiązanie? Bezwzględne usunięcie:
+
+```bash
+distrobox rm --force debian
+```
+
+A następnie stworzenie kontenera od nowa:
+
+```bash
+distrobox create --image docker.io/library/debian:latest --name debian
+```
+
+I wreszcie...
+
+```bash
+distrobox enter debian
+```
+
+Sukces! `Distrobox` znów działał jak marzenie.
+
+<br/>
+<button onClick={() => alert("Dziękuję za przeczytanie artykułu o naprawie Distroboxa! 👍")}>
+  Mam nadzieję, że ta kronika pomoże Ci w przyszłości. Czasem najprostsze rozwiązania wymagają najdłuższego śledztwa! Do zobaczenia w następnym wpisie! 🧙‍♂️🌟
+</button>
