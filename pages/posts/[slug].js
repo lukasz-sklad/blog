@@ -17,6 +17,7 @@ import Layout, { GradientBackground } from '../../components/Layout';
 import SEO from '../../components/SEO';
 import InteractiveGame from '../../components/InteractiveGame';
 import EchoTerminal from '../../components/EchoTerminal';
+import CodeBlock from '../../components/CodeBlock';
 
 // Custom components/renderers to pass to MDX.
 // Since the MDX files aren't loaded by webpack, they have no knowledge of how
@@ -24,6 +25,7 @@ import EchoTerminal from '../../components/EchoTerminal';
 // here.
 const components = {
   a: CustomLink,
+  pre: CodeBlock,
   // It also works with dynamically-imported components, which is especially
   // useful for conditionally loading components for certain routes.
   // See the notes in README.md for more details.
