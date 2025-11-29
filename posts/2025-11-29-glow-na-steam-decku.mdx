@@ -1,0 +1,161 @@
+---
+title: 'Markdown w blasku neonów: Glow, Fish i Steam Deck'
+description: 'Zmień swój Steam Deck w prawdziwy Cyberdeck. Instrukcja instalacji czytnika Glow, integracji z powłoką Fish i konfiguracji Dolphin, aby pliki .mdx otwierały się w stylowym terminalu.'
+summary: 'steamdeck glow markdown fish terminal cyberpunk dolphin linux'
+date: Listopad November 29 2025
+slug: glow-na-steam-decku
+---
+
+# Markdown w blasku neonów: Glow, Fish i Steam Deck  Deck 🕶️💾
+
+Twój Steam Deck to nie tylko zabawka. To potężny, przenośny **Cyberdeck**, gotowy do hackowania rzeczywistości (i plików tekstowych) w dowolnym miejscu w sieci. Ale czytanie dokumentacji w zwykłym edytorze tekstu? To takie... *oldschoolowe*.
+
+Potrzebujesz stylu. Potrzebujesz **Glow**.
+
+Glow to terminalowy czytnik Markdowna, który renderuje tekst z taką elegancją, że poczujesz się jak operator w Matrixie. Dziś zintegrujemy go z Twoim systemem, podepniemy pod powłokę **Fish** i zmusimy menedżer plików **Dolphin**, by traktował go z należytym szacunkiem.
+
+Gotowy na upgrade systemu? 🚀
+
+## Faza 1: Pozyskanie Zasobów (Acquisition)
+
+Najpierw musimy ściągnąć binarkę. Nie bawimy się w kompilację, bierzemy gotowy ładunek prosto ze źródła. Otwórz swoją konsolę (Konsole) i wklep to:
+
+```bash
+wget https://github.com/charmbracelet/glow/releases/download/v2.1.1/glow_2.1.1_Linux_x86_64.tar.gz
+```
+
+Teraz rozpakujmy ten cyfrowy prezent:
+
+```bash
+tar -xvf glow_2.1.1_Linux_x86_64.tar.gz
+```
+
+## Faza 2: Integracja z Systemem (Core Injection)
+
+Nie chcemy, żeby Glow walał się po folderze pobierania. Jego miejsce jest w systemowym krwiobiegu – w `~/.local/bin`. To standardowa ścieżka dla lokalnych binarek użytkownika na SteamOS.
+
+```bash
+mkdir -p ~/.local/bin
+mv glow ~/.local/bin/
+```
+
+Sprawdźmy, czy system go widzi. Wpisz:
+
+```bash
+glow --version
+```
+
+Jeśli system odpowie wersją – jesteśmy w domu. Jeśli nie, musimy skalibrować Twój **Neural Link** (czyli `PATH` w Fishu).
+
+### Kalibracja Fish Shell
+
+Jeśli używasz Fisha (a powinieneś, to przyszłość!), upewnij się, że `~/.local/bin` jest w Twojej ścieżce:
+
+```fish
+set -Ua fish_user_paths ~/.local/bin
+```
+
+A żeby Twój Fish potrafił przewidywać komendy Glowa, zainstaluj completions:
+
+```bash
+mkdir -p ~/.config/fish/completions
+cp glow_2.1.1_Linux_x86_64/completions/glow.fish ~/.config/fish/completions/
+```
+
+Teraz Glow jest dostępny z każdego miejsca w terminalu. Spróbuj wyświetlić jakiś plik README: `glow README.md`. Wygląda obłędnie, prawda? 😎
+
+## Faza 3: Protokół MIME (Matrix Adjustment)
+
+Aby system wiedział, że pliki `.mdx` to nie jakieś śmieci, tylko szlachetny Markdown, musimy zaktualizować bazę MIME.
+
+Otwórz terminal i wklej te komendy, aby stworzyć nową definicję:
+
+```bash
+mkdir -p ~/.local/share/mime/packages
+
+cat <<EOF > ~/.local/share/mime/packages/mdx-markdown.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+  <mime-type type="text/markdown">
+    <glob pattern="*.mdx"/>
+  </mime-type>
+</mime-info>
+EOF
+```
+
+Następnie przeładuj bazę, aby system "zrozumiał" nową wiedzę:
+
+```bash
+update-mime-database ~/.local/share/mime
+```
+
+## Faza 4: Nadpisanie Interfejsu (Desktop Entry Override)
+
+To jest ten moment, gdzie magia się dzieje. Chcemy, żeby kliknięcie w plik w Dolphinie nie otwierało nudnego KWrite, ale odpalało nową sesję terminala z Glowem.
+
+Stworzymy specjalny plik aktywatora `.desktop`.
+
+```bash
+mkdir -p ~/.local/share/applications
+nano ~/.local/share/applications/glow.desktop
+```
+
+Wklej tam poniższy kod. Zwróć uwagę na linię `Exec` – to ona robi całą robotę, odpalając `konsole`, która natychmiast wykonuje `glow` na wskazanym pliku.
+
+```ini
+[Desktop Entry]
+Type=Application
+Name=Glow Markdown Reader
+Comment=Render markdown in terminal
+Exec=konsole -e glow -p %f
+Icon=text-markdown
+Terminal=false
+Categories=Utility;TextTools;
+MimeType=text/markdown;
+```
+
+Zapisz plik (Ctrl+O, Enter) i wyjdź (Ctrl+X).
+
+Następnie odśwież bazę aplikacji KDE (może nie być konieczne, ale lepiej dmuchać na zimne):
+
+```bash
+kbuildsycoca6
+```
+
+*(Na starszych wersjach SteamOS może to być `kbuildsycoca5`)*
+
+## Faza 5: Ostateczne Połączenie (System Override)
+
+Teraz otwórz **Dolphina**.
+1. Znajdź dowolny plik `.md` lub `.mdx`.
+2. Kliknij na niego **Prawym Przyciskiem Myszy**.
+3. Wybierz **Otwórz za pomocą...** -> **Inna aplikacja...**
+4. Wyszukaj **Glow Markdown Reader** (powinien być na liście dzięki naszemu plikowi .desktop).
+5. Zaznacz **"Pamiętaj skojarzenie aplikacji dla tego typu plików"**.
+
+## Mission Complete
+
+Klikasz w plik. Bum! 💥 Otwiera się okno terminala, a w nim Twój tekst, sformatowany, kolorowy, czytelny.
+Twój Steam Deck właśnie zyskał +10 do stylu i +50 do użyteczności.
+
+Hack the Planet! 🌐
+
+### Bonus Tip: Personalizacja Pager-a
+
+Domyślnie `glow` (w trybie pagera `-p`) używa `less` do wyświetlania treści. `less` to potężne narzędzie z klawiszami nawigacyjnymi podobnymi do Vima. Jeśli jednak wolisz inne narzędzie, takie jak `nano`, możesz to zmienić, ustawiając zmienną środowiskową `PAGER`.
+
+Aby ustawić `nano` jako domyślny pager w powłoce `Fish`, dodaj do swojego pliku `~/.config/fish/config.fish` następującą linię:
+
+```fish
+set -Ux PAGER nano
+```
+
+*   `set -U` sprawia, że zmienna jest uniwersalna (dostępna we wszystkich sesjach Fish).
+*   `set -x` eksportuje zmienną do podprocesów (takich jak `glow`), dzięki czemu programy uruchamiane z Fish ją zobaczą.
+
+Pamiętaj jednak, że `nano` nie jest typowym pagerem "tylko do odczytu". Otworzy plik w trybie edycji, co może nie być idealne dla samego podglądu. Jeśli to będzie problem, możesz wrócić do `less` lub eksperymentować z innymi pagerami (np. `most`).
+
+<br/>
+<button onClick={() => alert("System zaktualizowany. Good hunting, Stalker. 🕶️")}>
+  Potwierdź wykonanie misji
+</button>
