@@ -3,6 +3,7 @@ import '../styles/globals.css';
 import 'prismjs/themes/prism-tomorrow.css';
 import { useEffect } from 'react';
 import { hotjar } from 'react-hotjar';
+import EchoTerminal from '../components/EchoTerminal';
 
 // function MyApp({ Component, pageProps }) {
 //   useEffect(() => {
@@ -34,6 +35,8 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <>
+      <span className="theme-bejamas" />
+      <EchoTerminal />
       <Component {...pageProps} />
     </>
   );

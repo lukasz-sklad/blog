@@ -29,7 +29,7 @@ const EchoTerminal = () => {
   // Stan terminala
   const [input, setInput] = useState('');
   const [history, setHistory] = useState([
-    { text: 'Witaj w blogOS v1.0. Wpisz "help" aby zobaczyć komendy.', type: 'info' }
+    { text: 'Witaj w blogOS v1.0. Wpisz "help" aby zobaczyć komendy.', type: 'default' }
   ]);
   const outputRef = useRef(null);
   const inputRef = useRef(null);
@@ -147,6 +147,20 @@ const EchoTerminal = () => {
     return () => observer.disconnect();
   }, []);
 
+  // Efekt do kontrolowania pętli wizualizera
+  useEffect(() => {
+    if (isPlaying && visualizerLineRef.current) {
+      // Start visualizer only if it's not already running
+      if (!animationRef.current) { // Prevent multiple calls if already running
+         startVisualizer();
+      }
+    } else {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+        animationRef.current = null;
+      }
+    }
+  }, [isPlaying, visualizerLineRef.current]); // Zależności: czy gra i czy ref wizualizera jest dostępny
 
   // --- Logika Audio Wizualizacji ---
 
@@ -228,19 +242,29 @@ const EchoTerminal = () => {
           return;
       }
 
-      // Stop previous
-      stopRadio();
-
+      // Zamiast pełnego stopRadio (który usuwa wizualizer), tylko pauzujemy audio i czyścimy stare animacje
+      if (audioRef.current) {
+          audioRef.current.pause();
+      }
+      
       setCurrentStation(stationName);
-      setIsPlaying(true); // Zakładamy, że zaraz zacznie grać
+      setIsPlaying(true);
 
-      // Dodaj placeholder na wizualizację
-      setHistory(prev => [...prev, { text: `Łączenie z ${stationName}...`, type: 'info' }, { text: '', type: 'visualizer' }]);
+      // Dodajemy wpis o łączeniu.
+      // Jeśli wizualizera nie ma w historii, dodajemy go. Jeśli jest, zostawiamy (będzie zaktualizowany przez ref).
+      setHistory(prev => {
+          const hasVisualizer = prev.some(item => item.type === 'visualizer');
+          const newEntries = [{ text: `Łączenie z ${stationName}...`, type: 'info' }];
+          if (!hasVisualizer) {
+              newEntries.push({ text: '', type: 'visualizer' });
+          }
+          return [...prev, ...newEntries];
+      });
 
       audioRef.current.src = url;
       audioRef.current.play()
         .then(() => {
-            startVisualizer();
+            // startVisualizer jest teraz uruchamiany przez useEffect, gdy visualizerLineRef jest gotowy
         })
         .catch(err => {
             console.error("Błąd odtwarzania:", err);
@@ -310,7 +334,16 @@ const EchoTerminal = () => {
 
       case 'date':
         const now = new Date();
-        newHistory.push({ text: now.toLocaleString('pl-PL'), type: 'info' });
+        const dateOptions = { 
+          weekday: 'long', 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit'
+        };
+        newHistory.push({ text: now.toLocaleString('pl-PL', dateOptions), type: 'success' });
         break;
 
       case 'ls':
@@ -340,7 +373,7 @@ const EchoTerminal = () => {
       case 'clear':
         const initialClearMessage = isPlaying 
             ? { text: 'System buffer cleared.', type: 'info' }
-            : { text: '[💀] SYSTEM READY. Knowledge is power. Type "help".', type: 'success' };
+            : { text: '[💀] SYSTEM READY. Knowledge is power. Type "help".', type: 'default' };
         
         setHistory([initialClearMessage]);
         setInput('');
@@ -361,6 +394,12 @@ const EchoTerminal = () => {
 
       default:
         newHistory.push({ text: `Nieznana komenda: ${command}`, type: 'error' });
+    }
+
+    // Jeśli radio gra i nie jest to komenda 'clear' (która ma własną logikę) ani 'radio stop', 
+    // dodaj wizualizera na koniec, żeby był zawsze widoczny na dole.
+    if (isPlaying && command !== 'clear' && !(command === 'radio' && parts[1] === 'stop')) {
+        newHistory.push({ text: '', type: 'visualizer' });
     }
 
     setHistory(newHistory);
@@ -473,6 +512,9 @@ const EchoTerminal = () => {
           <div key={i} className={`mb-1 ${
             line.type === 'command' ? 'font-bold ' + (theme === 'dark' ? 'text-white' : 'text-gray-900') :
             line.type === 'error' ? 'text-red-500' : 
+            line.type === 'success' ? (theme === 'dark' ? 'text-green-500' : 'text-green-700') : // Zielony dla sukcesu (jaśniejszy w dark, ciemniejszy w light)
+            line.type === 'warning' ? 'text-yellow-500' :
+            line.type === 'info' ? 'text-blue-400' :
             line.type === 'visualizer' ? 'text-green-400 font-bold animate-pulse' :
             (theme === 'dark' ? 'text-gray-300' : 'text-gray-700')
           }`}>
