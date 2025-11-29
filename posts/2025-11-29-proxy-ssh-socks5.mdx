@@ -1,0 +1,130 @@
+---
+title: 'Proxy SSH: Jak ominąć blokadę portów i bezpiecznie surfować'
+description: 'Twój dostawca blokuje porty? Chcesz bezpiecznie przeglądać sieć na publicznym WiFi? Zobacz jak postawić tunel SOCKS5 przez SSH w kilka minut.'
+summary: 'ssh socks5 proxy tunnel termux android firefox fennec privacy'
+date: Listopad November 29 2025
+slug: proxy-ssh-socks5
+---
+
+# Proxy SSH: Jak ominąć blokadę portów i bezpiecznie surfować 🛡️
+
+Zdarzyło Ci się kiedyś, że dostawca internetu zablokował konkretne porty? A może korzystasz z publicznego WiFi i nie chcesz, żeby ktoś podsłuchiwał Twój ruch?
+
+Rozwiązaniem jest **SSH Dynamic Port Forwarding**, czyli tunel SOCKS5. To prosta, a zarazem potężna technika, która zamienia Twój serwer SSH w bezpieczne proxy dla przeglądarki.
+
+## Szybki start (Dla niecierpliwych)
+
+Jeśli masz już dostęp do serwera SSH, wystarczy jedna komenda w terminalu:
+
+```bash
+ssh -p 2201 -D 50500 -N root@twoj_adres_ip_lub_domena &
+```
+
+*   `-p 2201`: Port SSH Twojego serwera (zmień jeśli masz standardowy 22).
+*   `-D 50500`: Otwiera lokalny port 50500 jako proxy SOCKS.
+*   `-N`: Nie wykonuj zdalnej komendy (tylko przesyłaj porty).
+*   `&`: Uruchom w tle (dzięki temu możesz zamknąć terminal, a tunel zostanie, o ile nie użyjesz `nohup` lub `disown`, ale w prostej sesji `&` wystarczy do zwolnienia prompta).
+
+## Konfiguracja przeglądarki (Fennec / Firefox)
+
+Na desktopie to proste (wtyczki typu FoxyProxy), ale na Androidzie bywa trudniej. Polecam przeglądarkę **Fennec** (dostępna w sklepie F-Droid), która pozwala na zaawansowaną konfigurację `about:config`.
+
+1. Wpisz w pasku adresu: `about:config`
+2. Wyszukaj i ustaw poniższe wartości:
+
+**network.proxy.type**
+```text
+1
+```
+*(Oznacza ręczną konfigurację proxy)*
+
+**network.proxy.socks**
+```text
+127.0.0.1
+```
+
+**network.proxy.socks_port**
+```text
+50500
+```
+
+**network.proxy.socks_version**
+```text
+5
+```
+
+**network.proxy.socks_remote_dns**
+```text
+true
+```
+*(Bardzo ważne! Dzięki temu zapytania DNS też idą przez tunel, co chroni przed DNS Leak)*
+
+## Automatyzacja: Klucze SSH
+
+Wpisywanie hasła za każdym razem jest męczące. Skonfigurujmy logowanie kluczem.
+
+### 1. Generowanie klucza
+
+Użyj `$HOME`, aby uniknąć problemów ze ścieżkami (szczególnie w Termux na Androidzie).
+
+```bash
+ssh-keygen -t ed25519 -f $HOME/.ssh/pixel_termux
+```
+
+### 2. Wysłanie klucza na serwer
+
+```bash
+cat $HOME/.ssh/pixel_termux.pub | ssh -p 2201 root@twoj_adres_ip_lub_domena "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
+```
+
+### 3. Łączenie z kluczem
+
+Teraz możesz połączyć się wskazując plik tożsamości (`-i`):
+
+```bash
+ssh -i $HOME/.ssh/pixel_termux -p 2201 -D 50500 -N root@twoj_adres_ip_lub_domena
+```
+
+## Profesjonalna konfiguracja: `~/.ssh/config`
+
+Zamiast wpisywać tasiemce w terminalu, zdefiniujmy wszystko w pliku konfiguracyjnym.
+
+Otwórz (lub stwórz) plik:
+```bash
+nano ~/.ssh/config
+```
+
+Wklej poniższą konfigurację:
+
+```text
+Host wrt
+    HostName twoj_adres_ip_lub_domena
+    Port 2201
+    User root
+    IdentityFile ~/.ssh/pixel_termux
+    DynamicForward 50500
+    RequestTTY no
+    ServerAliveInterval 60
+```
+
+*   `DynamicForward 50500`: To samo co `-D 50500`.
+*   `RequestTTY no`: To samo co `-N` (w uproszczeniu, nie alokuje terminala).
+*   `ServerAliveInterval 60`: Wysyła sygnał co 60 sekund, żeby połączenie nie zostało zerwane przez brak aktywności.
+
+## Finał
+
+Teraz, aby odpalić swoje bezpieczne proxy, wpisujesz tylko:
+
+```bash
+ssh -N wrt
+```
+
+I gotowe. Cały ruch Twojej przeglądarki przechodzi teraz przez Twój serwer, omijając lokalne blokady i filtry. 🕵️‍♂️ Co więcej, jeśli tunelujesz ruch do swojego domowego routera lub komputera, nikt nie zorientuje się, że tak naprawdę właśnie ganiasz w slipach po plaży, popijając drinka z palemką, podczas gdy "pracujesz zdalnie" z Katowic. System melduje, że jesteś na swoim IP, a Ty korzystasz z życia!
+
+### Pamiętaj: Zawsze używaj swojego adresu IP lub domeny serwera/routera, na którym masz dostęp SSH!
+
+<br/>
+<button onClick={() => alert("Dziękuję za przeczytanie artykułu o Proxy SSH! 👍")}>
+  Teraz możesz omijać blokady i pracować z plaży.
+  Do zobaczenia w następnym wpisie! 🧙‍♂️🌟
+</button>
