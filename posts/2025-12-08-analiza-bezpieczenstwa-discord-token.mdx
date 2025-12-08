@@ -1,0 +1,75 @@
+---
+title: Analiza Bezpieczeństwa Discord Jak Tokeny Stają Się Wektorami Ataku? 🛡️
+description: 'Zrozum, czym jest token Discorda, gdzie jest przechowywany i jak może zostać wykorzystany do przejęcia Twojego konta. Naucz się, jak się chronić przed atakami bazującymi na tokenach.'
+summary: 'Tokeny Discorda są kluczami sesji, które pozwalają omijać 2FA. Dowiedz się, gdzie są przechowywane (LevelDB, Local Storage) i jak atakujący mogą je wykorzystać. Zobacz, jak chronić swoje konto.'
+date: 2025-12-08
+slug: analiza-bezpieczenstwa-discord-tokeny
+---
+
+## 1. Natura Tokenu
+Token Discorda to klucz sesji (Authorization Token). Działa jak cyfrowa przepustka, która pozwala omijać ekran logowania oraz (co krytyczne) **uwierzytelnianie dwuskładnikowe (2FA)**. Serwer uznaje posiadacza tokenu za zweryfikowanego użytkownika.
+
+### Różnica: Token vs Hasło
+*   **Token daje:** Pełny dostęp do komunikacji (czytanie/pisanie), zarządzanie serwerami, podszywanie się pod ofiarę.
+*   **Token NIE daje (zazwyczaj):** Możliwości zmiany hasła, adresu e-mail ani wyłączenia 2FA (te akcje wymagają ponownego podania starego hasła).
+
+## 2. Lokalizacja Tokenu (Wektory kradzieży)
+Tokeny nie leżą w "próżni", są zapisywane lokalnie, aby utrzymać sesję użytkownika.
+
+*   **Aplikacja Desktopowa (Windows/Linux):**
+    Tokeny przechowywane są w bazie danych LevelDB.
+    *   Windows: `%APPDATA%\Discord\Local Storage\leveldb`
+    *   Linux: `~/.config/discord/Local Storage/leveldb`
+    *   Malware typu *InfoStealer* skanuje te ścieżki i wyciąga ciągi znaków pasujące do wzorca (RegEx).
+
+*   **Przeglądarka (Web):**
+    Token znajduje się w **Local Storage** przeglądarki pod domeną `discord.com`.
+    *   Klucz: `token` (pojedynczy, krytyczny).
+    *   Atak: Złośliwy skrypt (XSS) lub wtyczka może odczytać `localStorage.getItem('token')`.
+
+## 3. Techniczne wykorzystanie skradzionego tokenu
+
+Posiadając token, nie trzeba używać oficjalnego klienta. Można komunikować się bezpośrednio z API Discorda (wersja v9).
+
+### A. Weryfikacja ofiary (GET)
+Sprawdzenie, do kogo należy token.
+```bash
+curl -X GET https://discord.com/api/v9/users/@me \
+  -H "Authorization: TU_WKLEJASZ_TOKEN" \
+  -H "Content-Type: application/json"
+```
+
+### B. Wysłanie wiadomości (POST)
+Wysłanie tekstu na konkretny kanał.
+```bash
+curl -X POST https://discord.com/api/v9/channels/{ID_KANALU}/messages \
+  -H "Authorization: TU_WKLEJASZ_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"content": "Wiadomość wysłana z terminala"}'
+```
+
+### C. Wysłanie pliku/zdjęcia (Multipart)
+Wymaga nagłówka `multipart/form-data`.
+```bash
+curl -X POST "https://discord.com/api/v9/channels/{ID_KANALU}/messages" \
+  -H "Authorization: TU_WKLEJASZ_TOKEN" \
+  -F "payload_json={'content': 'Opis pliku', 'tts': false}" \
+  -F "file1=@sciezka_do_pliku.png"
+```
+
+### D. Mit "Wyślij do wszystkich" 
+API **nie posiada** funkcji "wyślij do wszystkich znajomych". Aby przeprowadzić masowy atak, napastnik musi:
+1.  Pobrać listę kanałów prywatnych (DM): `GET /users/@me/channels`.
+2.  Zastosować skrypt iterujący (pętlę), który wyśle osobne żądanie `POST` do każdego ID z listy.
+3.  Jest to moment, w którym systemy **Rate Limiting** Discorda najczęściej wykrywają i blokują atak.
+
+## 4. Ochrona i Reakcja
+*   **Unieważnienie tokenu:** Zmiana hasła do konta natychmiast unieważnia stary token.
+*   **Geo-Lock:** Discord często blokuje użycie tokenu z drastycznie innego adresu IP bez potwierdzenia mailowego.
+*   **Higiena:** Nieuruchamianie nieznanych plików `.exe` (Windows) ani skryptów `curl | bash` (Linux) z niezaufanych źródeł.
+
+<br/>
+<button onClick={() => alert("Dziękuję za przeczytanie artykułu o analizie bezpieczeństwa tokenów Discord 👍")}>
+  Mam nadzieję, że teraz lepiej zrozumiesz zagrożenia i będziesz bezpieczniejszy. Do zobaczenia w następnym wpisie! 🧙‍♂️🌟
+</button>
+
