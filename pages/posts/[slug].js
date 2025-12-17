@@ -19,6 +19,7 @@ import InteractiveGame from '../../components/InteractiveGame';
 import EchoTerminal from '../../components/EchoTerminal';
 import CodeBlock from '../../components/CodeBlock';
 import VideoPlayer from '../../components/VideoPlayer';
+import ThreeDModel from '../../components/ThreeDModel';
 
 // Custom components/renderers to pass to MDX.
 // Since the MDX files aren't loaded by webpack, they have no knowledge of how
@@ -34,6 +35,7 @@ const components = {
   InteractiveGame,
   EchoTerminal,
   VideoPlayer,
+  ThreeDModel,
 };
 
 export default function PostPage({

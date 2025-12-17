@@ -101,8 +101,8 @@
     "zweryfikować"
   ],
   "terminal.integrated.defaultProfile.linux": "bash",
-  "terminal.integrated.automationProfile.linux": {
-    
-
+  "terminal.integrated.automationProfile.linux": {},
+  "files.associations": {
+    "*.mdx": "markdown"
   }
 }
