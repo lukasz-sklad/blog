@@ -47,9 +47,20 @@ const EchoTerminal = () => {
 
   // Stan motywu
   const [theme, setTheme] = useState('dark');
+  const [isChristmas, setIsChristmas] = useState(false);
 
   // Inicjalizacja Audio
   useEffect(() => {
+    // Sprawdzanie okresu świątecznego dla pozycji ikonki
+    const checkChristmas = () => {
+      const now = new Date();
+      const month = now.getMonth();
+      const day = now.getDate();
+      const christmasRange = (month === 11 && day >= 17) || (month === 0 && day <= 6);
+      setIsChristmas(christmasRange);
+    };
+    checkChristmas();
+
     audioRef.current = new Audio();
     audioRef.current.crossOrigin = "anonymous"; // Ważne dla CORS i Web Audio API
 
@@ -498,8 +509,8 @@ const EchoTerminal = () => {
     : "terminal-header bg-gray-100 p-2 flex justify-between items-center cursor-move select-none border-b border-gray-300";
 
   const minimizeIconClasses = theme === 'dark'
-    ? "fixed bottom-5 right-5 bg-black text-green-500 p-3 rounded-full cursor-pointer border border-green-500 shadow-lg hover:scale-110 transition-transform z-50 font-mono"
-    : "fixed bottom-5 right-5 bg-white text-blue-600 p-3 rounded-full cursor-pointer border border-blue-600 shadow-lg hover:scale-110 transition-transform z-50 font-mono";
+    ? `fixed ${isChristmas ? 'top-5' : 'bottom-5'} right-5 bg-black text-green-500 p-3 rounded-full cursor-pointer border border-green-500 shadow-lg hover:scale-110 transition-transform z-50 font-mono`
+    : `fixed ${isChristmas ? 'top-5' : 'bottom-5'} right-5 bg-white text-blue-600 p-3 rounded-full cursor-pointer border border-blue-600 shadow-lg hover:scale-110 transition-transform z-50 font-mono`;
 
 
   if (!isOpen) {
