@@ -4,6 +4,7 @@ import 'prismjs/themes/prism-tomorrow.css';
 import { useEffect } from 'react';
 import { hotjar } from 'react-hotjar';
 import EchoTerminal from '../components/EchoTerminal';
+import Script from 'next/script';
 
 // function MyApp({ Component, pageProps }) {
 //   useEffect(() => {
@@ -37,6 +38,7 @@ function MyApp({ Component, pageProps }) {
     <>
       <span className="theme-bejamas" />
       <EchoTerminal />
+      <Script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js" strategy="afterInteractive" />
       <Component {...pageProps} />
     </>
   );
