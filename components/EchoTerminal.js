@@ -356,6 +356,27 @@ const EchoTerminal = () => {
             });
         }
         break;
+
+      case 'search':
+        if (!args) {
+            newHistory.push({ text: 'Podaj frazę do wyszukania, np. "search python"', type: 'warning' });
+        } else {
+            const query = args.toLowerCase();
+            const results = posts.filter(p => 
+                p.title.toLowerCase().includes(query) || 
+                (p.description && p.description.toLowerCase().includes(query))
+            );
+            
+            if (results.length === 0) {
+                newHistory.push({ text: `Brak wyników dla "${args}".`, type: 'warning' });
+            } else {
+                newHistory.push({ text: `Znaleziono ${results.length} wyników:`, type: 'info' });
+                results.forEach(p => {
+                    newHistory.push({ text: `[${p.date}] ${p.title}`, type: 'response', slug: p.slug });
+                });
+            }
+        }
+        break;
       
       case 'open':
           if (!args) newHistory.push({ text: 'Podaj slug.', type: 'error' });
