@@ -16,47 +16,37 @@ const PRONUNCIATION_MAP = {
 const SpeechControl = () => {
   const [isReading, setIsReading] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
-  const [useFallback, setUseFallback] = useState(false);
+  const [hasVoices, setHasVoices] = useState(false);
+  const [isSupported, setIsSupported] = useState(true);
   const [voices, setVoices] = useState([]);
   
   const utteranceRef = useRef(null);
-  const audioRef = useRef(null);
-  const sentenceQueue = useRef([]);
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && window.speechSynthesis) {
-        const synth = window.speechSynthesis;
-        const loadVoices = () => {
-            const v = synth.getVoices();
-            setVoices(v);
-            if (v.length === 0) setUseFallback(true);
-            else setUseFallback(false);
-        };
-        loadVoices();
-        if (synth.onvoiceschanged !== undefined) synth.onvoiceschanged = loadVoices;
-        
-        setTimeout(() => {
-            if (window.speechSynthesis.getVoices().length === 0) setUseFallback(true);
-        }, 2000);
-    } else {
-        setUseFallback(true);
+    if (typeof window === 'undefined' || !window.speechSynthesis) {
+        setIsSupported(false);
+        return;
     }
+
+    const synth = window.speechSynthesis;
     
-    // Zwykły tag <audio> (bez skryptów zewnętrznych!)
-    audioRef.current = new Audio();
-    audioRef.current.onended = playNextSentence;
-    audioRef.current.onerror = (e) => {
-        console.warn("Audio Error (Google Block?):", e);
-        // Próbuj następne mimo błędu
-        setTimeout(playNextSentence, 500);
+    const loadVoices = () => {
+        const v = synth.getVoices();
+        setVoices(v);
+        setHasVoices(v.length > 0);
     };
 
+    loadVoices();
+    if (synth.onvoiceschanged !== undefined) {
+        synth.onvoiceschanged = loadVoices;
+    }
+    
+    // Ostatnie sprawdzenie po chwili (dla Chrome/Android)
+    setTimeout(loadVoices, 1000);
+
     return () => {
-        if (window.speechSynthesis) window.speechSynthesis.cancel();
-        if (audioRef.current) {
-            audioRef.current.pause();
-            audioRef.current.src = "";
-        }
+        synth.cancel();
+        if (synth.onvoiceschanged !== undefined) synth.onvoiceschanged = null;
     };
   }, []);
 
@@ -75,84 +65,38 @@ const SpeechControl = () => {
     return text.replace(/\s+/g, ' ').trim();
   };
 
-  // --- ODTWARZANIE JAKO PLIK MP3 ---
-  const playNextSentence = () => {
-      if (sentenceQueue.current.length === 0) {
-          setIsReading(false);
-          setIsPaused(false);
-          return;
-      }
-      const sentence = sentenceQueue.current.shift();
-      
-      // Używamy client=tw-ob (działa najlepiej jako "plik")
-      // Dzielimy na bardzo krótkie kawałki, żeby nie przekroczyć limitu GET
-      const url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(sentence)}&tl=pl&client=tw-ob`;
-      
-      if (audioRef.current) {
-          audioRef.current.src = url;
-          audioRef.current.play().catch(e => console.error("Play blocked:", e));
-      }
-  };
-
-  const startOnlineAudio = (text) => {
-      // Dzielimy na bardzo krótkie fragmenty (<100 znaków), bo URL ma limity
-      const chunks = text.match(/[^.!?]+[.!?]+|\s*$/g)
-          .map(s => s.trim())
-          .filter(s => s.length > 0)
-          .flatMap(s => s.length > 80 ? s.match(/.{1,80}(\s|$)/g) : [s]);
-
-      sentenceQueue.current = chunks;
-      playNextSentence();
-      setIsReading(true);
-  };
-
   const toggleRead = () => {
-    const text = getCleanText();
-    if (!text) return;
+    if (!hasVoices) return;
 
-    if (useFallback) {
-        // FALLBACK: Czyste Audio MP3
-        if (isReading) {
-            if (isPaused) { audioRef.current.play(); setIsPaused(false); }
-            else { audioRef.current.pause(); setIsPaused(true); }
-        } else {
-            startOnlineAudio(text);
-        }
+    const synth = window.speechSynthesis;
+    if (isReading) {
+        if (isPaused) { synth.resume(); setIsPaused(false); } 
+        else { synth.pause(); setIsPaused(true); }
     } else {
-        // NATIVE
-        const synth = window.speechSynthesis;
-        if (isReading) {
-            if (isPaused) { synth.resume(); setIsPaused(false); }
-            else { synth.pause(); setIsPaused(true); }
-        } else {
-            synth.cancel();
-            const ut = new SpeechSynthesisUtterance(text);
-            const pl = voices.find(v => v.lang.startsWith('pl'));
-            if (pl) ut.voice = pl; else ut.lang = 'pl-PL';
-            
-            ut.onend = () => { setIsReading(false); setIsPaused(false); };
-            ut.onerror = () => { 
-                console.warn("Native error -> switch to MP3");
-                setUseFallback(true); 
-                startOnlineAudio(text);
-            };
-            
-            utteranceRef.current = ut;
-            synth.speak(ut);
-            setIsReading(true);
-        }
+        const text = getCleanText();
+        if (!text) return;
+
+        synth.cancel();
+        const ut = new SpeechSynthesisUtterance(text);
+        const pl = voices.find(v => v.lang.startsWith('pl'));
+        if (pl) ut.voice = pl; else ut.lang = 'pl-PL';
+        
+        ut.onend = () => { setIsReading(false); setIsPaused(false); };
+        ut.onerror = () => { setIsReading(false); setIsPaused(false); };
+        
+        utteranceRef.current = ut;
+        synth.speak(ut);
+        setIsReading(true);
     }
   };
 
   const stopRead = () => {
-    if (useFallback) {
-        if (audioRef.current) { audioRef.current.pause(); sentenceQueue.current = []; }
-    } else {
-        if (window.speechSynthesis) window.speechSynthesis.cancel();
-    }
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
     setIsReading(false);
     setIsPaused(false);
   };
+
+  if (!isSupported) return null;
 
   return (
     <div className="flex items-center justify-between my-6 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 w-full">
@@ -160,26 +104,34 @@ const SpeechControl = () => {
         <span className="text-sm font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 whitespace-nowrap">
           Asystent Głosowy 🎧
         </span>
-        {useFallback && <span className="text-[10px] text-gray-400 ml-1">(Stream MP3)</span>}
+        {!hasVoices && (
+            <span className="text-[10px] text-red-400 ml-1" title="Zainstaluj pakiet mowy w systemie (np. speech-dispatcher na Linuxie)">
+                (Brak TTS)
+            </span>
+        )}
       </div>
       
       <div className="flex items-center space-x-2">
         <button
           onClick={toggleRead}
-          className="px-4 py-1.5 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors flex items-center shadow-sm"
+          disabled={!hasVoices}
+          className={`px-4 py-1.5 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors flex items-center shadow-sm 
+            ${!hasVoices ? 'opacity-50 cursor-not-allowed bg-gray-400 hover:bg-gray-400' : ''}`}
         >
           {isReading && !isPaused ? (
             <><span className="mr-2">⏸</span> Pauza</>
           ) : (
-            <><span className="mr-2">▶</span> {isPaused ? "Wznów" : "Czytaj"}</>
+            <><span className="mr-2">▶</span> Czytaj</>
           )}
         </button>
 
-        {isReading && (
-          <button onClick={stopRead} className="px-4 py-1.5 text-sm bg-red-600 hover:bg-red-700 text-white rounded-md transition-colors shadow-sm">
-            Stop
-          </button>
-        )}
+        <button 
+            onClick={stopRead} 
+            disabled={!hasVoices}
+            className={`px-4 py-1.5 text-sm bg-red-600 hover:bg-red-700 text-white rounded-md transition-colors shadow-sm ${!hasVoices ? 'opacity-50 cursor-not-allowed' : ''}`}
+        >
+          Stop
+        </button>
       </div>
     </div>
   );
