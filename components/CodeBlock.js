@@ -46,7 +46,7 @@ const CodeBlock = ({ children, className, ...props }) => {
     <div className="my-6 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#1e1e1e] shadow-lg dark:shadow-2xl not-prose flex flex-col relative">
       
       {/* Pasek nagłówka */}
-      <div className="flex items-center justify-between px-4 py-2 bg-gray-50 dark:bg-[#2d2d2d] border-b border-gray-200 dark:border-gray-700 select-none z-10">
+      <div className="flex items-center justify-between px-4 py-2 bg-gray-50 dark:bg-[#2d2d2d] border-b border-gray-200 dark:border-gray-700 select-none z-10 no-read">
         <div className="flex items-center gap-2">
              <span className="font-mono text-xs text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider">
                 {language}

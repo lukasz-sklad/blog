@@ -20,6 +20,7 @@ import EchoTerminal from '../../components/EchoTerminal';
 import CodeBlock from '../../components/CodeBlock';
 import VideoPlayer from '../../components/VideoPlayer';
 import ThreeDModel from '../../components/ThreeDModel';
+import SpeechControl from '../../components/SpeechControl';
 
 // Custom components/renderers to pass to MDX.
 // Since the MDX files aren't loaded by webpack, they have no knowledge of how
@@ -36,6 +37,7 @@ const components = {
   EchoTerminal,
   VideoPlayer,
   ThreeDModel,
+  SpeechControl,
 };
 
 export default function PostPage({
@@ -60,6 +62,7 @@ export default function PostPage({
     {frontMatter.summary && (
       <p className="text-xl mb-4">{frontMatter.summary}</p>
     )}
+    <SpeechControl />
   </header>
         <main>
           <article className="prose dark:prose-dark">
