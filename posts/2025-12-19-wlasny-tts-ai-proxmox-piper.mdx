@@ -1,0 +1,193 @@
+--- 
+title: Jak dałem mojemu blogowi głos? Budujemy własne API AI na Proxmoxie! 🗣️⚡
+description: 'Historia o tym, jak połączyliśmy statycznego bloga z domowym serwerem, aby usłyszeć głos Gosi zamiast robota. Docker, Python, Piper TTS i Cloudflare Tunnel w akcji.'
+summary: 'Docker, Piper TTS, Cloudflare Tunnel, Next.js'
+date: Grudzień December 19 2025
+slug: wlasny-tts-ai-proxmox-piper
+---
+
+# Jak dałem mojemu blogowi głos? Budujemy własne API AI na Proxmoxie! 🗣️⚡
+
+Czy zdarzyło Ci się kiedyś kliknąć "Czytaj na głos" w przeglądarce i skrzywić się, słysząc metaliczny, bezduszny głos robota z lat 90.? Mnie też. 🤖
+
+Marzyłem o czymś lepszym. O blogu, który **mówi do czytelnika** naturalnym, płynnym głosem. Ale nie chciałem płacić milionów za API od gigantów technologicznych. Przecież mam w domu serwer (Proxmox), mam Debiana i mam chęci! 🏠💪
+
+W tym artykule pokażę Wam, jak zbudowałem **własne, prywatne API Text-to-Speech (TTS)**, które działa na moim domowym sprzęcie i "nadaje" głos prosto do Waszych przeglądarek – nawet na Steam Decku! 🚀
+
+## Architektura: Plan Bitwy 🗺️
+
+Nasz cel był ambitny: połączyć statycznego bloga (Next.js na Netlify) z kontenerem w mojej piwnicy, bez wystawiania routera na świat.
+
+Użyliśmy do tego:
+1.  **Backend:** Domowy Debian na Proxmoxie.
+2.  **Silnik:** [Piper TTS](https://github.com/rhasspy/piper) – niesamowicie szybki i lekki model AI (wybrałem głos `pl_PL-gosia-medium`).
+3.  **API:** Własny mikro-serwer w Pythonie (Flask).
+4.  **Transport:** [Cloudflare Tunnel](https://www.cloudflare.com/products/tunnel/) – magiczna rura, która bezpiecznie wystawia nasz lokalny serwer na świat (HTTPS) bez przekierowywania portów! 🛡️
+5.  **Frontend:** Inteligentny komponent w React, który decyduje, kiedy użyć AI.
+
+---
+
+## Krok 1: Serwer "Szyty na Miarę" 🧵
+
+Początkowo próbowaliśmy gotowych rozwiązań (OpenTTS, wyoming), ale ciągle czegoś brakowało. Biblioteki się gryzły, Python marudził... Postanowiliśmy więc zbudować własny kontener od zera na bazie Ubuntu.
+
+Oto serce naszego systemu – skrypt `server.py`, który przyjmuje tekst i zamienia go na plik WAV przy użyciu Pipera:
+
+```python
+# server.py - Nasz Wrapper API
+from flask import Flask, request, send_file, make_response
+import subprocess
+import os
+
+app = Flask(__name__)
+
+@app.route('/api/tts', methods=['GET'])
+def tts():
+    text = request.args.get('text')
+    if not text: return 'No text', 400
+    
+    # Piper wymaga nowej linii na końcu, żeby wiedzieć, że to koniec zdania
+    input_text = text + '\n' 
+    
+    # Pełne ścieżki - klucz do sukcesu w Dockerze!
+    cmd = ['/app/piper/piper', '--model', '/app/pl_PL-gosia-medium.onnx', '--output_file', '/app/output.wav']
+    
+    try:
+        # Uruchamiamy proces Pipera i karmimy go tekstem przez stdin
+        process = subprocess.Popen(
+            cmd,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE
+        )
+        stdout, stderr = process.communicate(input=input_text.encode('utf-8'))
+        
+        if process.returncode != 0:
+            return f'Piper Error: {stderr.decode("utf-8")}', 500
+            
+        # Zwracamy plik audio z odpowiednimi nagłówkami (CORS!)
+        response = make_response(send_file('/app/output.wav', mimetype='audio/wav'))
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        response.headers['Content-Disposition'] = 'inline; filename=tts.wav'
+        return response
+        
+    except Exception as e:
+        return str(e), 500
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
+```
+
+Aby to uruchomić, potrzebowaliśmy solidnego środowiska. Oto nasz pancerny `Dockerfile`:
+
+```dockerfile
+FROM ubuntu:22.04
+
+WORKDIR /app
+
+# Instalujemy zależności systemowe (kluczowe dla Pipera!)
+RUN apt-get update && \
+    apt-get install -y python3 python3-pip wget tar espeak-ng-data libespeak-ng1 && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN pip3 install flask
+
+# Pobieramy binarkę Pipera
+RUN wget -O piper.tar.gz 'https://github.com/rhasspy/piper/releases/download/2023.11.14-2/piper_linux_x86_64.tar.gz' && \
+    tar -xvf piper.tar.gz && \
+    rm piper.tar.gz
+
+# Kopiujemy nasz skrypt i model głosu (Gosia!)
+COPY . .
+
+# Linkujemy pythona
+RUN ln -s /usr/bin/python3 /usr/bin/python
+
+CMD ["python3", "server.py"]
+```
+
+---
+
+## Krok 2: Wielkie Spięcie (Docker Compose) 🐳
+
+Mając obraz, musieliśmy go połączyć ze światem. Tu wchodzi **Cloudflare Tunnel**. Dzięki niemu mój lokalny kontener jest dostępny pod adresem `https://tts.lmk.one`, a ja mam darmowy certyfikat SSL i śpię spokojnie.
+
+Plik `docker-compose.yml`:
+
+```yaml
+version: '3.8'
+
+services:
+  my-piper:
+    build: ./app
+    container_name: my-piper
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    networks:
+      - tts-net
+
+  cloudflared:
+    container_name: cloudflared-tunnel
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    command: tunnel run
+    environment:
+      - TUNNEL_TOKEN=TU_BYL_MOJ_SEKRETNY_TOKEN
+    depends_on:
+      - my-piper
+    networks:
+      - tts-net
+
+networks:
+  tts-net:
+    driver: bridge
+```
+
+Wystarczyło jedno polecenie, by ożywić bestię:
+```bash
+docker compose up -d --build
+```
+
+---
+
+## Krok 3: Inteligentny Frontend (React) 🧠
+
+Teraz najciekawsze. Nie chciałem, żeby **każdy** używał mojego domowego serwera. Jeśli ktoś ma Chrome na Androidzie, ma tam świetne wbudowane głosy Google. Po co marnować mój prąd?
+
+Stworzyłem więc system hybrydowy w `SpeechControl.js`:
+
+1.  **Sprawdź przeglądarkę:** Czy masz wbudowane głosy (Web Speech API)?
+2.  **Tak (np. Chrome):** Użyj ich! Szybko, lokalnie, za darmo.
+3.  **Nie (np. Firefox na Linuxie/Steam Deck):** Aaa, tutaj cię mam! 🕵️‍♂️
+4.  **Fallback:** Połącz się z moim serwerem `tts.lmk.one`, wyślij tekst, odbierz głos Gosi wygenerowany przez AI i odtwórz go w przeglądarce.
+
+Dodatkowo zadbaliśmy o detale:
+*   **Słownik wymowy:** "vs" czytamy jako "kontra", "ssh" jako "es es ha".
+*   **Czyszczenie:** Wycinamy emoji 🚀, bo lektor czytający "rakieta startuje" psuje klimat.
+*   **Interpunkcja:** Podmieniamy kropki na spacje, żeby lektor nie mówił słowa "kropka", ale zostawiamy przecinki, żeby robił naturalne pauzy.
+
+```javascript
+// Fragment logiki
+const toggleRead = () => {
+    if (useFallback) {
+        // Tryb AI Home (Proxmox)
+        playRemoteTTS(text);
+    } else {
+        // Tryb Natywny (System)
+        const ut = new SpeechSynthesisUtterance(text);
+        window.speechSynthesis.speak(ut);
+    }
+};
+```
+
+## Efekt Końcowy ✨
+
+Teraz mogę wejść na bloga z mojego Steam Decka, wcisnąć "Czytaj" i usłyszeć płynny, polski głos generowany w czasie rzeczywistym na serwerze w drugim pokoju. Zero reklam, zero opłat, pełna kontrola.
+
+To był projekt "teoretyczny", który stał się praktyczny. I to jest w IT najpiękniejsze! ❤️
+
+<br/>
+<button onClick={() => alert("Dziękuję za odsłuchanie historii o Gosi i Piperze! 🎧")}>
+  Mam nadzieję, że ten projekt zainspiruje Cię do własnych eksperymentów z AI! Do zobaczenia w kolejnym wpisie! 🧙‍♂️🌟
+</button>

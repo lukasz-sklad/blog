@@ -13,40 +13,62 @@ const PRONUNCIATION_MAP = {
   ' -> ': ' strzałka ',
 };
 
+const REMOTE_TTS_URL = 'https://tts.lmk.one/api/tts';
+
 const SpeechControl = () => {
   const [isReading, setIsReading] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
-  const [hasVoices, setHasVoices] = useState(false);
-  const [isSupported, setIsSupported] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [useFallback, setUseFallback] = useState(false);
   const [voices, setVoices] = useState([]);
   
   const utteranceRef = useRef(null);
+  const audioRef = useRef(null);
+  const isManuallyStopped = useRef(false);
 
   useEffect(() => {
-    if (typeof window === 'undefined' || !window.speechSynthesis) {
-        setIsSupported(false);
-        return;
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+        const synth = window.speechSynthesis;
+        const loadVoices = () => {
+            const v = synth.getVoices();
+            setVoices(v);
+            if (v.length === 0) setUseFallback(true);
+            else setUseFallback(false);
+        };
+        loadVoices();
+        if (synth.onvoiceschanged !== undefined) synth.onvoiceschanged = loadVoices;
+        
+        setTimeout(() => {
+            if (window.speechSynthesis.getVoices().length === 0) setUseFallback(true);
+        }, 2000);
+    } else {
+        setUseFallback(true);
     }
-
-    const synth = window.speechSynthesis;
     
-    const loadVoices = () => {
-        const v = synth.getVoices();
-        setVoices(v);
-        setHasVoices(v.length > 0);
+    audioRef.current = new Audio();
+    audioRef.current.oncanplay = () => {
+        if (isManuallyStopped.current) return;
+        setIsLoading(false);
+        setIsReading(true);
+        audioRef.current.play().catch(e => console.error("Play blocked:", e));
+    };
+    audioRef.current.onended = () => {
+        setIsReading(false);
+        setIsPaused(false);
+        setIsLoading(false);
+    };
+    audioRef.current.onerror = (e) => {
+        console.error("Remote TTS Error:", e);
+        setIsLoading(false);
+        setIsReading(false);
     };
 
-    loadVoices();
-    if (synth.onvoiceschanged !== undefined) {
-        synth.onvoiceschanged = loadVoices;
-    }
-    
-    // Ostatnie sprawdzenie po chwili (dla Chrome/Android)
-    setTimeout(loadVoices, 1000);
-
     return () => {
-        synth.cancel();
-        if (synth.onvoiceschanged !== undefined) synth.onvoiceschanged = null;
+        if (window.speechSynthesis) window.speechSynthesis.cancel();
+        if (audioRef.current) {
+            audioRef.current.pause();
+            audioRef.current.src = "";
+        }
     };
   }, []);
 
@@ -54,49 +76,95 @@ const SpeechControl = () => {
     const article = document.querySelector('article main .prose');
     if (!article) return "";
     const clone = article.cloneNode(true);
+    
     const ignore = ['pre', 'code', '.code-block', 'button', '.no-read', 'script', 'style', 'noscript', 'img', 'svg'];
     ignore.forEach(s => clone.querySelectorAll(s).forEach(el => el.remove()));
+    
+    // Nagłówki z wymuszoną pauzą (przecinek)
+    const headers = clone.querySelectorAll('h1, h2, h3, h4, h5, h6');
+    headers.forEach(h => { h.innerText = h.innerText + ', '; });
+
     let text = clone.innerText;
+    
     text = text.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '');
+    
     Object.keys(PRONUNCIATION_MAP).forEach(key => {
       const regex = new RegExp(key.replace('.', '\\.'), 'gi');
       text = text.replace(regex, PRONUNCIATION_MAP[key]);
     });
+    
+    // USUNIĘCIE KROPEK (To one są czytane jako "kropka")
+    text = text.replace(/\./g, ' '); 
+    
     return text.replace(/\s+/g, ' ').trim();
   };
 
-  const toggleRead = () => {
-    if (!hasVoices) return;
+  const playRemoteTTS = (text) => {
+      if (isManuallyStopped.current) return;
+      setIsLoading(true);
+      const url = `${REMOTE_TTS_URL}?text=${encodeURIComponent(text)}`;
+      if (audioRef.current) {
+          audioRef.current.src = url;
+      }
+  };
 
-    const synth = window.speechSynthesis;
+  const toggleRead = () => {
+    if (isLoading) return;
+    isManuallyStopped.current = false;
+
     if (isReading) {
-        if (isPaused) { synth.resume(); setIsPaused(false); } 
-        else { synth.pause(); setIsPaused(true); }
+        if (isPaused) { 
+            if (useFallback) audioRef.current.play();
+            else window.speechSynthesis.resume();
+            setIsPaused(false); 
+        } else { 
+            if (useFallback) audioRef.current.pause();
+            else window.speechSynthesis.pause();
+            setIsPaused(true); 
+        }
     } else {
         const text = getCleanText();
         if (!text) return;
 
-        synth.cancel();
-        const ut = new SpeechSynthesisUtterance(text);
-        const pl = voices.find(v => v.lang.startsWith('pl'));
-        if (pl) ut.voice = pl; else ut.lang = 'pl-PL';
-        
-        ut.onend = () => { setIsReading(false); setIsPaused(false); };
-        ut.onerror = () => { setIsReading(false); setIsPaused(false); };
-        
-        utteranceRef.current = ut;
-        synth.speak(ut);
-        setIsReading(true);
+        if (useFallback) {
+            playRemoteTTS(text);
+        } else {
+            const synth = window.speechSynthesis;
+            synth.cancel();
+            const ut = new SpeechSynthesisUtterance(text);
+            const pl = voices.find(v => v.lang.startsWith('pl'));
+            if (pl) ut.voice = pl; else ut.lang = 'pl-PL';
+            
+            ut.onend = () => { setIsReading(false); setIsPaused(false); };
+            ut.onerror = (e) => {
+                if (isManuallyStopped.current) return;
+                console.warn("Native error -> AI Home");
+                setUseFallback(true);
+                playRemoteTTS(text);
+            };
+            
+            utteranceRef.current = ut;
+            synth.speak(ut);
+            setIsReading(true);
+        }
     }
   };
 
   const stopRead = () => {
-    if (window.speechSynthesis) window.speechSynthesis.cancel();
+    isManuallyStopped.current = true;
+    if (useFallback) {
+        if (audioRef.current) { 
+            audioRef.current.pause(); 
+            audioRef.current.currentTime = 0; 
+            audioRef.current.src = "";
+        }
+    } else {
+        if (window.speechSynthesis) window.speechSynthesis.cancel();
+    }
     setIsReading(false);
     setIsPaused(false);
+    setIsLoading(false);
   };
-
-  if (!isSupported) return null;
 
   return (
     <div className="flex items-center justify-between my-6 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 w-full">
@@ -104,32 +172,24 @@ const SpeechControl = () => {
         <span className="text-sm font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 whitespace-nowrap">
           Asystent Głosowy 🎧
         </span>
-        {!hasVoices && (
-            <span className="text-[10px] text-red-400 ml-1" title="Zainstaluj pakiet mowy w systemie (np. speech-dispatcher na Linuxie)">
-                (Brak TTS)
-            </span>
-        )}
+        {useFallback && <span className="text-[10px] text-green-500 ml-1 font-bold">(AI Home)</span>}
+        {isLoading && <span className="text-[10px] text-blue-500 ml-1 animate-pulse">Proszę czekać...</span>}
       </div>
       
       <div className="flex items-center space-x-2">
         <button
           onClick={toggleRead}
-          disabled={!hasVoices}
-          className={`px-4 py-1.5 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors flex items-center shadow-sm 
-            ${!hasVoices ? 'opacity-50 cursor-not-allowed bg-gray-400 hover:bg-gray-400' : ''}`}
+          disabled={isLoading}
+          className={`px-4 py-1.5 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors flex items-center shadow-sm ${isLoading ? 'opacity-70 cursor-wait' : ''}`}
         >
-          {isReading && !isPaused ? (
-            <><span className="mr-2">⏸</span> Pauza</>
+          {isLoading ? (
+             <span className="mr-2">⏳</span>
           ) : (
-            <><span className="mr-2">▶</span> Czytaj</>
+             isReading && !isPaused ? <><span className="mr-2">⏸</span> Pauza</> : <><span className="mr-2">▶</span> Czytaj</>
           )}
         </button>
 
-        <button 
-            onClick={stopRead} 
-            disabled={!hasVoices}
-            className={`px-4 py-1.5 text-sm bg-red-600 hover:bg-red-700 text-white rounded-md transition-colors shadow-sm ${!hasVoices ? 'opacity-50 cursor-not-allowed' : ''}`}
-        >
+        <button onClick={stopRead} className="px-4 py-1.5 text-sm bg-red-600 hover:bg-red-700 text-white rounded-md transition-colors shadow-sm">
           Stop
         </button>
       </div>
