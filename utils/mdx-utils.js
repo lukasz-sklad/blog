@@ -26,6 +26,12 @@ export const getPosts = () => {
     const source = fs.readFileSync(path.join(POSTS_PATH, filePath));
     // const { content, data } = matter(source);
     const { data } = matter(source);
+    
+    // Ensure date is serializable (convert Date objects to string)
+    if (data.date instanceof Date) {
+      data.date = data.date.toString();
+    }
+
     return {
       data,
       filePath,

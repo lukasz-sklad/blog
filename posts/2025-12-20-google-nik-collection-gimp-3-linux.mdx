@@ -1,0 +1,256 @@
+--- 
+title: Darmowy Google Nik Collection w GIMP 3.0 na Linuxie i Steam Decku
+description: 'Jak uruchomić legendarną wtyczkę Nik Collection 1.2.11 w GIMP 3.0 (Flatpak) przy użyciu Bottles i dedykowanego skryptu Python'
+summary: 'gimp, linux, steam deck, nik collection, photo editing, bottles'
+date: Grudzień December 20 2025
+slug: NIK-Collection-GIMP-linux-Steam-Deck-Flatpak
+---
+
+# Powrót Legendy: Nik Collection 1.2.11 w GIMP 3.0 na Linuxie
+
+Wiele lat temu Google udostępniło za darmo pakiet **Nik Collection** – zestaw niesamowitych filtrów do edycji zdjęć (m.in. Color Efex Pro, Silver Efex Pro). Choć dziś pakiet jest rozwijany płatnie przez DxO, stara, darmowa wersja 1.2.11 wciąż potrafi zdziałać cuda.
+
+Problem? Uruchomienie jej na nowoczesnym Linuxie (np. SteamOS na Steam Decku), wewnątrz skonteneryzowanego GIMP-a 3.0 (Flatpak), graniczy z cudem.
+
+Ale udało się! Dzięki modyfikacji wtyczki [nikGimp](https://github.com/iiey/nikGimp) i użyciu **Bottles**, możemy cieszyć się tymi filtrami bezpośrednio w GIMPie.
+
+## Czego potrzebujesz?
+
+1.  **GIMP 3.0** (wersja Flatpak).
+2.  **Bottles** (wersja Flatpak) – do uruchamiania plików `.exe`.
+3.  **Instalator Google Nik Collection 1.2.11** – do pobrania np. z [TechSpot](https://www.techspot.com/downloads/6809-google-nik-collection.html).
+
+## Krok 1: Instalacja Nik Collection w Bottles
+
+To kluczowy moment. Nie używamy systemowego Wine, ale izolowanej "butelki".
+
+1.  Uruchom **Bottles**.
+2.  Utwórz nową butelkę typu "Application" o nazwie dokładnie: `NikCollection`.
+3.  Uruchom w niej pobrany instalator `.exe`. Zainstaluj w domyślnej ścieżce (`C:\Program Files\Google\Nik Collection`).
+4.  **Ważne:** Po instalacji wejdź w "Zależności" (Dependencies) w Bottles i doinstaluj:
+    *   `vcredist2010`, `vcredist2012`, `vcredist2015`
+    *   `dotnet48` (.NET Framework 4.8)
+    *   `gdiplus` (kluczowe dla grafiki)
+
+## Krok 2: Uprawnienia Flatpak
+
+Ponieważ GIMP i Bottles to osobne kontenery, musimy pozwolić GIMP-owi "widzieć" pliki Bottles. W terminalu wykonaj:
+
+```bash
+flatpak override --user --filesystem=xdg-data/bottles org.gimp.GIMP
+```
+
+## Krok 3: Magiczna Wtyczka (Python 3)
+
+Oryginalna wtyczka `nikGimp` nie działa z GIMP 3 i Flatpakiem. Stworzyliśmy wersję **v3.21**, która:
+*   Automatycznie komunikuje się z Bottles.
+*   Naprawia problem z zapisywaniem plików (Nik lubi zapisywać jako `deck.JPG` na pulpicie Wine, zamiast nadpisywać plik).
+*   Działa w trybie "Smart Import" – sama znajduje najnowszy wygenerowany plik.
+
+Pobierz poniższy kod i zapisz go jako `nikplugin.py` w katalogu wtyczek GIMPa (np. `~/.config/GIMP/3.0/plug-ins/nikplugin/nikplugin.py`), a następnie nadaj mu prawa wykonywania (`chmod +x`).
+
+### Kod wtyczki (nikplugin.py)
+
+```python
+#!/usr/bin/env python3
+# Wersja 3.21 - Modified for Bottles/Flatpak & GIMP 3.0
+# Obsługuje "Smart Import" z Pulpitu Wine
+
+import gi
+gi.require_version("Gimp", "3.0")
+gi.require_version("GimpUi", "3.0")
+gi.require_version("Gtk", "3.0")
+gi.require_version("Gegl", "0.4")
+
+from gi.repository import GLib, GObject, Gegl, Gimp, GimpUi, Gio, Gtk
+from enum import Enum
+from pathlib import Path
+import os, subprocess, sys, tempfile, traceback, time
+
+# KONFIGURACJA ŚCIEŻEK
+BOTTLES_PATH = Path.home() / ".var/app/com.usebottles.bottles/data/bottles/bottles"
+BOTTLE_NAME = "NikCollection"
+DRIVE_C_PATH = BOTTLES_PATH / BOTTLE_NAME / "drive_c"
+NIK_INSTALL_REL_PATH = Path("Program Files/Google/Nik Collection")
+NIK_BASE_PATH = DRIVE_C_PATH / NIK_INSTALL_REL_PATH
+WINE_DESKTOP_PATH = DRIVE_C_PATH / "users/deck/Desktop" # Dostosuj 'deck' jeśli inna nazwa usera
+WINE_DOCUMENTS_PATH = DRIVE_C_PATH / "users/deck/Documents"
+
+PROC_NAME = "NikCollection"
+AUTHOR = "nemo (modified for Bottles)"
+COPYRIGHT = "GNU General Public License v3"
+DATE = "2025-12-20"
+
+def list_progs(idx=None):
+    # Wymuszamy JPG dla maksymalnej kompatybilności
+    progs_info = [
+        ("Analog Efex Pro 2", "Analog Efex Pro 2.exe", "jpg"),
+        ("Color Efex Pro 4", "Color Efex Pro 4.exe", "jpg"),
+        ("DFine 2", "Dfine2.exe", "jpg"),
+        ("HDR Efex Pro 2", "HDR Efex Pro 2.exe", "jpg"),
+        ("Sharpener Pro 3", "SHP3OS.exe", "jpg"),
+        ("Silver Efex Pro 2", "Silver Efex Pro 2.exe", "jpg"),
+        ("Viveza 2", "Viveza 2.exe", "jpg"),
+    ]
+    
+    progs_lst = []
+    if NIK_BASE_PATH.exists():
+        for prog, exe, ext in progs_info:
+            fullpath = NIK_BASE_PATH / prog / exe
+            if fullpath.exists():
+                progs_lst.append((prog, fullpath, ext))
+
+    if idx is None:
+        return [prog[0] for prog in progs_lst]
+    else:
+        if idx < len(progs_lst): return progs_lst[idx]
+        return ("", Path(""), "")
+
+def find_latest_result(base_path: Path) -> Path:
+    # Inteligentne szukanie pliku wynikowego
+    candidates = []
+    if WINE_DESKTOP_PATH.exists():
+        candidates.append(WINE_DESKTOP_PATH / "deck.JPG")
+        candidates.append(WINE_DESKTOP_PATH / "Documents.JPG")
+    
+    if WINE_DOCUMENTS_PATH.exists():
+        candidates.append(WINE_DOCUMENTS_PATH / "deck.JPG")
+
+    candidates.extend([base_path, base_path.with_suffix(".JPG"), Path(str(base_path) + ".JPG")])
+    
+    best_file = base_path
+    newest_mtime = 0.0
+    found_any = False
+    
+    for cand in candidates:
+        if cand.exists():
+            mtime = cand.stat().st_mtime
+            if mtime > newest_mtime:
+                newest_mtime = mtime
+                best_file = cand
+                found_any = True
+    return best_file
+
+def plugin_main(procedure, run_mode, image, drawables, config, data):
+    try:
+        if run_mode == Gimp.RunMode.INTERACTIVE:
+            GimpUi.init(PROC_NAME)
+            Gegl.init(None)
+            dialog = GimpUi.ProcedureDialog(procedure=procedure, config=config)
+            dialog.fill(None)
+            if not dialog.run():
+                dialog.destroy()
+                return procedure.new_return_values(Gimp.PDBStatusType.CANCEL, GLib.Error(message="Anulowano"))
+            dialog.destroy()
+
+        visible = config.get_property("visible")
+        prog_idx = int(config.get_property("command"))
+        prog_name, prog_filepath, img_ext = list_progs(prog_idx)
+        
+        if not prog_name:
+            return procedure.new_return_values(Gimp.PDBStatusType.EXECUTION_ERROR, GLib.Error(message="Nie znaleziono Nik Collection"))
+
+        drawable = drawables[0]
+        Gimp.context_push()
+        image.undo_group_start()
+
+        try:
+            if visible == "Use_current_layer":
+                temp = drawable
+            else:
+                temp = Gimp.Layer.new_from_visible(image, image, prog_name)
+
+            buffer = Gimp.edit_named_copy([temp if visible != "Use_current_layer" else drawable], "ShellOutTemp")
+            tmp_img = Gimp.edit_named_paste_as_new_image(buffer)
+            
+            # Wymuszamy 8-bit
+            if tmp_img.get_precision() != Gimp.Precision.U8_NON_LINEAR:
+                 tmp_img.convert_precision(Gimp.Precision.U8_NON_LINEAR)
+
+            tmp_filename = f"NikTmp.{img_ext}"
+            linux_tmp_path = Path.home() / tmp_filename
+            
+            # Sprzątanie starych plików
+            potential_stale = [WINE_DESKTOP_PATH / "deck.JPG", WINE_DESKTOP_PATH / "Documents.JPG", linux_tmp_path]
+            for f in potential_stale:
+                if f.exists():
+                    try: os.remove(f)
+                    except: pass
+
+            Gimp.progress_init("Zapisywanie...")
+            Gimp.file_save(run_mode=Gimp.RunMode.NONINTERACTIVE, image=tmp_img, file=Gio.File.new_for_path(str(linux_tmp_path)), options=None)
+            
+            tmp_img.delete()
+            Gimp.buffer_delete(buffer)
+            
+            # Uruchomienie Bottles
+            Gimp.progress_init(f"Uruchamianie {prog_name}...")
+            cmd = ["flatpak-spawn", "--host", "flatpak", "run", "--command=bottles-cli", "com.usebottles.bottles", "run", "-b", BOTTLE_NAME, "-e", str(prog_filepath), str(linux_tmp_path)]
+            subprocess.check_call(cmd)
+            
+            # Oczekiwanie na użytkownika (Kluczowe!)
+            msg_dialog = Gtk.MessageDialog(
+                title="Nik Collection",
+                text=f"Edycja w {prog_name}...",
+                secondary_text="1. Edytuj zdjęcie w Nik.\n2. Kliknij 'Save' (niech zapisze gdzie chce).\n3. Poczekaj aż Nik się zamknie.\n4. Kliknij tutaj OK.",
+                buttons=Gtk.ButtonsType.OK,
+                message_type=Gtk.MessageType.INFO,
+            )
+            msg_dialog.set_keep_above(True)
+            msg_dialog.run()
+            msg_dialog.destroy()
+
+            # Import wyniku
+            result_path = find_latest_result(linux_tmp_path)
+            
+            if result_path.exists():
+                Gimp.progress_init("Wczytywanie wyniku...")
+                filtered_layer = Gimp.file_load_layer(run_mode=Gimp.RunMode.NONINTERACTIVE, image=image, file=Gio.File.new_for_path(str(result_path)))
+                filtered_layer.set_name(f"{prog_name} Result")
+                image.insert_layer(filtered_layer, None, 0)
+                
+                offsets = drawable.get_offsets()
+                if visible == "Use_current_layer": filtered_layer.set_offsets(offsets[0], offsets[1])
+                Gimp.displays_flush()
+
+        finally:
+            image.undo_group_end()
+            Gimp.displays_flush()
+            Gimp.context_pop()
+            
+    except Exception as e:
+        return procedure.new_return_values(Gimp.PDBStatusType.EXECUTION_ERROR, GLib.Error(message=f"{str(e)}"))
+
+    return procedure.new_return_values(Gimp.PDBStatusType.SUCCESS, GLib.Error())
+
+class LayerSource(str, Enum):
+    NEW_FROM_VISIBLE = "New_from_visible"
+    USE_CURRENT_LAYER = "Use_current_layer"
+    @classmethod
+    def create_choice(cls):
+        choice = Gimp.Choice.new()
+        choice.add(cls.NEW_FROM_VISIBLE, 1, "Nowa z widocznych", "Utwórz nową warstwę")
+        choice.add(cls.USE_CURRENT_LAYER, 0, "Bieżąca warstwa", "Modyfikuj bieżącą")
+        return choice
+
+class NikPlugin(Gimp.PlugIn):
+    def do_query_procedures(self):
+        return [PROC_NAME]
+    def do_create_procedure(self, name):
+        procedure = Gimp.ImageProcedure.new(self, name, Gimp.PDBProcType.PLUGIN, plugin_main, None)
+        procedure.set_image_types("RGB*, GRAY*")
+        procedure.set_menu_label(PROC_NAME)
+        procedure.add_menu_path("<Image>/Filters/")
+        procedure.add_choice_argument("visible", "Warstwa:", "Wybierz źródło", LayerSource.create_choice(), LayerSource.NEW_FROM_VISIBLE, GObject.ParamFlags.READWRITE)
+        
+        cmd_choice = Gimp.Choice.new()
+        for idx, prog in enumerate(list_progs()): cmd_choice.add(str(idx), idx, prog, prog)
+        procedure.add_choice_argument("command", "Program:", "Wybierz filtr", cmd_choice, "0", GObject.ParamFlags.READWRITE)
+        return procedure
+
+Gimp.main(NikPlugin.__gtype__, sys.argv)
+```
+
+## Podziękowania
+
+Inspiracją był kod [iiey/nikGimp](https://github.com/iiey/nikGimp), który dostosowaliśmy do realiów Flatpaka i współczesnego Wine. Podziękowania dla społeczności [gimpchat.com](https://gimpchat.com).
