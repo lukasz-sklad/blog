@@ -1,0 +1,103 @@
+---
+title: Odzyskaj władzę nad YouTube w Kodi! 🧙‍♂️ Jak zdobyć Złote Klucze API i pokonać błąd 403. 🗝️
+description: 'Twoje centrum rozrywki na Steam Decku przestało działać? Błąd "Quota Exceeded" lub 403 spędza Ci sen z powiek? Oto magiczny poradnik, jak wygenerować własne klucze API Google i przywrócić YouTube do życia.'
+summary: 'kodi youtube api fix 403 quota'
+date: Grudzień December 21 2025
+slug: kodi-youtube-api-fix
+---
+
+# Odzyskaj władzę nad YouTube w Kodi! 🧙‍♂️ Jak zdobyć Złote Klucze API i pokonać błąd 403. 🗝️
+
+Siedzisz wygodnie z padem w ręku, Steam Deck cicho szumi, odpalasz ulubioną wtyczkę YouTube w Kodi i... BUM. 💥 Ciemność. Błąd 403. Komunikat o przekroczonym limicie. Czujesz, jak magia domowego centrum rozrywki pryska.
+
+Ale spokojnie, młody padawanie! To nie koniec świata. To tylko Google, smok strzegący swoich zasobów, wymaga od Ciebie, byś stał się prawowitym posiadaczem **Trzech Złotych Kluczy**. 🗝️🗝️🗝️
+
+W tym poradniku przeprowadzę Cię przez labirynt **Google Cloud Console**, ominiemy pułapki "Publikacji" i zdobędziemy artefakty, które przywrócą Twój YouTube do żywych. Gotowy?
+
+## Krok 1: Wrota do Chmury (Google Cloud Console) ☁️
+
+Pierwszym krokiem jest wejście do jaskini lwa.
+
+1.  Otwórz przeglądarkę i udaj się na [console.cloud.google.com](https://console.cloud.google.com/).
+2.  Stwórz **Nowy Projekt** (nazwij go np. `Kodi-Deck-Hero`).
+3.  W menu po lewej wybierz **"Biblioteka" (Library)**.
+4.  Wpisz w wyszukiwarkę zaklęcie: `YouTube Data API v3`.
+5.  Kliknij **Włącz (Enable)**. Pierwsza pieczęć została złamana!
+
+## Krok 2: Pakt z Użytkownikiem (Ekran Zgody) 📝
+
+Tutaj wielu śmiałków poległo, ale Ty znasz sekret.
+
+1.  W menu wybierz **"Ekran zgody OAuth" (OAuth consent screen)**.
+2.  Jako typ wybierz **Zewnętrzny (External)**.
+3.  Wypełnij tylko wymagane pola (Nazwa: `Kodi`, i Twój email).
+4.  Przeklikaj "Zapisz i kontynuuj" aż dojdziesz do sekcji **Użytkownicy testowi (Test users)**.
+
+⚠️ **TO JEST KLUCZOWY MOMENT!** ⚠️
+
+Jeśli pominiesz ten krok, smok Google spali Cię błędem `403 Access Denied`.
+*   Kliknij **+ ADD USERS**.
+*   Wpisz **SWÓJ ADRES EMAIL** (ten sam, którym będziesz się logować w Kodi).
+*   Zapisz.
+
+Pamiętaj: Twoja aplikacja na zawsze pozostanie w trybie **Testowanie (Testing)**. Nigdy nie klikaj "Opublikuj aplikację" – to pułapka biurokracji!
+
+## Krok 3: Kucie Kluczy (Credentials) 🔨
+
+Teraz wykujemy oręż potrzebny do walki. Idź do zakładki **Dane logowania (Credentials)**.
+
+### Klucz 1: API Key
+1.  Kliknij **+ UTWÓRZ DANE LOGOWANIA** -> **Klucz interfejsu API**.
+2.  Skopiuj ten ciąg znaków. To Twój miecz. ⚔️
+
+### Klucz 2 i 3: Client ID i Secret
+1.  Kliknij **+ UTWÓRZ DANE LOGOWANIA** -> **Identyfikator klienta OAuth**.
+2.  Typ aplikacji: **Telewizory i urządzenia z ograniczonymi możliwościami...** (TVs and Limited Input devices).
+3.  Kliknij Utwórz.
+4.  Otrzymasz **Identyfikator klienta** (Client ID) oraz **Tajny klucz** (Client Secret). To Twoja tarcza i zbroja. 🛡️
+
+## Krok 4: Zaklęcie Konfiguracji (Na Steam Decku) 🎮
+
+Możesz wpisywać te długie kody pilotem... ale po co się męczyć? Jesteś na Linuxie! Użyjemy prastarej techniki pliku konfiguracyjnego.
+
+1.  Wejdź w tryb Pulpitu (Desktop Mode).
+2.  Otwórz terminal lub edytor tekstu.
+3.  Stwórz plik w tajemnej komnacie ustawień Kodi:
+
+```bash
+nano /home/deck/.var/app/tv.kodi.Kodi/data/userdata/addon_data/plugin.video.youtube/api_keys.json
+```
+
+4.  Wklej do niego poniższe zaklęcie (uzupełniając swoje klucze):
+
+```json
+{
+    "keys": {
+        "developer": {},
+        "user": {
+            "api_key": "TWOJ_API_KEY",
+            "client_id": "TWOJ_CLIENT_ID.apps.googleusercontent.com",
+            "client_secret": "TWOJ_CLIENT_SECRET"
+        }
+    }
+}
+```
+
+## Krok 5: Rytuał Podwójnego Logowania 🔄
+
+Ostatnia prosta!
+
+1.  Uruchom YouTube w Kodi.
+2.  Kliknij **Zaloguj się (Sign In)**.
+3.  Zobaczysz kod. Wejdź na telefonie na `google.com/device` i go wpisz.
+4.  **UWAGA!** Po pierwszym sukcesie... wtyczka może poprosić Cię o to SAMO jeszcze raz.
+5.  To nie błąd w Matrixie. Pierwsze logowanie autoryzuje konto, drugie daje dostęp do subskrypcji. Wykonaj rytuał ponownie.
+
+## I stała się jasność! ✨
+
+Teraz Twoje Kodi jest potężniejsze niż kiedykolwiek. Masz własne limity, nikt Ci ich nie zabierze, a Twoje subskrypcje są bezpieczne.
+
+<br/>
+<button onClick={() => alert("Dziękuję za przeczytanie artykułu o naprawie YouTube w Kodi! 👍")}>
+  Ciesz się wolnością i nielimitowanym dostępem! Do zobaczenia w następnym wpisie! 🧙‍♂️🌟
+</button>
