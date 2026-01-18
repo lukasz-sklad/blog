@@ -20,42 +20,61 @@ Standardowe narzędzia systemowe w SteamOS często nie potrafią "rozmawiać" z 
 
 Narzędzie `ddcutil` to prawdziwy kombajn, który komunikuje się bezpośrednio z monitorem za pomocą protokołu **DDC/CI**. To tak, jakbyś fizycznie klikał przyciski na obudowie monitora, ale robisz to z poziomu wygodnej linii komend.
 
-### Jak to zrobić?
+### Krok 1: Magiczne Uprawnienia (Bez tego ani rusz!) 🔐
 
-Najpierw sprawdźmy, czy Twój monitor jest gotowy do współpracy:
+Aby system (i widgety w pasku zadań!) mogły sterować monitorem bez pytania Cię o hasło co 5 sekund, musimy nadać Twojemu użytkownikowi odpowiednie moce. To kluczowy moment – bez tego magia nie zadziała "sama".
+
+Otwórz terminal i wpisz te zaklęcia:
+
+**1. Stwórz regułę udev dla urządzeń i2c:**
+To pozwoli systemowi traktować interfejs monitora z odpowiednim szacunkiem (i uprawnieniami).
 
 ```bash
-sudo ddcutil detect
+sudo bash -c 'echo "KERNEL==\"i2c-[0-9]*\", GROUP=\"i2c\", MODE=\"0660\"" > /etc/udev/rules.d/99-i2c.rules'
 ```
 
-Jeśli na liście zobaczysz swój monitor (np. Iiyama lub Dell), możesz zacząć czarować. Aby zmienić jasność na 70%, wpisz:
+**2. Stwórz grupę `i2c` i dodaj do niej siebie:**
+Dzięki temu Twój użytkownik (`deck`) wejdzie do elitarnego klubu osób mogących sterować sprzętem.
 
 ```bash
-# Ustawienie jasności na 70%
-sudo ddcutil setvcp 10 70
+# Tworzymy grupę (jeśli jeszcze nie istnieje)
+sudo groupadd -f i2c
+
+# Dodajemy użytkownika 'deck' do grupy
+sudo usermod -aG i2c deck
 ```
 
-Gdzie `10` to standardowy kod VCP dla jasności, a `70` to pożądana wartość.
+### Krok 2: Instalacja Widgetu (Level Up!) 🎚️
 
-## Dlaczego to jest lepsze?
+Sam terminal jest potężny, ale umówmy się – suwak pod myszką to czysta wygoda. W sklepie **KDE Store** dostępny jest genialny dodatek: **"A native-looking applet for display brightness adjustment"** (znany też jako `plasma-screendimmer`).
 
-1.  **Sprzętowa zmiana:** Zmieniasz faktyczne podświetlenie, co oszczędza energię i Twoje oczy.
-2.  **Zero konfliktów:** Nie psuje to działania "Nocnego światła" (filtru światła niebieskiego) w KDE Plasma.
-3.  **Pełna kontrola:** Możesz stworzyć sobie skróty klawiszowe lub aliasy, aby błyskawicznie przełączać się między trybem dziennym a nocnym.
+Ja znalazłem go bezpośrednio w **Odkrywcy (Discover)** jako pakiet **Flatpak**.
 
-## Level Up: Widget w pasku zadań (Wygoda!) 🎚️
+1.  Otwórz **Discover** (Odkrywca).
+2.  Wyszukaj i zainstaluj: **"A native-looking applet for display brightness adjustment"**.
+3.  (Dla ciekawskich magów: [KDE Store](https://store.kde.org/p/2167836) | [GitHub](https://github.com/JonMagon/plasma-screendimmer)).
 
-Jeśli nie chcesz wpisywać komend za każdym razem, mam dla Ciebie świetną wiadomość. W sklepie KDE Store dostępny jest genialny dodatek: **"A native-looking applet for display brightness adjustment"**.
+Nie martw się o uprawnienia samego Flatpaka – te, które nadaliśmy w Kroku 1 (udev i grupy), załatwiają sprawę dostępu do sprzętu dla całego Twojego użytkownika.
 
-Ja znalazłem go bezpośrednio w **Odkrywcy (Discover)** jako pakiet Flatpak. Wystarczyło kliknąć "Zainstaluj", a po szybkim restarcie systemu ikona jasności pojawiła się w pasku zadań obok zegara. Działa to "prosto z pudełka" i wygląda jak natywna część systemu! ✨
+## Wielki Finał: Restart i Magia ✨
+
+Mamy już **Uprawnienia** i mamy **Widget**. Czego brakuje? Iskry życia!
+
+🛑 **BARDZO WAŻNE:** Aby te zmiany (szczególnie nowa grupa i reguły udev) zadziałały, **musisz zrestartować Steam Decka!** Wylogowanie może nie wystarczyć. Zrób to teraz.
+
+...
+
+Zrobiłeś restart? Świetnie! Teraz spójrz na pasek zadań obok zegara.
+Powinna tam czekać na Ciebie nowa ikona jasności. Dzięki uprawnieniom z Kroku 1, działa ona "prosto z pudełka"! Klikasz, przesuwasz suwak, a monitor posłusznie zmienia jasność. To jest ta chwila, w której czujesz się jak haker, który naprawił system i sprawił, że wszystko po prostu *działa*. 😎✨
 
 ## Ściąga dla Twardzieli (Terminal) 🤓
 
-Jeśli jednak wolisz czarną konsolę, oto szybka ściąga komend, które warto znać:
+Jeśli jednak wolisz czarną konsolę (lub chcesz sprawdzić, czy wszystko gra "pod maską"), oto komendy:
 
-*   `xrandr --output DisplayPort-0 --brightness 0.4` – **Jasność programowa (przyciemnia)**
-*   `sudo ddcutil getvcp 10` – **Sprawdza obecną jasność**
-*   `sudo ddcutil setvcp 10 90` – **Ustawia jasność 90%**
+*   `xrandr --output DisplayPort-0 --brightness 0.4` – **Jasność programowa (przyciemnia)** 
+*   `ddcutil detect` – **Sprawdza czy monitor jest widoczny** (teraz powinno działać bez `sudo`!)
+*   `ddcutil getvcp 10` – **Sprawdza obecną jasność**
+*   `ddcutil setvcp 10 90` – **Ustawia jasność na 90%**
 
 Pamiętaj, że `xrandr` to rozwiązanie programowe (nakłada "cień"), a `ddcutil` zmienia fizyczne ustawienia monitora!
 
