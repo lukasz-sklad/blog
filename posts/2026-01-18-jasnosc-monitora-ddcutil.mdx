@@ -1,0 +1,67 @@
+---
+title: Kontrola jasności zewnętrznego monitora na Steam Decku? To możliwe! 💡
+description: 'Odkryj ddcutil – potężne narzędzie, które pozwala sterować jasnością monitora zewnętrznego bezpośrednio z terminala Steam Decka, bez psucia filtrów kolorów!'
+summary: 'ddcutil steamdeck linux brightness monitor'
+date: Styczeń January 18 2026
+slug: jasnosc-monitora-zewnetrznego-ddcutil-steam-deck
+---
+
+# Kontrola jasności zewnętrznego monitora na Steam Decku? To możliwe! 💡
+
+Używasz Steam Decka jako stacji roboczej? Jeśli tak, na pewno znasz ten ból: podłączasz piękny, duży monitor zewnętrzny, chcesz przyciemnić obraz wieczorem, a suwak w systemie... działa tylko na wbudowany ekran. Co gorsza, popularne sztuczki z `xrandr` często psują kolory i wyłączają tryb nocny. 
+
+Ale spokojnie, mamy na to magiczne rozwiązanie! 🧙‍♂️
+
+## Problem: Ciemność (lub jej brak) na zewnętrznym ekranie
+
+Standardowe narzędzia systemowe w SteamOS często nie potrafią "rozmawiać" z elektroniką zewnętrznych monitorów przez port DisplayPort lub HDMI. Zamiast zmieniać podświetlenie matrycy, próbują nakładać programowe filtry, co kończy się wyłączeniem filtrów światła niebieskiego i brzydkim, szarym obrazem.
+
+## Rozwiązanie: ddcutil
+
+Narzędzie `ddcutil` to prawdziwy kombajn, który komunikuje się bezpośrednio z monitorem za pomocą protokołu **DDC/CI**. To tak, jakbyś fizycznie klikał przyciski na obudowie monitora, ale robisz to z poziomu wygodnej linii komend.
+
+### Jak to zrobić?
+
+Najpierw sprawdźmy, czy Twój monitor jest gotowy do współpracy:
+
+```bash
+sudo ddcutil detect
+```
+
+Jeśli na liście zobaczysz swój monitor (np. Iiyama lub Dell), możesz zacząć czarować. Aby zmienić jasność na 70%, wpisz:
+
+```bash
+# Ustawienie jasności na 70%
+sudo ddcutil setvcp 10 70
+```
+
+Gdzie `10` to standardowy kod VCP dla jasności, a `70` to pożądana wartość.
+
+## Dlaczego to jest lepsze?
+
+1.  **Sprzętowa zmiana:** Zmieniasz faktyczne podświetlenie, co oszczędza energię i Twoje oczy.
+2.  **Zero konfliktów:** Nie psuje to działania "Nocnego światła" (filtru światła niebieskiego) w KDE Plasma.
+3.  **Pełna kontrola:** Możesz stworzyć sobie skróty klawiszowe lub aliasy, aby błyskawicznie przełączać się między trybem dziennym a nocnym.
+
+## Level Up: Widget w pasku zadań (Wygoda!) 🎚️
+
+Jeśli nie chcesz wpisywać komend za każdym razem, mam dla Ciebie świetną wiadomość. W sklepie KDE Store dostępny jest genialny dodatek: **"A native-looking applet for display brightness adjustment"**.
+
+Ja znalazłem go bezpośrednio w **Odkrywcy (Discover)** jako pakiet Flatpak. Wystarczyło kliknąć "Zainstaluj", a po szybkim restarcie systemu ikona jasności pojawiła się w pasku zadań obok zegara. Działa to "prosto z pudełka" i wygląda jak natywna część systemu! ✨
+
+## Ściąga dla Twardzieli (Terminal) 🤓
+
+Jeśli jednak wolisz czarną konsolę, oto szybka ściąga komend, które warto znać:
+
+*   `xrandr --output DisplayPort-0 --brightness 0.4` – **Jasność programowa (przyciemnia)**
+*   `sudo ddcutil getvcp 10` – **Sprawdza obecną jasność**
+*   `sudo ddcutil setvcp 10 90` – **Ustawia jasność 90%**
+
+Pamiętaj, że `xrandr` to rozwiązanie programowe (nakłada "cień"), a `ddcutil` zmienia fizyczne ustawienia monitora!
+
+## Podsumowanie
+
+<br/>
+<button onClick={() => alert("Dziękuję za przeczytanie artykułu o ddcutil 👍")}>
+  To narzędzie to prawdziwy game-changer dla każdego, kto używa Decka z zewnętrznym ekranem. Do zobaczenia w następnym wpisie! 🧙‍♂️🌟
+</button>
