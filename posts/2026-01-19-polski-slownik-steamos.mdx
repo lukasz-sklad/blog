@@ -1,0 +1,50 @@
+---
+title: Czerwone podkreślenia znikają! 🪄 Dodajemy polski słownik do Steam Decka bez rootowania. ✨
+description: 'Masz dość podkreślania każdego polskiego słowa na czerwono w trybie pulpitu Steam Decka? Pokażę Ci magiczny trik, jak dodać polski słownik do KDE Plasma w kilka sekund!'
+summary: 'steam deck steamos pisownia kde linux'
+date: Styczeń January 19 2026
+slug: polski-slownik-steamos-steam-deck
+---
+
+# Czerwone podkreślenia znikają! 🪄 Dodajemy polski słownik do Steam Decka bez rootowania. ✨
+
+Czy znasz to uczucie, gdy otwierasz edytor tekstu na swoim Steam Decku w trybie pulpitu, piszesz proste zdanie po polsku, a ekran wygląda jak pole bitwy? Wszystko podkreślone na czerwono. System krzyczy: "Błąd! Nie znam tego słowa!" 😩
+
+Dla SteamOS domyślnym językiem jest angielski, a próba doinstalowania słowników systemowych kończy się zderzeniem ze ścianą – system plików jest "read-only" (tylko do odczytu). Wielu myśli, że trzeba wyłączać zabezpieczenia, wpisywać hasła administratora i ryzykować stabilność systemu.
+
+**Nic bardziej mylnego!** Mam dla Ciebie zaklęcie, które teleportuje polski słownik prosto do Twojego katalogu domowego, gdzie system powita go z otwartymi ramionami. 🧙‍♂️📖
+
+## Magia w jednej linijce kodu 📜
+
+Nie musimy zdobywać uprawnień roota. Wystarczy, że pobierzemy oficjalne słowniki (te same, z których korzysta LibreOffice) i umieścimy je w specjalnym, ukrytym katalogu użytkownika. KDE Plasma jest na tyle sprytna, że od razu je zauważy!
+
+Otwórz terminal (Konsole) i rzuć to zaklęcie (skopiuj i wklej całość):
+
+```bash
+mkdir -p ~/.local/share/hunspell && \
+curl -L -o ~/.local/share/hunspell/pl_PL.dic https://raw.githubusercontent.com/LibreOffice/dictionaries/master/pl_PL/pl_PL.dic && \
+curl -L -o ~/.local/share/hunspell/pl_PL.aff https://raw.githubusercontent.com/LibreOffice/dictionaries/master/pl_PL/pl_PL.aff
+```
+
+### Co tu się wydarzyło? 🕵️‍♂️
+
+1.  **`mkdir`**: Tworzymy bezpieczną przystań dla słowników w Twoim katalogu domowym (`~/.local/share/hunspell`).
+2.  **`curl`**: Pobieramy dwa kluczowe składniki eliksiru:
+    *   `.dic` – lista słów.
+    *   `.aff` – zasady gramatyki i odmiany (afiksy).
+
+## Aktywacja mocy w Ustawieniach ⚙️
+
+Gdy pliki są już na miejscu, musimy powiedzieć systemowi, żeby zaczął ich używać.
+
+1.  Otwórz **Ustawienia systemowe** (System Settings).
+2.  Przejdź do sekcji **Region i język** (Region & Language) -> **Sprawdzanie pisowni** (Spell Check).
+3.  Na liście powinieneś teraz zobaczyć **Język polski (Polska)**! ✨
+4.  Zaznacz go i przesuń na szczyt listy lub po prostu aktywuj.
+
+Gotowe! Od teraz programy takie jak **Kate**, KWrite czy systemowe notatki będą rozumieć naszą piękną, szeleszczącą mowę. Koniec z czerwonymi falami pod każdym słowem "chrząszcz"! 🐞
+
+<br/>
+<button onClick={() => alert("Dziękuję za przeczytanie artykułu o polskim słowniku 👍")}>
+  Ciesz się poprawną polszczyzną na Decku! Do zobaczenia w następnym wpisie! 🧙‍♂️🌟
+</button>
