@@ -1,0 +1,64 @@
+---
+title: Nagrywanie rozmów - Pixel 9 Pro + Steam Deck = Szpiegowski Duet? 🕵️‍♂️🎧
+description: 'Czy wiesz, że Twój Steam Deck może nagrywać rozmowy z Twojego Pixela? Bez kabli (prawie), bez dziwnych aplikacji. Czysty open-source i magia scrcpy!'
+summary: 'scrcpy pixel android nagrywanie rozmów'
+date: Styczeń January 20 2026
+slug: nagrywanie-rozmow-scrcpy-pixel-steam-deck
+---
+
+# Nagrywanie rozmów: Pixel 9 Pro + Steam Deck = Szpiegowski Duet? 🕵️‍♂️🎧
+
+Jesteśmy w Polsce, prawo jest po naszej stronie (dopóki sami rozmawiamy!), a technologia... cóż, technologia lubi stawiać opór. Google od lat blokuje nagrywanie rozmów na Androidzie. Aplikacje ze sklepu Play są bezużyteczne.
+
+Ale Ty masz **Pixela 9 Pro**. I masz **Steam Decka**. 
+To nie są zwykłe zabawki. To potężne maszyny z Linuksem w sercu! ❤️🐧
+
+Pokażę Ci trick, który sprawi, że poczujesz się jak haker z "Mr. Robot". Żadnych przejściówek, żadnego lutowania. Czysty kod.
+
+## Magiczne zaklęcie: `--audio-source` 🪄
+
+Większość ludzi używa `scrcpy` tylko do wyświetlania ekranu. To błąd! Od wersji 2.0 to narzędzie potrafi wpiąć się bezpośrednio w strumień audio Androida.
+
+Dla Twojego Pixela z Androidem 14, to działa "od strzała".
+
+### Jak to zrobić?
+
+1.  Podłącz Pixela do Steam Decka kablem USB.
+2.  Otwórz terminal (Konsole) na Decku.
+3.  Wpisz to zaklęcie:
+
+```bash
+scrcpy --audio-source=voice-call --no-video --record=ważna_rozmowa.opus
+```
+
+po wifi
+
+```bash
+scrcpy -s 192.168.1.13:5555 --audio-source=voice-call --no-video --record=ważna_rozmowa.opus
+```
+
+### Co tu się dzieje? 🤯
+
+*   `192.168.1.13:5555`: Poszukaj w telefonie jakie masz ip, wcześniej przypisz port `adb tcpip 5555` (dowolny)".
+*   `--audio-source=voice-call`: To jest klucz! Mówimy Androidowi: "Nie chcę muzyki z YouTube'a. Daj mi surowy dźwięk z modułu telefonicznego".
+*   `--no-video`: Po co Ci obraz czarnego ekranu przy uchu? Oszczędzamy procesor Decka.
+*   `--record=...`: Zapisuje wszystko do pliku w super jakości (Opus).
+
+## Opcje dla profesjonalistów
+
+Jeśli chcesz nagrywać *tylko* rozmówcę (np. do wywiadu), a siebie nagrać osobno na lepszy mikrofon:
+
+```bash
+scrcpy --audio-source=voice-call-downlink --record=rozmowca.opus
+```
+
+A jeśli system będzie marudził? Czasami (rzadko na Pixelach) trzeba włączyć debugowanie USB audio w opcjach programistycznych, ale zazwyczaj Pixel 9 Pro jest gotowy do działania prosto z pudełka.
+
+## Podsumowanie
+
+Masz teraz w kieszeni mobilne studio do nagrywania wywiadów, ustaleń biznesowych czy po prostu pamiątek głosowych. Pamiętaj tylko o etyce i prawie! 
+
+<br/>
+<button onClick={() => alert("Dziękuję za przeczytanie artykułu o nagrywaniu rozmów! 🎤")}>
+  Teraz żadne słowo Ci nie umknie. Powodzenia w nagrywaniu! 📞💾
+</button>

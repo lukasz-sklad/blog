@@ -56,7 +56,8 @@ const EchoTerminal = () => {
       const now = new Date();
       const month = now.getMonth();
       const day = now.getDate();
-      const christmasRange = (month === 11 && day >= 17) || (month === 0 && day <= 6);
+      // Od 6 grudnia (Mikołajki) do 6 stycznia (Trzech Króli)
+      const christmasRange = (month === 11 && day >= 6) || (month === 0 && day <= 6);
       setIsChristmas(christmasRange);
     };
     checkChristmas();
@@ -509,13 +510,27 @@ const EchoTerminal = () => {
     : "terminal-header bg-gray-100 p-2 flex justify-between items-center cursor-move select-none border-b border-gray-300";
 
   const minimizeIconClasses = theme === 'dark'
-    ? `fixed ${isChristmas ? 'top-5' : 'bottom-5'} right-5 bg-black text-green-500 p-3 rounded-full cursor-pointer border border-green-500 shadow-lg hover:scale-110 transition-transform z-50 font-mono`
-    : `fixed ${isChristmas ? 'top-5' : 'bottom-5'} right-5 bg-white text-blue-600 p-3 rounded-full cursor-pointer border border-blue-600 shadow-lg hover:scale-110 transition-transform z-50 font-mono`;
+    ? `bg-black text-green-500 p-3 rounded-full cursor-pointer border border-green-500 shadow-lg hover:scale-110 transition-transform font-mono w-12 h-12 flex items-center justify-center`
+    : `bg-white text-blue-600 p-3 rounded-full cursor-pointer border border-blue-600 shadow-lg hover:scale-110 transition-transform font-mono w-12 h-12 flex items-center justify-center`;
 
+  const containerClasses = `fixed ${isChristmas ? 'top-5' : 'bottom-5'} right-5 z-50 flex flex-col gap-3 items-center`;
 
   if (!isOpen) {
     return (
-      <div onClick={() => setIsOpen(true)} className={minimizeIconClasses}>&gt;_</div>
+      <div className={containerClasses}>
+        <a 
+          href="https://buycoffee.to/lmk.one" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className={minimizeIconClasses}
+          title="sudo apt-get install more-coffee"
+        >
+          <span className="text-3xl">☕</span>
+        </a>
+        <div onClick={() => setIsOpen(true)} className={minimizeIconClasses}>
+          <span className="text-xl">&gt;_</span>
+        </div>
+      </div>
     );
   }
 
