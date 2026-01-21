@@ -1,0 +1,41 @@
+---
+title: Tryb Performance na Steam Decku - Czy warto budzić bestię? 🐉⚡
+description: 'Analizujemy sterownik amd-pstate-epp. Czy zmiana profilu z powersave na performance faktycznie daje kopa, czy tylko zjada baterię?'
+summary: 'steam deck linux amd-pstate cpupower wydajność'
+date: Styczeń January 21 2026
+slug: steam-deck-amd-pstate-performance
+---
+
+# Tryb Performance na Steam Decku: Czy warto budzić bestię? 🐉⚡
+
+Sprawdzasz terminal, wpisujesz `cpupower frequency-info` i widzisz to: Twój potężny Steam Deck działa na profilu... **powersave**? Czy to znaczy, że Twój sprzęt jedzie na zaciągniętym hamulcu ręcznym? 🛑
+
+Spokojnie! W świecie nowoczesnych procesorów AMD i sterownika `amd-pstate-epp`, nazwy potrafią mylić.
+
+## Powersave to nie "Oszczędzanie Energii" 🧠
+
+W starych laptopach "powersave" oznaczało, że procesor ledwo zipie. W Steam Decku (architektura Zen 2), profil ten jest **niesamowicie inteligentny**. To tryb zbalansowany, który:
+*   Obniża taktowanie do **400 MHz**, gdy tylko czytasz tekst.
+*   Wystrzeliwuje do **3.50 GHz** w milisekundę, gdy tylko odpalisz grę lub zaczniesz nagrywać rozmowę przez `scrcpy`.
+
+To jak automatyczna skrzynia biegów w sportowym aucie – wrzuca wysoki bieg na trasie, ale redukuje natychmiast, gdy wciśniesz gaz do dechy.
+
+## Co daje tryb Performance? 🏎️
+
+Wymuszając `sudo cpupower frequency-set -g performance`, zmieniasz tzw. EPP (*Energy Performance Preference*). Procesor staje się wtedy "nadpobudliwy". Zamiast czekać na realne obciążenie, trzyma wysokie obroty "na wszelki wypadek".
+
+**Efekty uboczne?**
+1.  **Wentylatory:** Zaczną szumieć szybciej.
+2.  **Bateria:** Zniknie w oczach.
+3.  **Ciepło:** Deck szybciej zrobi się gorący w dłoniach.
+
+## Werdykt: Kiedy przełączać? ⚖️
+
+Dla nagrywania rozmów telefonicznych z Twojego Pixela 9/10 Pro? **Zdecydowanie zostań na powersave.** Kodowanie audio jest tak lekkim zadaniem, że zmiana profilu nic nie poprawi, a jedynie szybciej rozładuje Ci konsolę.
+
+Tryb `performance` zostaw sobie na momenty, gdy emulujesz bardzo wymagające systemy (np. RPCS3) lub kompilujesz ogromne projekty ze źródeł.
+
+<br/>
+<button onClick={() => alert("Dziękuję za przeczytanie o wydajności Steam Decka! ⚡")}>
+  Twój Steam Deck wie, co robi. Zaufaj jego automatyce i ciesz się ciszą! 😊 Do zobaczenia w następnym wpisie! 🧙‍♂️🌟
+</button>
