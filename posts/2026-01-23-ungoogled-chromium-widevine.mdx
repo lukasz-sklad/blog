@@ -1,0 +1,111 @@
+---
+title: Zakazana Magia! 🪄 Jak zmusiłem Ungoogled Chromium do odtwarzania filmów. 🎬🍿
+description: 'Twój Ungoogled Chromium odmawia posłuszeństwa przy Netflixie czy Amazon Prime? Zobacz, jak przeprowadzić cyfrowy przeszczep serca (Widevine) i odblokować streaming na Steam Decku! 🛠️'
+summary: 'widevine ungoogled chromium steam deck linux'
+date: Piątek January 23 2026
+slug: ungoogled-chromium-widevine-drm-steam-deck
+---
+
+# Zakazana Magia! 🪄 Jak zmusiłem Ungoogled Chromium do odtwarzania filmów. 🎬🍿
+
+Znasz to uczucie? Instalujesz **Ungoogled Chromium** – przeglądarkę czystą jak łza, pozbawioną śledzących macek gigantów technologicznych. Czujesz się bezpiecznie, prywatność level hard. Rozsiadasz się wygodnie na kanapie ze Steam Deckiem, wchodzisz na Amazon Prime Video, klikasz "Odtwórz" i...
+
+💥 **BUM!** Czarny ekran. Błąd 7132. *"Twoja przeglądarka jest niekompatybilna"*.
+
+Czar pryska. Okazuje się, że w pogoni za prywatnością wycięli coś kluczowego – **Widevine CDM**. To cyfrowy strażnik (DRM), bez którego serwisy streamingowe traktują nas jak piratów. Ale spokojnie! Nie musisz wracać do zwykłego Chrome'a.
+
+Dziś zabawimy się w cyfrowych chirurgów. Przeprowadzimy **przeszczep organu** z Google Chrome do naszego Chromium. Będzie trochę alchemii, trochę Pythona i dużo satysfakcji! 🧙‍♂️✨
+
+## Dlaczego to nie działa? 🤔
+
+Ungoogled Chromium, jak sama nazwa wskazuje, jest "odgooglowane". Autorzy wycieli z niego wszystko, co łączy się z serwerami Google i co jest zamkniętym kodem. Niestety, wtyczka **Widevine** (odpowiedzialna za odtwarzanie szyfrowanych filmów) jest własnością Google. Bez niej Netflix, Disney+ czy Prime Video są ślepe.
+
+Musimy więc "ukraść" tę wtyczkę z oficjalnego pakietu i ręcznie zaszczepić ją w naszym systemie.
+
+## Rytuał Przeszczepu (Instrukcja Krok po Kroku) 📜
+
+Na Steam Decku (i wielu innych systemach Linux) sprawa jest utrudniona, bo brakuje standardowych narzędzi do rozpakowywania archiwów `.deb`. Ale my jesteśmy sprytniejsi! Użyjemy Pythona jako naszego scyzoryka MacGyvera.
+
+Oto magiczne zaklęcie (skrypt), które zrobi wszystko za Ciebie:
+1.  Pobierze oficjalnego Chrome'a.
+2.  Chirurgicznie wyciągnie z niego pliki Widevine.
+3.  Zainstaluje je w odpowiednim folderze Twojego Chromium (wersja Flatpak).
+
+### Krok 1: Otwórz Terminal i rzuć zaklęcie 💻
+
+Skopiuj i wklej poniższy blok kodu do swojego terminala (Konsole):
+
+```bash
+# Tworzymy tymczasowe laboratorium
+mkdir -p /tmp/chrome-hack
+cd /tmp/chrome-hack
+
+# 1. Pobieramy "Dawcę" (oficjalny pakiet Google Chrome)
+echo "🔽Pobieranie Google Chrome..."
+wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+
+# 2. Pythonowy Skalpel - wyciągamy dane bez narzędzia 'ar'
+echo "🐍 Uruchamianie ekstraktora Python..."
+python3 -c "
+import sys
+try:
+    with open('google-chrome-stable_current_amd64.deb', 'rb') as f:
+        if f.read(8) != b'!<arch>\n': sys.exit(1)
+        while True:
+            h = f.read(60)
+            if not h or len(h)<60: break
+            s = int(h[48:58].strip())
+            name = h[:16].strip().decode()
+            if name.startswith('data.tar'):
+                with open('data.tar.xz','wb') as o: o.write(f.read(s))
+                sys.exit(0)
+            f.seek(s+(s%2), 1)
+except Exception as e: print(e); sys.exit(1)
+"
+
+# 3. Rozpakowujemy właściwe pliki
+echo "📦 Rozpakowywanie..."
+tar -xf data.tar.xz
+
+# 4. Przygotowujemy miejsce przeszczepu
+# Ścieżka dla wersji Flatpak (najczęstsza na Steam Decku)
+BASE_DIR="$HOME/.var/app/io.github.ungoogled_software.ungoogled_chromium/config/chromium/WidevineCdm"
+mkdir -p "$BASE_DIR"
+
+# 5. Wyciągamy wersję (Kluczowy moment!)
+# Bez tego Chromium widzi wersję 0.0.0.0 i nie działa!
+VERSION=$(grep '"version"' opt/google/chrome/WidevineCdm/manifest.json | cut -d'"' -f4)
+echo "💎 Wykryta wersja Widevine: $VERSION"
+
+TARGET_DIR="$BASE_DIR/$VERSION"
+mkdir -p "$TARGET_DIR"
+
+# 6. Finalny transfer plików
+echo "💉 Przenoszenie plików do $TARGET_DIR..."
+cp -r opt/google/chrome/WidevineCdm/* "$TARGET_DIR/"
+
+# Sprzątanie po operacji
+cd ~
+rm -rf /tmp/chrome-hack
+
+echo "✅ GOTOWE! Zrestartuj Chromium i sprawdź chrome://components"
+```
+
+## Wielki Finał 🎭
+
+Po wykonaniu skryptu musisz zrobić tylko jedną rzecz:
+
+1.  **Zrestartuj całkowicie Chromium.**
+2.  Wpisz w pasek adresu: `chrome://components`.
+3.  Poszukaj **Widevine Content Decryption Module**.
+
+Jeśli widzisz tam numer wersji (np. `4.10.2934.0`) zamiast `0.0.0.0` – **WYGRAŁEŚ!** 🎉
+
+Teraz możesz wejść na Amazon Prime Video lub Netflixa. Filmy będą działać płynnie, a Ty nadal korzystasz ze swojej prywatnej, odchudzonej przeglądarki. Pamiętaj tylko, że ta metoda nie aktualizuje się sama – jeśli za pół roku filmy przestaną działać, po prostu powtórz ten proces.
+
+Miłego oglądania! 🍿🎬
+
+<br/>
+<button onClick={() => alert("Dziękuję za przeczytanie artykułu o Widevine i Chromium 👍")}>
+  Oglądaj bezpiecznie i prywatnie. Do zobaczenia w następnym wpisie! 🧙‍♂️🌟
+</button>
