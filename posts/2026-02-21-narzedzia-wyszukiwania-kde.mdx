@@ -1,0 +1,50 @@
+---
+title: Tajna Broń Wyszukiwania 🛠️ Skrypt, który naprawia "ślepotę" KDE! ✨
+description: 'Masz folder, którego Baloo nie chce zaindeksować? Zobacz mój skrypt Search_Tools-KDE, który wymusza posłuszeństwo systemowej wyszukiwarki!'
+summary: 'kde baloo bash skrypt steamdeck'
+date: Luty February 20 2026
+slug: narzedzia-wyszukiwania-kde-skrypt
+---
+
+# Tajna Broń Wyszukiwania 🛠️ Skrypt, który naprawia "ślepotę" KDE! ✨
+
+W poprzednim wpisie opowiadałem o walce z gigantycznym, ślepym indeksem Baloo. Ale co zrobić, gdy już odchudziliśmy nasz system, a Baloo nadal jest... uparty? Co jeśli wrzucasz nowy folder z kursem wideo i chcesz, by **natychmiast** pojawił się w wynikach wyszukiwania? 🏃‍♂️💨
+
+Dla takich niecierpliwych (i dbających o porządek) jak ja, powstał specjalny skrypt: `Search_Tools-KDE`.
+
+## Kiedy Baloo potrzebuje "zachęty"? 🤔
+
+Czasem samo wrzucenie pliku do folderu to za mało. Baloo może być w trybie oszczędzania energii, może czekać na restart systemu, albo po prostu... mieć gorszy dzień. Zamiast czekać w nieskończoność, możemy użyć mojej tajnej broni, która siłą wprowadza pliki do indeksu.
+
+## Jak działa magia? ✨
+
+Skrypt, który trzymam w moim folderze z narzędziami (`/home/deck/GIT/tools/Search_Tools-KDE/`), to prosty, ale potężny kawałek kodu w Bashu. Robi on dwie najważniejsze rzeczy: wymusza indeksowanie konkretnego folderu i sprawdza aktualny status usługi.
+
+```bash
+#!/usr/bin/env bash
+TARGET_PATH="$1"
+
+# Magia zaczyna się tutaj:
+echo "[1/2] Wymuszam indeksowanie plików w tym folderze..."
+balooctl6 index "$TARGET_DIR"
+
+echo "[2/2] Pobieram aktualny status..."
+timeout 10s balooctl6 status
+```
+
+To tak, jakbyś podszedł do Baloo i palcem wskazał mu dokładnie, gdzie ma teraz patrzeć. ☝️ Dzięki temu pliki stają się widoczne w KRunnerze i Dolphinie niemal natychmiast po ich skopiowaniu!
+
+## Dlaczego to jest lepsze niż czekanie? ⏳
+
+1.  **Kontrola:** Ty decydujesz, co jest ważne w tej chwili.
+2.  **Szybkość:** Nie czekasz na systemowy harmonogram indeksowania.
+3.  **Pewność:** Status wyświetlany na końcu daje Ci czarno na białym informację, czy wszystko poszło zgodnie z planem.
+
+## Podsumowanie
+
+Własne narzędzia to siła każdego użytkownika Linuxa. Dzięki małemu skryptowi `Search_Tools-KDE`, przestałem prosić system o znalezienie moich plików – zacząłem mu to nakazywać! 💪 Jeśli też masz foldery, które system uparcie ignoruje, taki skrypt to absolutny must-have.
+
+<br/>
+<button onClick={() => alert("Dziękuję za przeczytanie o moich narzędziach wyszukiwania 👍")}>
+  Moje skrypty to moja potęga! Zapraszam do kolejnych wpisów o automatyzacji na Steam Decku. Do zobaczenia! 🧙‍♂️🌟
+</button>

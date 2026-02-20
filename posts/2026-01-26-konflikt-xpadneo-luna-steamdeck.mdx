@@ -1,0 +1,87 @@
+---
+title: Wojna Kontrolerów na Steam Decku 🎮 Jak pogodziłem pada Xbox z Amazon Luna ✨
+description: 'Gdy instalacja sterowników xpadneo "zabija" Twoją Lunę, czas na taktyczną operację na otwartym sercu Linuxa. Zobacz, jak pogodzić zwaśnione pady!'
+summary: 'xpadneo amazon luna steamdeck bluetooth linux'
+date: Styczeń January 26 2026
+slug: konflikt-xpadneo-luna-steamdeck
+---
+
+# Wojna Kontrolerów na Steam Decku 🎮 Jak pogodziłem pada Xbox z Amazon Luna ✨
+
+Dziś na warsztat wjechał fascynujący problem "polityczny" wewnątrz Linuxa na naszym ukochanym Steam Decku. Mamy dwa potężne obozy: doskonałe, ergonomiczne pady **Xbox Series X/S** oraz niszowy, ale solidny i lekki kontroler **Amazon Luna**. ⚔️
+
+Cel był prosty: sprawić, by oba te światy współistniały w pokoju i stabilnie służyły do grania. Rzeczywistość jednak szybko zweryfikowała te śmiałe plany – instalacja zaawansowanych sterowników dla Xboxa nieoczekiwanie "zabiła" możliwość parowania Luny. Co tu się wydarzyło? 😱
+
+## Bohaterowie dramatu 🎭
+
+1.  **Pady Xbox:** Działają na Linuxie "z pudełka", ale bywają kapryśne – problemy z wibracjami czy mapowaniem przycisków potrafią zepsuć imersję. Rozwiązaniem jest **xpadneo** – potężny, magiczny sterownik, który naprawia wszystko i sprawia, że pad staje się przedłużeniem Twojej dłoni. 🪄
+2.  **Kontroler Amazon Luna:** Działa po Bluetooth (Low Energy), ale jest wyjątkowo wybredny przy pierwszym zapoznaniu (parowaniu).
+3.  **xpadneo (Nasz Zaborczy Bohater):** Ten sterownik jest niezwykle ambitny. Przejmuje głęboką kontrolę nad urządzeniami Bluetooth, aby zapewnić nam najniższe opóźnienia. Niestety, przy okazji bywa zbyt zazdrosny... 😅
+
+## Wielki Konflikt 💥
+
+Zainstalowaliśmy `xpadneo`, żeby pady od Xboxa śmigały jak złoto. Wszystko pięknie! Ale gdy próbowaliśmy sparować kontroler Luna, zaczęły się dziać dziwne rzeczy.
+
+**Efekt?**
+*   Luna łączy się na ułamek sekundy i natychmiast ucieka (rozłącza się). 🏃‍♂️
+*   W logach systemowych sypią się błędy: `org.bluez.Error.Failed le-connection-abort-by-local`.
+*   System widzi kontroler, ale nie pozwala mu dokończyć "uścisku dłoni" (handshake).
+
+Okazało się, że załadowany moduł jądra `hid_xpadneo` gryzie się z procesem parowania Luny, prawdopodobnie błędnie interpretując jej sygnały LE (Low Energy). To była czysta cyfrowa zazdrość!
+
+## Rozwiązanie: Taktyczny Odwrót 🛡️
+
+Naprawa wymagała małej "operacji na otwartym sercu" – musieliśmy tymczasowo uśpić sterownik Xboxa, aby Luna mogła poczuć się bezpiecznie.
+
+### Krok 1: Tymczasowe uśpienie xpadneo 💤
+
+Najpierw wyrzuciliśmy Lunę z pamięci Bluetooth, a następnie wyłączyliśmy sterownik, który blokował drogę:
+
+```bash
+# Usuwamy przeszkodę z jądra systemu
+sudo modprobe -r hid_xpadneo
+```
+
+W tym momencie pady od Xboxa przestały działać poprawnie (to normalne), ale "powietrze" dla sygnałów Bluetooth stało się czyste!
+
+### Krok 2: Parowanie Luny 🤝
+
+Gdy `xpadneo` spał, Luna sparowała się błyskawicznie i bez żadnego zająknięcia. Linuxowy BlueZ przyjął ją z otwartymi ramionami.
+
+```bash
+bluetoothctl pair [MAC_LUNY]
+bluetoothctl trust [MAC_LUNY]
+bluetoothctl connect [MAC_LUNY]
+```
+
+### Krok 3: Powrót Króla (xpadneo) 👑
+
+Gdy Luna była już sparowana i oznaczona jako zaufana, mogliśmy bezpiecznie przywrócić do życia sterownik dla Xboxa:
+
+```bash
+sudo modprobe hid_xpadneo
+```
+
+**Zwycięstwo!** Teraz oba kontrolery działają obok siebie w pełnej harmonii. Konflikt występował tylko na etapie **nawiązywania** nowej znajomości. Gdy urządzenia są już sobie przedstawione, `xpadneo` nie wchodzi Lunie w drogę. 🥳
+
+## Bonus: Utrwalenie pokoju (Reboot Proof) ⚓
+
+Aby Steam zawsze poprawnie mapował przyciski pada Xbox przez `xpadneo`, musieliśmy dodać specjalną zmienną środowiskową. Edycja `.bashrc` nie wystarcza dla trybu Gaming Mode!
+
+Utworzyliśmy specjalny plik konfiguracyjny:
+**Ścieżka:** `/home/deck/.config/environment.d/xpadneo.conf`
+
+```bash
+SDL_GAMECONTROLLERCONFIG="050000005e040000fd02000003090000,Xbox One Wireless Controller,a:b0,b:b1,back:b6,dpdown:h0.4,dpleft:h0.8,dpright:h0.2,dpup:h0.1,guide:b8,leftshoulder:b4,leftstick:b9,lefttrigger:a2,leftx:a0,lefty:a1,rightshoulder:b5,rightstick:b10,righttrigger:a5,rightx:a3,righty:a4,start:b7,x:b2,y:b3,"
+```
+
+Dzięki temu po każdym restarcie nasz Steam Deck wstaje gotowy do walki, obsługując wszystkie kontrolery jednocześnie bez żadnych humorów! 🚀🎮
+
+## Podsumowanie
+
+Często najtrudniejsze problemy rozwiązuje się nie siłą, a sprytem i... chwilowym usunięciem się z drogi. Teraz mój setup kontrolerów jest kompletny! 🌟
+
+<br/>
+<button onClick={() => alert("Dziękuję za przeczytanie artykułu o konfiguracji padów 👍")}>
+  Moje pady wreszcie przestały ze sobą walczyć! Czas na sesję w Elden Ring. Do zobaczenia w następnym wpisie! 🧙‍♂️🌟
+</button>

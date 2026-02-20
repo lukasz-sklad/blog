@@ -1,0 +1,46 @@
+---
+title: Ratunku, kopiowanie przerwane! 😱 rsync wchodzi cały na biało ✨
+description: 'Przerwany transfer na telefon? 50% i błąd? Zobacz, jak rsync inteligentnie dociąga brakujące pliki i ratuje Twój czas!'
+summary: 'rsync linux kopiowanie mtp'
+date: Luty February 20 2026
+slug: rsync-ratunek-przerwanego-kopiowania-mtp
+---
+
+# Ratunku, kopiowanie przerwane! 😱 rsync wchodzi cały na biało ✨
+
+Nie ma nic gorszego niż kopiowanie ogromnego folderu z kursami wideo na telefon, tylko po to, by przy 50% zobaczyć komunikat o błędzie. 😫 Dolphin (czy jakikolwiek inny menedżer plików) zazwyczaj rozkłada ręce – albo zaczynasz od nowa, albo próbujesz ręcznie zgadywać, co już jest na miejscu.
+
+Ale my, użytkownicy Linuxa, mamy w rękawie asa. Nazywa się **rsync**.
+
+## Dlaczego zwykłe kopiowanie to ryzyko? 🎲
+
+Standardowe kopiowanie (MTP) na Steam Decku bywa kapryśne. Wystarczy lekkie poruszenie kablem, chwila zadyszki systemu i... transfer leży. Najgorsze jest to, że nie wiesz, czy ostatni kopiowany plik nie został uszkodzony (ucięty w połowie).
+
+## rsync – Twój inteligentny pomocnik 🧠
+
+Zamiast kopiować wszystko od zera, rsync porównuje oba foldery i dociąga tylko to, czego brakuje lub co się różni.
+
+```bash
+# Magiczna komenda ratunkowa
+rsync -avP "/ścieżka/źródłowa/" "/ścieżka/docelowa/"
+```
+
+Co oznaczają te litery?
+*   **-a**: Kopiuje "wszystko jak leci" (uprawnienia, daty itp.).
+*   **-v**: Gadatliwość – widzisz dokładnie, który plik jest teraz przetwarzany.
+*   **-P**: To mój ulubiony przełącznik. Pokazuje postęp i pozwala wznowić przesyłanie plików, które zostały przerwane w połowie!
+
+## A co z pewnością? 🛡️
+
+Dla największych paranoików (takich jak ja!) istnieje flaga `-c` (checksum). Sprawia ona, że rsync liczy sumy kontrolne każdego pliku. Jeśli na telefonie jest plik o tej samej nazwie i rozmiarze, ale ma choć jeden błędny bit – rsync go naprawi. 
+
+*Uwaga: Przy połączeniu z telefonem (MTP) sumy kontrolne mogą być bardzo wolne, ale dają 100% pewności.*
+
+## Podsumowanie
+
+Od teraz nie boję się przerwanych transferów. rsync to narzędzie, które każdy posiadacz Steam Decka powinien mieć w swoim cyfrowym przyborniku. Oszczędza czas, nerwy i miejsce na dysku.
+
+<br/>
+<button onClick={() => alert("Dziękuję za przeczytanie artykułu o rsync 👍")}>
+  Teraz żadne przerwane kopiowanie nie jest mi straszne! Do zobaczenia w następnym wpisie! 🧙‍♂️🌟
+</button>

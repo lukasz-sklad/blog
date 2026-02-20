@@ -1,0 +1,52 @@
+---
+title: Pogromca Gigantów 🐉 Jak przywróciłem wzrok wyszukiwarce na Steam Decku! ✨
+description: 'Twoje wyszukiwanie na Steam Decku milczy mimo obecności plików? Zobacz, jak pokonałem 12-gigabajtowego potwora Baloo i naprawiłem "ślepotę" systemu!'
+summary: 'baloo linux kde steamdeck wyszukiwanie'
+date: Luty February 19 2026
+slug: pogromca-gigantow-baloo-steam-deck
+---
+
+# Pogromca Gigantów 🐉 Jak przywróciłem wzrok wyszukiwarce na Steam Decku! ✨
+
+Czy kiedykolwiek miałeś wrażenie, że Twój Steam Deck patrzy prosto na plik, a mimo to twierdzi, że go nie widzi? 🕵️‍♂️ Wpisujesz nazwę w KRunnerze lub Dolphinie, wiesz, że plik tam jest, a system uparcie milczy... Nie ma wyników, nie ma podpowiedzi, tylko cyfrowa pustka.
+
+Ostatnio odkryłem u siebie tego "cyfrowego ślepca". Nazywa się **Baloo** – to usługa odpowiedzialna za indeksowanie plików w KDE. Gdy sprawdziłem jego stan, oniemiałem. Mój indeks ważył **12,6 GB** i zawierał prawie **3 miliony plików**, a mimo to... nie znajdował kompletnie nic! 🌋
+
+## Dlaczego Baloo "ślepieje"? 🎈
+
+Na Steam Decku problem jest specyficzny. Każda gra, każda biblioteka Protona to tysiące małych plików. Baloo, w swojej nieskończonej gorliwości, próbował zaindeksować absolutnie wszystko, od tekstur gier po logi Wine. Baza stała się tak ciężka i "zapchana" śmieciami, że indeksator po prostu przestał radzić sobie z dodawaniem nowych, faktycznie ważnych plików. 
+
+Mój skrypt do wymuszania indeksowania nie miał szans – Baloo był zbyt zajęty walką z tym gigantem, by w ogóle zareagować.
+
+## Plan bitwy ⚔️
+
+Musiałem zadziałać radykalnie i wskazać Baloo, gdzie ma zakaz wstępu.
+
+```bash
+# Wykluczamy foldery gier i Wine z indeksowania (najwięksi winowajcy!)
+kwriteconfig6 --file ~/.config/baloofilerc --group General --key "exclude folders" "/home/deck/.local/share/Steam/steamapps/,/home/deck/.wine/,/home/deck/.cache/"
+
+# Zabijamy upartego potwora
+killall -9 baloo_file
+
+# Czyścimy starą, ciężką i bezużyteczną bazę danych
+balooctl6 purge
+
+# Odpalamy indeksator na nowo – w wersji Light!
+balooctl6 enable
+```
+
+## Efekt? Magia! 🪄
+
+Po tych zabiegach rozmiar indeksu spadł z **12.6 GB do 12 KB**! 🎊 Ale co najważniejsze – Baloo wreszcie "przejrzał na oczy". Teraz indeksuje tylko moje dokumenty, kursy i ważne pliki, a wyszukiwanie działa błyskawicznie i bezbłędnie. 
+
+Jeśli Twoja wyszukiwarka nie widzi plików, które masz przed nosem – sprawdź stan swojego indeksu komendą `balooctl6 status`. Może Ty też masz w systemie nieproszonego, ślepego giganta?
+
+## Podsumowanie
+
+Czasem więcej wcale nie znaczy lepiej. W przypadku indeksowania plików, mniej śmieci to więcej trafnych wyników. Odchudzenie Baloo to pierwszy krok do porządku w systemie! 🗺️
+
+<br/>
+<button onClick={() => alert("Dziękuję za przeczytanie artykułu o naprawie wyszukiwania 👍")}>
+  Moja wyszukiwarka wreszcie odzyskała wzrok, a ja odzyskałem 12 GB miejsca! Do zobaczenia w następnym wpisie! 🧙‍♂️🌟
+</button>
