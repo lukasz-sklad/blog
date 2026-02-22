@@ -16,6 +16,33 @@ body {
   font-family: var(--font-secondary);
 }
 
+/* Podświetlanie akapitu (pancerne) */
+.tts-highlight-sentence {
+  background-color: rgba(59, 130, 246, 0.1) !important;
+  border-left: 5px solid #3b82f6 !important;
+  padding-left: 15px !important;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+}
+
+.dark .tts-highlight-sentence {
+  background-color: rgba(59, 130, 246, 0.2) !important;
+  border-left: 5px solid #60a5fa !important;
+}
+
+/* Nowoczesne podświetlanie konkretnego słowa (Highlight API) */
+::highlight(tts-word-highlight) {
+  background-color: #fcd34d !important;
+  color: #000 !important;
+  text-decoration: underline wavy #d97706;
+}
+
+/* Bazowy styl dla słów TTS (jeśli zostaną spany) */
+.tts-word {
+  transition: all 0.2s ease;
+  display: inline;
+}
+
 .dark th {
   color: white; /* Lub inny jasny kolor, który będzie widoczny, naglowkow tabel w pliku mdx */
 }
