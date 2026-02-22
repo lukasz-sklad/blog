@@ -1,0 +1,41 @@
+---
+title: Koniec z błędami w terminalu 🛑 Jak uciszyć Homebrew w kontenerach Distrobox ✨
+description: Masz dość irytującego błędu "bash: brew: Nie ma takiego pliku" przy każdym wejściu do kontenera? Oto prosty sposób na inteligentny .bashrc, który sam wie, gdzie się znajduje!
+summary: 'linux steamos distrobox homebrew bashrc fix'
+date: Luty February 22 2026
+slug: inteligentny-bashrc-homebrew-distrobox-fix
+---
+
+# Koniec z błędami w terminalu 🛑 Jak uciszyć Homebrew w kontenerach Distrobox ✨
+
+Czy znasz to uczucie, gdy wchodzisz do swojego ulubionego kontenera z Arch Linuxem na Steam Decku, gotowy do kodowania, a terminal na powitanie krzyczy do Ciebie: `bash: /home/linuxbrew/.linuxbrew/bin/brew: Nie ma takiego pliku ani katalogu`? 😱 
+
+To jak kamień w bucie – niby drobnostka, ale przy każdym nowym oknie terminala irytuje tak samo. Problem wynika z faktu, że SteamOS i Twoje kontenery Distrobox często dzielą ten sam plik konfiguracyjny `.bashrc`. Kiedy dodajesz do niego obsługę Homebrew, Twój "główny" system jest zachwycony, ale kontener (który nie ma zainstalowanego Brewa) czuje się zagubiony i rzuca błędami.
+
+## Magiczne rozwiązanie – "Pancerny" warunek 🛡️
+
+Zamiast usuwać Homebrew lub tworzyć osobne pliki konfiguracyjne, możemy sprawić, by nasz `.bashrc` stał się inteligentny. Wystarczy zamienić standardową linię ładowania Brewa na taką, która najpierw sprawdza, czy plik w ogóle istnieje i czy można go uruchomić.
+
+Oto wersja "pancerna", która uciszy błędy raz na zawsze:
+
+```bash
+# Sprawdź, czy Brew istnieje i jest wykonywalny, zanim spróbujesz go załadować
+if [ -x "/home/linuxbrew/.linuxbrew/bin/brew" ]; then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
+```
+
+### Dlaczego to działa? 🧠
+
+*   **`if [ -x ... ]`**: Ten mały strażnik sprawdza dwie rzeczy: czy ścieżka istnieje i czy masz uprawnienia do jej wykonania.
+*   **W kontenerze**: Warunek nie zostanie spełniony (bo plik nie istnieje), więc cała linia `eval` zostanie po prostu pominięta. Cisza i spokój! ✅
+*   **Na SteamOS**: Plik jest na swoim miejscu, więc Brew ładuje się błyskawicznie jak zawsze. ✅
+
+## Podsumowanie
+
+Dzięki tej prostej zmianie Twój terminal staje się czystszy, a Ty możesz skupić się na tym, co naprawdę ważne – na tworzeniu kolejnych niesamowitych projektów! 🚀
+
+<br/>
+<button onClick={() => alert("Dziękuję za przeczytanie artykułu o naprawie błędu Homebrew 👍")}>
+  Twój terminal właśnie stał się inteligentniejszy! Ciesz się spokojną pracą w kontenerach. 😊 Do zobaczenia w następnym wpisie! 🧙‍♂️🌟
+</button>
