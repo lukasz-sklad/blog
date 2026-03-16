@@ -1,6 +1,7 @@
 import classNames from 'classnames';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './Layout.module.css';
+import SpeechControl from './SpeechControl';
 
 
 export function GradientBackground({ variant, className }) {
@@ -44,18 +45,16 @@ export default function Layout({ children }) {
 
   useEffect(() => {
     setAppTheme();
-  }, []);
-
-  useEffect(() => {
     handleSystemThemeChange();
   }, []);
 
   return (
     <div className="relative pb-24 overflow-hidden">
-      <div className="flex flex-col items-center max-w-2xl w-full mx-auto">
+      <div className="flex flex-col items-center max-w-2xl w-full mx-auto px-6 md:px-0 text-gray-900 dark:text-white">
+        {/* Globalny asystent w trybie PDF - niewidoczny, dopóki nie ma danych PDF */}
+        <SpeechControl mode="pdf" />
         {children}
       </div>
-      
     </div>
   );
 }

@@ -62,7 +62,7 @@ export default function PostPage({
     {frontMatter.summary && (
       <p className="text-xl mb-4">{frontMatter.summary}</p>
     )}
-    <SpeechControl />
+    <SpeechControl mode="post" />
   </header>
         <main>
           <article className="prose dark:prose-dark">
