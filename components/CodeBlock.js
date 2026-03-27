@@ -22,17 +22,16 @@ const CodeBlock = ({ children, className, ...props }) => {
     }
   }, [children]);
 
-  const handleCopy = async (e) => {
+  const handleCopy = (e) => {
     e.stopPropagation(); 
     if (codeRef.current) {
       const text = codeRef.current.textContent;
-      try {
-        await navigator.clipboard.writeText(text);
+      navigator.clipboard.writeText(text).then(() => {
         setIsCopied(true);
         setTimeout(() => setIsCopied(false), 2000);
-      } catch (err) {
+      }).catch(err => {
         console.error('Failed to copy!', err);
-      }
+      });
     }
   };
 
@@ -43,10 +42,10 @@ const CodeBlock = ({ children, className, ...props }) => {
   };
 
   return (
-    <div className="my-6 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#1e1e1e] shadow-lg dark:shadow-2xl not-prose flex flex-col relative">
+    <div className="my-6 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#1e1e1e] shadow-lg dark:shadow-2xl not-prose flex flex-col relative w-full max-w-full overflow-hidden">
       
       {/* Pasek nagłówka */}
-      <div className="flex items-center justify-between px-4 py-2 bg-gray-50 dark:bg-[#2d2d2d] border-b border-gray-200 dark:border-gray-700 select-none z-10 no-read">
+      <div className="flex items-center justify-between px-4 py-2 bg-gray-50 dark:bg-[#2d2d2d] border-b border-gray-200 dark:border-gray-700 select-none z-10 no-read w-full">
         <div className="flex items-center gap-2">
              <span className="font-mono text-xs text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider">
                 {language}
@@ -76,9 +75,9 @@ const CodeBlock = ({ children, className, ...props }) => {
         </button>
       </div>
 
-      {/* Kontener kodu */}
+      {/* Kontener kodu z agresywnym zawijaniem */}
       <div 
-        className="relative transition-all duration-500 ease-in-out bg-white dark:bg-[#1e1e1e]"
+        className="relative transition-all duration-500 ease-in-out bg-white dark:bg-[#1e1e1e] w-full"
         style={{
             maxHeight: isExpanded ? 'none' : (isLongContent ? `${PREVIEW_HEIGHT}px` : 'none'),
             overflow: 'hidden'
@@ -87,7 +86,7 @@ const CodeBlock = ({ children, className, ...props }) => {
       >
          <pre 
             {...props} 
-            className={`${className} !m-0 !p-4 !bg-transparent text-sm leading-relaxed font-mono text-gray-800 dark:text-gray-100 whitespace-pre-wrap break-words`} 
+            className={`${className} !m-0 !p-4 !bg-transparent text-sm leading-relaxed font-mono text-gray-800 dark:text-gray-100 whitespace-pre-wrap break-all w-full`} 
             ref={codeRef}
          >
             {children}
@@ -96,7 +95,7 @@ const CodeBlock = ({ children, className, ...props }) => {
          {/* Gradient i przycisk "Pokaż więcej" (tylko gdy zwinięte i długie) */}
          {!isExpanded && isLongContent && (
              <div 
-                className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-white via-[#ffffffd9] dark:from-[#1e1e1e] dark:via-[#1e1e1ee6] to-transparent flex items-end justify-center pb-4 cursor-pointer"
+                className="absolute bottom-0 left-0 w-full h-12 bg-gradient-to-t from-white via-[#ffffffd9] dark:from-[#1e1e1e] dark:via-[#1e1e1ee6] to-transparent flex items-end justify-center pb-2 cursor-pointer z-20"
                 onClick={toggleExpand}
              >
                  <div className="px-2.5 py-0.5 bg-blue-600 hover:bg-blue-500 dark:bg-blue-900 dark:hover:bg-blue-800 text-white text-[10px] font-semibold uppercase tracking-wide rounded-full shadow-lg transition-all transform hover:scale-105 flex items-center gap-1">
@@ -113,7 +112,7 @@ const CodeBlock = ({ children, className, ...props }) => {
       {isExpanded && isLongContent && (
           <div 
             onClick={toggleExpand}
-            className="h-6 bg-gray-50 hover:bg-gray-100 dark:bg-[#2d2d2d] dark:hover:bg-[#3d3d3d] cursor-pointer flex justify-center items-center transition-colors border-t border-gray-200 dark:border-gray-700"
+            className="h-6 bg-gray-50 hover:bg-gray-100 dark:bg-[#2d2d2d] dark:hover:bg-[#3d3d3d] cursor-pointer flex justify-center items-center transition-colors border-t border-gray-200 dark:border-gray-700 z-20"
             title="Zwiń kod"
           >
              <svg className="w-4 h-4 text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">

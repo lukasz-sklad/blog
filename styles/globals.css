@@ -16,6 +16,15 @@ body {
   font-family: var(--font-secondary);
 }
 
+/* Drastyczna blokada poziomego przewijania */
+html, body {
+  overflow-x: hidden !important;
+  width: 100vw !important;
+  position: relative;
+  margin: 0;
+  padding: 0;
+}
+
 /* Podświetlanie akapitu (pancerne) */
 .tts-highlight-sentence {
   background-color: rgba(59, 130, 246, 0.1) !important;
@@ -60,3 +69,45 @@ body {
 .radio-bar:nth-child(2) { animation-delay: 0.2s; }
 .radio-bar:nth-child(3) { animation-delay: 0.4s; }
 .radio-bar:nth-child(4) { animation-delay: 0.6s; }
+
+/* Poprawka dla responsywności artykułów na telefonach */
+.overflow-wrap-anywhere {
+  overflow-wrap: anywhere !important;
+  word-break: normal !important;
+}
+
+.prose {
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+/* Wymuszenie zawijania kodu wewnątrz tekstu (inline code) */
+.prose code:not(pre code) {
+  white-space: normal !important;
+  word-break: break-all !important;
+  overflow-wrap: anywhere !important;
+}
+
+/* Zapewnienie, że bloki kodu i inne kontenery nie rozpychają strony */
+.prose pre, pre[class*="language-"] {
+  max-width: 100% !important;
+  width: 100% !important;
+  overflow-x: auto !important;
+  white-space: pre-wrap !important;
+  word-break: break-all !important;
+  overflow-wrap: anywhere !important;
+}
+
+/* Wymuszenie zawijania kodu wewnątrz bloku pre, jeśli overflow nie działa */
+.prose pre code {
+  white-space: pre-wrap !important;
+  word-break: break-all !important;
+}
+
+/* Zapewnienie zawijania tekstu w przyciskach wewnątrz artykułów */
+.prose button {
+  white-space: normal !important;
+  height: auto !important;
+  text-align: center;
+  max-width: 100%;
+}

@@ -54,13 +54,13 @@ export default function PostPage({
         description={frontMatter.description}
       />
       <Header name={globalData.name} />
-      <article className="px-6 md:px-0">
+      <article className="px-6 md:px-0 break-words overflow-wrap-anywhere">
   <header>
-    <h1 className="text-3xl md:text-5xl dark:text-white text-center mb-12">
+    <h1 className="text-3xl md:text-5xl dark:text-white text-center mb-12 break-words">
       {frontMatter.title}
     </h1>
     {frontMatter.summary && (
-      <p className="text-xl mb-4">{frontMatter.summary}</p>
+      <p className="text-xl mb-4 break-words">{frontMatter.summary}</p>
     )}
     <SpeechControl mode="post" />
   </header>
@@ -76,7 +76,7 @@ export default function PostPage({
                 <p className="uppercase text-gray-500 mb-4 dark:text-white dark:opacity-60">
                   Previous
                 </p>
-                <h4 className="text-2xl text-gray-700 mb-6 dark:text-white">
+                <h4 className="text-2xl text-gray-700 mb-6 dark:text-white break-words">
                   {prevPost.title}
                 </h4>
                 <ArrowIcon className="transform rotate-180 mx-auto md:mr-0 mt-auto" />
@@ -89,7 +89,7 @@ export default function PostPage({
                 <p className="uppercase text-gray-500 mb-4 dark:text-white dark:opacity-60">
                   Next
                 </p>
-                <h4 className="text-2xl text-gray-700 mb-6 dark:text-white">
+                <h4 className="text-2xl text-gray-700 mb-6 dark:text-white break-words">
                   {nextPost.title}
                 </h4>
                 <ArrowIcon className="mt-auto mx-auto md:ml-0" />
