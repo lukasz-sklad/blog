@@ -101,7 +101,7 @@
     "zweryfikować"
   ],
   "terminal.integrated.defaultProfile.linux": "bash",
-  "terminal.integrated.automationProfile.linux": {},
+  "terminal.integrated.automationProfile.linux": { "path": "/bin/bash" },
   "files.associations": {
     "*.mdx": "markdown"
   }
