@@ -100,6 +100,11 @@
     "znalezieniu",
     "zweryfikować"
   ],
+  "files.autoSave": "afterDelay",
+  "terminal.integrated.fontFamily": "'JetBrainsMono Nerd Font Mono'",
+  "terminal.integrated.fontLigatures.enabled": true,
+  "editor.fontFamily": "'JetBrainsMono Nerd Font Mono'",
+  "editor.fontLigatures": true,
   "terminal.integrated.defaultProfile.linux": "bash",
   "terminal.integrated.automationProfile.linux": { "path": "/bin/bash" },
   "files.associations": {
