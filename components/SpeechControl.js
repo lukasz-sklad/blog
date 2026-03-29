@@ -248,10 +248,19 @@ const SpeechControl = ({ mode = "post" }) => {
           {useFallback && <span className="text-[9px] text-green-500 font-black">AI HOME</span>}
         </div>
         <div className="flex items-center space-x-1">
-          <button onClick={toggleRead} className="px-3 py-1 text-xs bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors min-w-[70px]">
-            {isLoading ? '⏳' : (isReading && !isPaused ? '⏸ Pauza' : '▶ Czytaj')}
+          <button onClick={toggleRead} className="px-3 py-1 text-xs bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors min-w-[40px] xs:min-w-[70px] flex items-center justify-center">
+            {isLoading ? '⏳' : (
+              isReading && !isPaused ? (
+                <>⏸<span className="hidden xs:inline ml-1">Pauza</span></>
+              ) : (
+                <>▶<span className="hidden xs:inline ml-1">Czytaj</span></>
+              )
+            )}
           </button>
-          <button onClick={stopRead} className="px-3 py-1 text-xs bg-red-600 hover:bg-red-700 text-white rounded ml-2">Stop</button>
+          <button onClick={stopRead} className="px-3 py-1 text-xs bg-red-600 hover:bg-red-700 text-white rounded ml-2 flex items-center justify-center">
+            <span className="hidden xs:inline">Stop</span>
+            <span className="inline xs:hidden" title="Stop">🛑</span>
+          </button>
         </div>
       </div>
     </div>
