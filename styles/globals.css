@@ -107,7 +107,11 @@ html, body {
 /* Zapewnienie zawijania tekstu w przyciskach wewnątrz artykułów */
 .prose button {
   white-space: normal !important;
+  word-break: break-word !important;
+  overflow-wrap: anywhere !important;
   height: auto !important;
+  min-height: fit-content;
   text-align: center;
   max-width: 100%;
+  display: inline-block;
 }

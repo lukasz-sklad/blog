@@ -13,7 +13,7 @@ A customizable blog starter using:
 >
 > [Click this link](https://oss-form.netlify.app/) to vote for your favorite Open Source project!
 
-![Preview of blog theme. Author named Jay Doe and blog's name is "Next.js Blog Theme" with one blog post](nextjs-blog-theme-preview.png)
+![Preview of blog theme. Author named Jay Doe and blog's name is ](nextjs-blog-theme-preview.png)
 
 [Take a gander at the demo.](https://bejamas-nextjs-blog.netlify.app)
 
@@ -41,7 +41,7 @@ Finally, you can run your project locally with:
 yarn run dev
 ```
 
-Open your browser and visit <http://localhost:3000>, your project should be running!
+Open your browser and visit [http://localhost:3000](http://localhost:3000), your project should be running!
 
 ### Using the Setup Wizard
 
@@ -54,14 +54,15 @@ Through the [setup wizard](https://nextjs-wizard.netlify.app/), you can create y
 The config is based on environment variables to make it easy to integrate with any Jamstack platform, like Netlify.
 
 Here are the variables you can edit:
-| Variable | Description | Options
-| --- | --- | --- |
-| `BLOG_NAME` | the name of your blog, displayed below the avatar ||
-| `BLOG_TITLE` | the main header (`h1`) on the home page ||
-| `BLOG_FOOTER_TEXT`| the text in the footer ||
-| `BLOG_THEME` | the theme to pass to Tailwind | default |
-| `BLOG_FONT_HEADINGS` | the font-family for all HTML headings, from `h1` to `h6`| sans-serif (default), serif, monospace|
-| `BLOG_FONT_PARAGRAPHS` | the font-family for all other HTML elements | sans-serif (default), serif, monospace|
+
+| Variable                 | Description                                                  | Options                                |
+| ------------------------ | ------------------------------------------------------------ | -------------------------------------- |
+| `BLOG_NAME`            | the name of your blog, displayed below the avatar            |                                        |
+| `BLOG_TITLE`           | the main header (`h1`) on the home page                    |                                        |
+| `BLOG_FOOTER_TEXT`     | the text in the footer                                       |                                        |
+| `BLOG_THEME`           | the theme to pass to Tailwind                                | default                                |
+| `BLOG_FONT_HEADINGS`   | the font-family for all HTML headings, from `h1` to `h6` | sans-serif (default), serif, monospace |
+| `BLOG_FONT_PARAGRAPHS` | the font-family for all other HTML elements                  | sans-serif (default), serif, monospace |
 
 All of the env variables can be configured through the [Wizard](https://nextjs-wizard.netlify.app/) or through setting the project's environment variables. You can do this in your Netlify dashaboard (Site settings/Build & deploy/Environment/Environment variables).
 
@@ -79,8 +80,6 @@ If setting an environment variable isn't your cup of tea, the defaults can be ch
 All posts are stored in `/posts` directory. To make a new post, create a new file with the [`.mdx` extension](https://mdxjs.com/).
 
 Since the posts are written in `MDX` format you can pass props and components. That means you can use [React components](https://reactjs.org/docs/components-and-props.html) inside your posts to make them more interactive. Learn more about how to do so in the [MDX docs on content](https://mdxjs.com/docs/using-mdx/#components).
-
-
 
 https://user-images.githubusercontent.com/3611928/152727802-102ec296-41c8-446d-93ed-922d11187073.mp4
 

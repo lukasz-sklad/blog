@@ -50,7 +50,7 @@ export default function Layout({ children }) {
 
   return (
     <div className="relative pb-24 overflow-x-hidden w-full">
-      <div className="flex flex-col items-center max-w-2xl w-full mx-auto px-6 md:px-0 text-gray-900 dark:text-white overflow-x-hidden">
+      <div className="flex flex-col items-center max-w-2xl w-full mx-auto px-6 md:px-0 text-gray-900 dark:text-white">
         {/* Globalny asystent w trybie PDF - niewidoczny, dopóki nie ma danych PDF */}
         <SpeechControl mode="pdf" />
         {children}
