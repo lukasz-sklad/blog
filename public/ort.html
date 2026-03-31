@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ortograf - Lokalna App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background-color: #f3f4f6; transition: background 0.3s; }
+        .app-container { display: flex; flex-direction: column; height: 100vh; }
+        .header { background: #2563eb; color: white; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); z-index: 10; }
+        .dark-mode .header { background: #1e293b; border-bottom: 1px solid #334155; }
+        .dark-mode body { background-color: #0f172a; }
+        iframe { flex-grow: 1; border: none; width: 100%; height: 100%; }
+        #theme-toggle { cursor: pointer; padding: 5px 12px; border-radius: 20px; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); font-size: 14px; }
+    </style>
+</head>
+<body class="light-mode">
+<div class="app-container">
+    <div class="header">
+        <div class="flex items-center space-x-2">
+            <span class="text-xl font-bold">Ortograf.pl</span>
+            <span id="status-tag" class="text-xs bg-blue-700 px-2 py-1 rounded">Lokalna App</span>
+        </div>
+        <button id="theme-toggle">🌙 Tryb Ciemny</button>
+    </div>
+    <iframe src="https://www.ortograf.pl/" id="ortograf-frame"></iframe>
+</div>
+<script>
+    const btn = document.getElementById('theme-toggle');
+    const iframe = document.getElementById('ortograf-frame');
+    const body = document.body;
+    const tag = document.getElementById('status-tag');
+    let isDark = false;
+
+    btn.addEventListener('click', () => {
+        isDark = !isDark;
+        const theme = isDark ? 'dark' : 'light';
+        
+        // Zmień wygląd nagłówka
+        body.className = isDark ? 'dark-mode' : 'light-mode';
+        btn.innerHTML = isDark ? '☀️ Tryb Jasny' : '🌙 Tryb Ciemny';
+        tag.className = isDark ? 'text-xs bg-slate-700 px-2 py-1 rounded' : 'text-xs bg-blue-700 px-2 py-1 rounded';
+
+        // Wyślij wiadomość do iframe (Violentmonkey to odbierze)
+        iframe.contentWindow.postMessage({ theme: theme }, 'https://www.ortograf.pl');
+    });
+</script>
+</body>
+</html>
