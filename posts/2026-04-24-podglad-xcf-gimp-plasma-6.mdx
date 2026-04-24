@@ -1,0 +1,118 @@
+---
+title: GIMP i Plasma 6 w końcu się dogadały! 🎨 Podgląd plików XCF na Steam Decku i nie tylko ✨
+description: 'Masz dość pustych ikon zamiast podglądu Twoich prac w GIMP? Zobacz, jak w kilka sekund przywrócić miniatury XCF, PSD i KRA w środowisku Plasma 6 bez użycia sudo!'
+summary: 'gimp xcf kde-plasma steam-deck dolphin-preview'
+date: Kwiecień April 24 2026
+slug: podglad-xcf-gimp-plasma-6-stamos
+---
+
+# GIMP i Plasma 6 w końcu się dogadały! 🎨 Podgląd plików XCF na Steam Decku i nie tylko ✨
+
+Czy znasz to uczucie pustki? Otwierasz folder ze swoimi genialnymi projektami w GIMPie, a zamiast pięknych, kolorowych miniatur widzisz... szare, smutne ikony. Na nowej Plasmie 6 (którą cieszą się m.in. użytkownicy Steam Decka) podgląd plików `.xcf` bywa kapryśny. Ale spokojnie, nie musisz instalować ciężkich pakietów systemowych ani ryzykować stabilności swojego urządzenia!
+
+Dzisiaj nauczymy się prostego "zaklęcia", które sprawi, że Twój menedżer plików Dolphin odzyska wzrok. Co najlepsze – zrobimy to w sposób bezpieczny, lokalny i całkowicie odwracalny!
+
+## Alchemia plików – jak to działa? 🧪
+
+Standardowo Plasma potrzebuje wtyczek `kimageformats`, aby zrozumieć formaty takie jak XCF, PSD (Photoshop) czy KRA (Krita). Zamiast walczyć z repozytoriami, my po prostu "pożyczymy" potrzebne pliki i umieścimy je tam, gdzie Plasma zawsze zagląda – do Twojego folderu domowego.
+
+## Rytuał instalacji 🪄
+
+Przygotowałem dla Ciebie kompletny skrypt, który wykona całą czarną robotę. Pobierze odpowiednią paczkę, wypakuje magiczne biblioteki `.so` i szepnie systemowi, gdzie ich szukać.
+
+### 1. Przygotuj skrypt
+Stwórz w swoim folderze domowym plik o nazwie `install_xcf_preview.sh` i wklej do niego poniższą zawartość:
+
+```bash
+#!/bin/bash
+set -e
+
+echo "--- Super-Instalator Podglądu Grafiki dla Plasma 6 (SteamOS) ---"
+
+# 1. Definicja ścieżek
+LOCAL_PLUGINS="$HOME/.local/lib/qt6/plugins/imageformats"
+ENV_SCRIPT_DIR="$HOME/.config/plasma-workspace/env"
+TMP_DIR="$HOME/Downloads/kimageformats_update"
+
+echo "[1/6] Przygotowanie katalogów..."
+mkdir -p "$LOCAL_PLUGINS"
+mkdir -p "$ENV_SCRIPT_DIR"
+mkdir -p "$TMP_DIR"
+mkdir -p "$HOME/.config/environment.d"
+
+cd "$TMP_DIR"
+
+# 2. Pobieranie wersji 6.9.0 (zgodnej z Twoim systemem)
+URL="https://archive.archlinux.org/packages/k/kimageformats/kimageformats-6.9.0-1-x86_64.pkg.tar.zst"
+
+echo "[2/6] Pobieranie paczki kimageformats..."
+curl -L "$URL" -o kimageformats.tar.zst
+
+echo "[3/6] Rozpakowywanie..."
+tar --zstd -xf kimageformats.tar.zst
+
+# 3. Kopiowanie WSZYSTKICH wtyczek (XCF, PSD, KRA, itd.)
+echo "[4/6] Instalowanie wtyczek w ~/.local..."
+cp usr/lib/qt6/plugins/imageformats/*.so "$LOCAL_PLUGINS/"
+
+# 4. Konfiguracja zmiennych środowiskowych (na 3 sposoby dla pewności)
+echo "[5/6] Konfiguracja zmiennych środowiskowych..."
+
+# Sposób 1: Autostart Plasmy
+ENV_FILE="$ENV_SCRIPT_DIR/qt6_plugins.sh"
+echo 'export QT_PLUGIN_PATH="$HOME/.local/lib/qt6/plugins:$QT_PLUGIN_PATH"' > "$ENV_FILE"
+chmod +x "$ENV_FILE"
+
+# Sposób 2: Terminal (.bashrc) - tylko jeśli jeszcze nie istnieje
+if ! grep -q "QT_PLUGIN_PATH=\"\$HOME/.local/lib/qt6/plugins:\$QT_PLUGIN_PATH\"" "$HOME/.bashrc"; then
+    echo 'export QT_PLUGIN_PATH="$HOME/.local/lib/qt6/plugins:$QT_PLUGIN_PATH"' >> "$HOME/.bashrc"
+fi
+
+# Sposób 3: Środowisko graficzne (environment.d)
+echo 'QT_PLUGIN_PATH="$HOME/.local/lib/qt6/plugins:$QT_PLUGIN_PATH"' > "$HOME/.config/environment.d/qt6_plugins.conf"
+
+# 5. Odświeżenie cache KDE
+echo "[6/6] Odświeżanie cache systemu..."
+kbuildsycoca6 --noincremental || true
+
+echo "-------------------------------------------------------"
+echo "SUKCES! Zainstalowano wsparcie dla: XCF, PSD, KRA i innych."
+echo ""
+echo "WAŻNE: Aby zmiany weszły w życie, ZRESTARTUJ system."
+echo ""
+echo "JEŚLI NADAL NIE DZIAŁA:"
+echo "1. Wyczyść cache miniatur komendą:"
+echo "   rm -rf ~/.cache/thumbnails/* && kbuildsycoca6 --noincremental"
+echo "2. Spróbuj uruchomić Dolphina ręcznie, by sprawdzić błędy:"
+echo "   QT_PLUGIN_PATH=\"\$HOME/.local/lib/qt6/plugins:\$QT_PLUGIN_PATH\" dolphin"
+echo "3. W ustawieniach Dolphina (Ogólne -> Podglądy) upewnij się,"
+echo "   że 'Pliki obrazów (GIMP)' i inne są zaznaczone."
+echo "-------------------------------------------------------"
+```
+
+### 2. Uruchom magię
+Otwórz terminal w tym samym folderze i wpisz:
+
+```bash
+chmod +x install_xcf_preview.sh
+./install_xcf_preview.sh
+```
+
+## Co dalej? Wielkie Przebudzenie 💤 -> ⚡
+
+Aby zmiany weszły w życie, system musi "przespać się" z nowymi ustawieniami. **Zrestartuj swój komputer lub Steam Decka.**
+
+Jeśli po restarcie miniatury nadal się nie pojawiają:
+1.  Wyczyść stary cache miniatur:
+    `rm -rf ~/.cache/thumbnails/* && kbuildsycoca6 --noincremental`
+2.  W ustawieniach Dolphina (**Ogólne -> Podglądy**) upewnij się, że opcja **Obrazy (GIF, PNG, BMP, ...)** jest zaznaczona.
+3.  Jeżeli podpinasz zdalne, sieciowe dyski (pCloud), ustaw **Zdalna przechowalnia: Pokaż podglądy dla** -> **plików poniżej 300 MiB**.
+
+## Podsumowanie
+
+Dzięki tej metodzie Twój Dolphin widzi teraz pliki XCF, PSD, a nawet KRA jak na dłoni! Wszystko to bez dotykania partycji systemowej i bez wpisywania hasła administratora. Czysta, bezpieczna magia.
+
+<br/>
+<button onClick={() => alert("Dziękuję za przeczytanie artykułu o podglądzie XCF 👍")}>
+  Mój Dolphin w końcu odzyskał wzrok! Twoje projekty zasługują na to, by je widzieć. Do zobaczenia w następnym wpisie! 🧙‍♂️🌟
+</button>
