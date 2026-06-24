@@ -1,0 +1,173 @@
+---
+title: DRL zamknęło swoje serwery w 2025 roku. Społeczność nie dała za wygraną! Oto jak gramy dalej. 🚁🔥
+description: 'Oficjalne serwery DRL Simulator zostały wyłączone w 2025 roku, ale społeczność stworzyła własny serwer. Zobacz krok po kroku, jak uruchomić go na Steam Decku z Linuxem i dalej latać!'
+summary: 'DRL Simulator community server Linux Steam Deck Proton BepInEx'
+date: Czerwiec June 24 2026
+slug: spolecznosciowy-serwer-drl-po-wylaczeniu-oficjalnych-serwerow
+---
+
+# DRL zamknęło swoje serwery w 2025 roku. Społeczność nie dała za wygraną! Oto jak gramy dalej. 🚁🔥
+
+Był rok 2025. Drone Racing League (DRL) – oficjalne mistrzostwa świata wyścigów dronów – podjęły decyzję, która wstrząsnęła całą społecznością. **Oficjalne serwery DRL Simulator zostały wyłączone.** 🛑
+
+Dla wielu oznaczało to koniec ery. Gra, która przez lata łączyła pilotów dronów z całego świata, nagle straciła swój kręgosłup – możliwość gry online, ścigania się z innymi, rywalizacji na rankingach. Ale wiecie co? **Społeczność nie powiedziała jeszcze ostatniego słowa.** 💪
+
+## Społeczność kontratakuje 🛠️
+
+Gdy oficjalne serwery padły, **Mr-milky-way** – jeden zapalony programista – wziął sprawy w swoje ręce i stworzył **Drone Racing League Community Server**. To otwartoźródłowy serwer społecznościowy, który przywraca grze życie. I to nie byle jakie życie! Dzięki niemu możesz znowu latać, ścigać się, a nawet organizować własne turnieje.
+
+Co więcej – cały projekt jest w pełni darmowy i open source. Kod znajdziecie na GitHubie:
+
+👉 [https://github.com/Mr-milky-way/Drone-Racing-League-Community-Server](https://github.com/Mr-milky-way/Drone-Racing-League-Community-Server)
+
+A całość opiera się na **BepInEx** – frameworku do modowania gier na Unity, rozwijanym przez społeczność pod adresem:
+
+👉 [https://github.com/BepInEx/BepInEx/releases](https://github.com/BepInEx/BepInEx/releases)
+
+## Jak to działa? 🧠
+
+Mechanizm jest prosty, ale genialny. Gra DRL Simulator łączy się z API pod adresem `api.drl-game.com`. Community Server podmienia ten adres na własny, dzięki czemu gra myśli, że łączy się z oryginalnymi serwerami, a tak naprawdę trafia do społecznościowej infrastruktury.
+
+Do tego potrzebne są dwa elementy:
+
+1. **BepInEx** – framework do modowania gier na Unity
+2. **DRL_DLL_Hooks.dll** – plugin, który przechwytuje połączenia sieciowe gry i przekierowuje je na community server
+
+## Instalacja na Steam Decku (Linux) krok po kroku 🐧🎮
+
+Poniżej przeprowadzę Cię przez cały proces. Zrzuty ekranu pochodzą z instalacji na Steam Decku z systemem SteamOS (Linux).
+
+### Krok 1: Zainstaluj ProtonUp-Qt 🛠️
+
+Najpierw potrzebujemy narzędzia do zarządzania wersjami Protona. Zainstalujemy ProtonUp-Qt z Flathuba.
+
+![Instalacja ProtonUp-Qt z Flathuba](/images/1.png)
+
+```bash
+flatpak install flathub net.davidotek.pupgui2
+```
+
+ProtonUp-Qt pozwoli Ci łatwo instalować różne wersje Protona – to kluczowe, bo DRL Simulator potrzebuje odpowiedniej wersji, by współpracować z naszym modem.
+
+### Krok 2: Uruchom ProtonUp-Qt 🚀
+
+![Uruchamianie ProtonUp-Qt](/images/2.png)
+
+```bash
+flatpak run net.davidotek.pupgui2
+```
+
+Po uruchomieniu zobaczysz okno, w którym możesz zarządzać wersjami Protona.
+
+### Krok 3: Zainstaluj odpowiednią wersję Protona 🎯
+
+![Wybór wersji Protona w ProtonUp-Qt](/images/3.png)
+
+W ProtonUp-Qt kliknij przycisk **"Add version"** i wybierz najnowszą wersję **Proton Experimental** lub **Proton GE**. Dlaczego to ważne? Ponieważ nasz mod wymaga biblioteki `winhttp.dll`, a starsze wersje Protona mogą mieć z tym problemy.
+
+### Krok 4: Zainstaluj ProtonTricks 🧰
+
+![Instalacja ProtonTricks](/images/4.png)
+
+```bash
+flatpak install flathub com.github.Matoking.protontricks
+```
+
+ProtonTricks to kolejne niezbędne narzędzie – pozwoli nam skonfigurować prefiks Wine dla DRL Simulatora.
+
+### Krok 5: Uruchom ProtonTricks i wybierz grę 🎮
+
+![Okno ProtonTricks z listą gier](/images/5-flatpak%20run%20com.github.Matoking.protontricks.png)
+
+Uruchom ProtonTricks:
+
+```bash
+flatpak run com.github.Matoking.protontricks
+```
+
+Zobaczysz listę gier Steam. Znajdź na niej **DRL Simulator** i zaznacz go.
+
+### Krok 6: Wybierz domyślny prefiks Wine ✅
+
+![Wybór domyślnego prefiksu Wine](/images/6.png)
+
+ProtonTricks zapyta Cię o prefiks Wine. Wybierz **"Default wineprefix"** – to standardowa lokalizacja, której Proton używa dla gier Steam.
+
+### Krok 7: Uruchom winecfg ⚙️
+
+![Uruchamianie winecfg](/images/7.png)
+
+W oknie ProtonTricks kliknij przycisk **"Run winecfg"**. To otworzy narzędzie konfiguracyjne Wine, które pozwoli nam dodać brakującą bibliotekę.
+
+### Krok 8: Dodaj bibliotekę winhttp 🏗️
+
+![Dodawanie winhttp w winecfg](/images/8.png)
+
+W oknie winecfg:
+1. Przejdź do zakładki **"Libraries"**
+2. W polu "New override for library" wpisz **`winhttp`**
+3. Kliknij **"Add"**
+
+To kluczowy krok! Dzięki temu Proton będzie używał natywnej biblioteki `winhttp.dll` zamiast własnej implementacji, co jest niezbędne do działania BepInEx.
+
+### Krok 9: Wgraj pliki modyfikacji 📂
+
+![Otwieranie folderu gry w Steam](/images/9.png)
+
+Teraz czas na właściwy mod. W Steam:
+1. Kliknij prawym przyciskiem na **DRL Simulator**
+2. Wybierz **"Zarządzaj" → "Przeglądaj pliki lokalne"**
+3. Otworzy się Dolphin (menedżer plików) w katalogu gry:
+   `/home/deck/.local/share/Steam/steamapps/common/DRL Simulator/`
+
+Teraz musisz pobrać i rozpakować pliki modyfikacji:
+
+BepInEx_win_x64_5.4.23.5.zip ze strony 
+
+
+👉 [https://github.com/BepInEx/BepInEx/releases](https://github.com/BepInEx/BepInEx/releases)
+
+Wypakuj zawartość do katalogu z grą, uruchom grę, stworzą się nowe pliki.
+
+`PAMIĘTAJ` wyłącz Steam i włącz z powrotem teraz patchuj 
+
+```bash
+# Pobierz najnowszy DRLPatchBase z GitHub Releases
+curl -sL -o DRLPatchBase.zip "https://github.com/Mr-milky-way/Drone-Racing-League-Community-Server/releases/download/V1.1-DLLS/DRLPatchBase.zip"
+
+# Rozpakuj do katalogu gry
+unzip -o DRLPatchBase.zip
+```
+
+Po rozpakowaniu w katalogu gry powinieneś mieć:
+
+| Plik | Lokalizacja | Opis |
+|------|------------|------|
+| `apiurl.txt` | katalog główny gry | Zawiera adres API (`https://api.drl-game.com`) |
+| `DRL_DLL_Hooks.dll` | `BepInEx/plugins/` | Plugin przekierowujący ruch na community server |
+
+### Krok 10: Gotowe! Uruchom grę 🏁
+
+Po wykonaniu wszystkich kroków możesz uruchomić DRL Simulator przez Steam. BepInEx załaduje się automatycznie, a plugin DRL_DLL_Hooks przechwyci połączenia i skieruje je na społecznościowy serwer.
+
+**Uwaga:** Gra działa doskonale na **Proton 11.0 (Beta)** – nie trzeba niczego zmieniać ani konfigurować, wystarczy wybrać tę wersję we właściwościach gry w Steam (właściwości gry → Zgodność → "Użyj konkretnego narzędzia Steam Play").
+
+## Podsumowanie 📝
+
+Oto co udało nam się osiągnąć:
+
+- ✅ **Zainstalowaliśmy ProtonUp-Qt** – do zarządzania wersjami Protona
+- ✅ **Zainstalowaliśmy odpowiednią wersję Protona** – z obsługą winhttp
+- ✅ **Skonfigurowaliśmy ProtonTricks** – do zarządzania prefiksem Wine
+- ✅ **Dodaliśmy winhttp jako bibliotekę natywną** – dla poprawnego działania BepInEx
+- ✅ **Pobraliśmy i rozpakowaliśmy DRLPatchBase** – z pluginem i konfiguracją
+- ✅ **Wrzuciliśmy DRL_DLL_Hooks.dll** – do folderu BepInEx/plugins/
+
+Dzięki temu DRL Simulator znowu żyje! Możesz ścigać się z innymi, bić rekordy i cieszyć się grą tak, jakby oficjalne serwery nigdy nie zgasły. 🔥
+
+Społeczność DRL udowodniła, że nawet gdy wielkie korporacje odwracają się od graczy, to pasja i zaangażowanie potrafią zdziałać cuda. **To nie jest koniec – to nowy początek.** 🚁✨
+
+<br/>
+<button onClick={() => alert("Dziękuję za przeczytanie artykułu o społecznościowym serwerze DRL 👍")}>
+  Społeczność DRL udowodniła, że pasja jest silniejsza niż zamknięte serwery. Dołącz do nas i leć dalej! Do zobaczenia w następnym wpisie! 🧙‍♂️🌟
+</button>
