@@ -1,16 +1,20 @@
 ---
-title: Tajna Broń Wyszukiwania 🛠️ Skrypt, który naprawia "ślepotę" KDE! ✨
+title: Tajna Broń Wyszukiwania 🛠️ Skrypt/y, który/e naprawia/ją "ślepotę" KDE! ✨
 description: 'Masz folder, którego Baloo nie chce zaindeksować? Zobacz mój skrypt Search_Tools-KDE, który wymusza posłuszeństwo systemowej wyszukiwarki!'
 summary: 'kde baloo bash skrypt steamdeck'
 date: Luty February 21 2026
 slug: narzedzia-wyszukiwania-kde-skrypt
 ---
 
-# Tajna Broń Wyszukiwania 🛠️ Skrypt, który naprawia "ślepotę" KDE! ✨
+# Tajna Broń Wyszukiwania 🛠️ Skrypt/y, który/e naprawia/ją "ślepotę" KDE! ✨
 
 W poprzednim wpisie opowiadałem o walce z gigantycznym, ślepym indeksem Baloo. Ale co zrobić, gdy już odchudziliśmy nasz system, a Baloo nadal jest... uparty? Co jeśli wrzucasz nowy folder z kursem wideo i chcesz, by **natychmiast** pojawił się w wynikach wyszukiwania? 🏃‍♂️💨
 
-Dla takich niecierpliwych (i dbających o porządek) jak ja, powstał specjalny skrypt: `Search_Tools-KDE`.
+👉 [https://lmk.one/posts/2026-02-19-pogromca-gigantow-baloo](https://lmk.one/posts/2026-02-19-pogromca-gigantow-baloo)
+
+Dla takich niecierpliwych (i dbających o porządek) jak ja, powstały specjalne skrypt/y: `Search_Tools-KDE`.
+
+👉 [https://github.com/lukasz-sklad/Search_Tools-KDE](https://github.com/lukasz-sklad/Search_Tools-KDE)
 
 ## Kiedy Baloo potrzebuje "zachęty"? 🤔
 
@@ -18,7 +22,9 @@ Czasem samo wrzucenie pliku do folderu to za mało. Baloo może być w trybie os
 
 ## Jak działa magia? ✨
 
-Skrypt, który trzymam w moim folderze z narzędziami (`/home/deck/GIT/tools/Search_Tools-KDE/`), to prosty, ale potężny kawałek kodu w Bashu. Robi on dwie najważniejsze rzeczy: wymusza indeksowanie konkretnego folderu i sprawdza aktualny status usługi.
+Skrypt, który trzymam w moim folderze z narzędziami (`install.sh`), to prosty, ale potężny kawałek kodu w Bashu. Robi on dwie najważniejsze rzeczy: wymusza indeksowanie konkretnego folderu i sprawdza aktualny status usługi.
+
+Przykład jednego ze skryptów:
 
 ```bash
 #!/usr/bin/env bash
@@ -42,7 +48,7 @@ To tak, jakbyś podszedł do Baloo i palcem wskazał mu dokładnie, gdzie ma ter
 
 ## Podsumowanie
 
-Własne narzędzia to siła każdego użytkownika Linuxa. Dzięki małemu skryptowi `Search_Tools-KDE`, przestałem prosić system o znalezienie moich plików – zacząłem mu to nakazywać! 💪 Jeśli też masz foldery, które system uparcie ignoruje, taki skrypt to absolutny must-have.
+Własne narzędzia to siła każdego użytkownika Linuxa. Dzięki małym skryptom `Search_Tools-KDE`, przestałem prosić system o znalezienie moich plików – zacząłem mu to nakazywać! 💪 Jeśli też masz foldery, które system uparcie ignoruje, takie skrypty to absolutny must-have.
 
 <br/>
 <button onClick={() => alert("Dziękuję za przeczytanie o moich narzędziach wyszukiwania 👍")}>
