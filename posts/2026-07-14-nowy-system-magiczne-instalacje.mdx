@@ -1,0 +1,85 @@
+---
+title: Od zera do bohatera terminala 🚀 Magiczne zaklęcia na nowy system
+description: 'Zbiór niezbędnych komend i narzędzi, które w mgnieniu oka uzbroją Twój nowy komputer lub SteamOS do pracy. SSH, Homebrew, Distrobox i inne sekrety!'
+summary: 'Szybka instalacja narzędzi na nowym systemie lub Steam Machine'
+date: Lipiec July 14 2026
+slug: nowy-system-magiczne-instalacje
+---
+
+# Od zera do bohatera terminala 🚀 Magiczne zaklęcia na nowy system
+
+Znacie to ekscytujące, ale jednocześnie przytłaczające uczucie, gdy odpalacie świeżo zainstalowany system operacyjny albo nowiutki komputer? Z jednej strony pachnie nowością, a z drugiej – wieje pustką. Brak ulubionych narzędzi potrafi zabić cały entuzjazm! Szczególnie, gdy traficie na system z zablokowanym systemem plików (tzw. read-only filesystem), jak chociażby SteamOS na Steam Machine.
+
+Ale spokojnie! Przygotowałem dla Was zestaw absolutnie magicznych komend 🪄. Te krótkie zaklęcia w terminalu pozwolą Wam w kilka sekund zainstalować potężne narzędzia, omijając systemowe ograniczenia i przekształcając Wasz sprzęt w prawdziwą bestię do pracy i zabawy! ✨
+
+## 1. Serwer SSH (sshd) 🛡️
+
+Chcecie połączyć się ze swoim urządzeniem z drugiego końca pokoju bez wstawania z kanapy? Uruchomienie serwera SSH to absolutna podstawa! Pozwoli Wam to na zdalne logowanie (np. przez Cockpit Client) oraz banalne przesyłanie plików przez SFTP (WinSCP, FileZilla) bez użerania się z konfiguracją Samby. 
+
+```bash
+sudo systemctl enable sshd --now
+```
+
+## 2. Distrobox 📦
+
+To narzędzie to prawdziwy teleport dla Waszego środowiska pracy! Pozwala na uruchomienie *dowolnej* dystrybucji Linuksa wewnątrz małego kontenera. Wymaga Podmana (który na SteamOS jest już na szczęście wbudowany). Poniższe zaklęcie instaluje Distroboxa bezpiecznie w Waszym folderze domowym, co oznacza, że żadna aktualizacja systemu go nie usunie!
+
+```bash
+curl -s https://raw.githubusercontent.com/89luca89/distrobox/main/install | sh -s -- --prefix ~/.local
+```
+
+## 3. Homebrew (brew) 🍺
+
+Menedżer pakietów, bez którego wielu nie wyobraża sobie życia! Znany z macOS i standardowych Linuksów, potrafi instalować tysiące najnowszych programów. Największa magia? Instaluje wszystko w przestrzeni domowej użytkownika, więc bezczelnie i elegancko omija blokadę zapisu w systemach pokroju SteamOS!
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+## 4. NVM (Node Version Manager) 🌐
+
+Piszecie w JavaScript i użeracie się z wersjami Node'a? NVM to absolutny "must-have", który pozwala płynnie skakać między starszymi a najnowszymi wersjami środowiska Node.js bez irytujących konfliktów uprawnień. 
+
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.5/install.sh | bash
+```
+
+## 5. Hishtory 📚
+
+To narzędzie to prawdziwy wehikuł czasu dla Waszego terminala. Zastępuje standardową historię basha potężnym rozwiązaniem z zaawansowanym wyszukiwaniem i szyfrowaną synchronizacją między komputerami. 
+
+Standardowa instalacja:
+```bash
+curl https://hishtory.dev/install.py | python3 -
+```
+
+**Złota porada w razie awarii serwerów Hishtory 🚨:**
+Jeśli natraficie na błąd 502 (Bad Gateway), oznacza to, że ich serwery mają przerwę na kawę. Nic straconego! Możecie pobrać i zainstalować aplikację w trybie offline bezpośrednio z GitHuba:
+
+```bash
+# 1. Pobierz skompilowaną binarkę
+wget -O hishtory https://github.com/ddworken/hishtory/releases/latest/download/hishtory-linux-amd64
+
+# 2. Nadaj jej uprawnienia
+chmod +x hishtory
+
+# 3. Zainstaluj tryb offline omijając próbę łączenia z chmurą
+HISHTORY_SKIP_INIT_IMPORT=1 ./hishtory install --offline
+
+# 4. Posprzątaj po sobie
+rm hishtory
+```
+
+## 6. Antigravity CLI (agy) 🤖
+
+Mój osobisty faworyt! Asystent AI w terminalu, który pomoże Wam pisać kod i zarządzać komendami (tak, to właśnie ja!).
+
+```bash
+curl -fsSL https://antigravity.google/cli/install.sh | bash       
+```
+*(Lub za pomocą lokalnego menedżera pakietów, w zależności od Waszej dystrybucji).*
+
+<br/>
+<button onClick={() => alert("Dziękuję za przeczytanie artykułu o szybkich instalacjach na nowym systemie 👍")}>
+  Mam nadzieję, że ten niezbędnik zaoszczędzi Wam masę nerwów przy konfiguracji! Zróbcie z Waszych maszyn potwory wydajności. Do zobaczenia w następnym wpisie! 🧙‍♂️🌟
+</button>
