@@ -31,19 +31,19 @@ export default function Index({ posts, globalData }) {
                 as={`/posts/${post.filePath.replace(/\.mdx?$/, '')}`}
                 href={`/posts/[slug]`}
               >
-                <a className="py-6 lg:py-10 px-6 lg:px-16 block focus:outline-none focus:ring-4">
+                <a className="py-6 lg:py-10 px-6 lg:px-16 block focus:outline-none focus:ring-4 transform-gpu will-change-transform">
   {post.data.date && (
-    <p className="uppercase mb-3 font-bold opacity-60">
+    <p className="uppercase mb-3 font-bold opacity-60 relative z-10">
       {post.data.date}
     </p>
   )}
-  <h2 className="text-2xl md:text-3xl">{post.data.title}</h2>
+  <h2 className="text-2xl md:text-3xl relative z-10">{post.data.title}</h2>
   {post.data.summary && (
-    <p className="mt-3 text-lg opacity-60">
+    <p className="mt-3 text-lg opacity-60 relative z-10">
       {post.data.summary}
     </p>
   )}
-  <ArrowIcon className="mt-4" />
+  <ArrowIcon className="mt-4 relative z-10" />
 </a>
               </Link>
             </li>
