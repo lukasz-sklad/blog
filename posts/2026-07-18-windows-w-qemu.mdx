@@ -1,0 +1,38 @@
+---
+title: Jak uwolnić Windowsa z pendrive i przenieść go wprost do QEMU na NVMe 🚀
+description: 'Przenieś fizycznego Windowsa do potężnej maszyny wirtualnej QEMU na Steam Machine używając plików obrazu img. Koniec z wolnym USB!'
+summary: 'Klonowanie Windows z USB do QEMU na NVMe przez Distrobox'
+date: Lipiec 18 2026
+slug: windows-z-pendrive-do-qemu-nvme
+---
+
+# Jak uwolnić Windowsa z pendrive'a i przenieść go wprost do QEMU na NVMe 🚀
+
+Czy znasz to uczucie frustracji, kiedy musisz czekać w nieskończoność na załadowanie się systemu z pendrive'a? Zrobiłeś świetny system ratunkowy Windows na przenośnej pamięci USB, ale prędkości odczytu sprawiają, że masz ochotę wyrzucić go przez okno. Też to miałem! Ale na szczęście odkryłem magiczną sztuczkę, która pozwoliła mi dosłownie wchłonąć tego Windowsa do wnętrza superszybkiego dysku NVMe w moim nowym Steam Machine. ✨
+
+Zamiast żmudnie instalować Windowsa od zera w maszynie wirtualnej, po prostu sklonowaliśmy nasz gotowy system z pamięci USB prosto do pliku `.img` wewnątrz Linuxa. To jak złapanie duszka do butelki! 🧞‍♂️
+
+Wystarczyła tylko jedna potężna komenda rzucona w terminalu, która skopiowała bit po bicie to, co najważniejsze:
+
+```bash
+sudo dd if=/dev/sda of=/home/deck/Applications/win-qemu-distrobox/windows_drive.img bs=1M count=160000 status=progress
+```
+
+Magia tej komendy polega na tym, że odcina ona całą pustą przestrzeń. Nie musimy kopiować 500 gigabajtów! Wystarczy nam tylko to miejsce, gdzie zadomowił się nasz Windows i jego sektor rozruchowy (EFI).
+
+Po utworzeniu obrazu, wkroczyliśmy w świat wirtualizacji z **QEMU** zamkniętym w wyizolowanym **Distroboxie**. Dzięki temu rozwiązaniu SteamOS zostaje w 100% nienaruszony, a nasza maszyna uruchamia się w akcelerowanym środowisku, czerpiąc z wydajności dysku NVMe. Co ważne, podpięliśmy obraz przez wirtualny kontroler SATA, aby zbootować sklonowanego Windowsa bez obaw o "Blue Screen" związany z brakiem sterowników VirtIO na start.
+
+## Instalacja krok po kroku
+
+Jeśli chcesz zrobić to samo, zbudowaliśmy gotowy instalator, który wszystko automatyzuje i odpala w mgnieniu oka.
+
+### Instalator dostosowany do Steam Machine z użyciem Distroboxa
+Link do repozytorium: https://github.com/lukasz-sklad/-win-qemu-distrobox-steaMachine
+
+### Oryginalny projekt na SteamDecka
+Link do repozytorium: https://github.com/lukasz-sklad/windows-qemu-distrobox
+
+<br/>
+<button onClick={() => alert("Dziękuję za przeczytanie artykułu o przenoszeniu Windowsa do QEMU 👍")}>
+  Maszyny wirtualne na Steam Machine są po prostu niesamowite! Do zobaczenia w następnym wpisie! 🧙‍♂️🌟
+</button>
