@@ -1,0 +1,54 @@
+---
+title: Twój telefon i klawiatura z komputera czyli magia scrcpy bez wideo ✨
+description: 'Odkryj potęgę scrcpy w trybie UHID! Jak w 3 sekundy połączyć klawiaturę i myszkę ze Steam Decka prosto do Twojego Androida, oszczędzając baterię i czas.'
+summary: 'scrcpy uhid klawiatura mysz android'
+date: Sierpień August 20 2026
+slug: scrcpy-magiczna-klawiatura-uhid
+---
+
+# Twój telefon i klawiatura z komputera czyli magia scrcpy bez wideo ✨
+
+Czy znasz to uczucie wszechogarniającej irytacji? Próbujesz odpisać na potężnego maila na telefonie, trafiając palcami w te mikroskopijne literki na ekranie, podczas gdy przed Tobą leży przepiękna, mechaniczna klawiatura? 😩 
+
+Dziś odkryłem zaklęcie, które sprawia, że ten problem znika jak za dotknięciem czarodziejskiej różdżki! 🪄 Wyobraź sobie, że używasz klawiatury i myszki ze swojego komputera na telefonie, ale bez przesyłania wideo, co oszczędza baterię i zapewnia kosmiczną prędkość reakcji.
+
+Wystarczy jedno polecenie w terminalu:
+
+```bash
+scrcpy --no-video --no-audio --keyboard=uhid --mouse=uhid
+```
+
+## Jak to działa w praktyce? 🕵️‍♂️
+
+Kiedy rzucasz to zaklęcie (oczywiście mając wcześniej telefon sparowany bezprzewodowo przez genialne _Wireless Debugging_ w nowym Androidzie), dzieje się prawdziwa magia:
+
+1. **`--no-video --no-audio`** – Wyłączamy strumieniowanie obrazu i dźwięku. Telefon nadal leży obok Ciebie, ekran świeci, ale nie obciążamy niepotrzebnie sieci Wi-Fi gigabajtami danych wizualnych. Czysta, skondensowana moc! ⚡
+2. **`--keyboard=uhid --mouse=uhid`** – To jest to! Tryb **UHID** (User-space Human Interface Device) pozwala na bezpośrednie przesyłanie sygnałów z Twojej klawiatury i myszki w taki sam sposób, jakbyś podłączył je kablem OTG fizycznie do telefonu. 
+
+System (w moim przypadku SteamOS na Steam Machine i Google Pixel 9 Pro z systemem Android 17) raportuje natychmiastowe połączenie:
+
+```bash
+scrcpy 4.1 <https://github.com/Genymobile/scrcpy>
+INFO: ADB device found:
+INFO:     --> (tcpip)  adb-4B041FDAP000SF-7DCpok._adb-tls-connect._tcp            device  Pixel_9_Pro
+/home/linuxbrew/.linuxbrew/Cellar/scrcpy/4.1_1/share/scrcpy/scrcpy-server: 1 file pushed, 0 skipped. 205.8 MB/s (733706 bytes in 0.003s)
+[server] INFO: Device: [Google] google Pixel 9 Pro (Android 17)
+INFO: Renderer: opengl
+INFO: OpenGL version: 4.6 (Compatibility Profile) Mesa 25.3.0 (git-59b552c765)
+INFO: Trilinear filtering disabled
+```
+
+Myszka sunie po ekranie smartfona, klawisze stukają, a Ty jesteś mistrzem produktywności! 🏆
+
+## A co, gdy chcę uciec? 🏃‍♂️
+
+Magia ma to do siebie, że trzeba potrafić nad nią zapanować. Kiedy skończysz pisać długiego SMS-a i chcesz uwolnić kursor ze szponów telefonu, nie musisz panikować. Wystarczy magiczny skrót klawiszowy:
+
+**Lewy `ALT` + `Q`**
+
+Pach! Magia się kończy, okno scrcpy się zamyka, a kontrola wraca do Twojego komputera. Czysto i elegancko. 🎩
+
+<br/>
+<button onClick={() => alert("Dziękuję za przeczytanie artykułu o bezprzewodowym scrcpy w trybie UHID 👍")}>
+  To narzędzie to totalny game-changer dla każdego, kto łączy pracę na PC i smartfonie. Daj mu szansę! Do zobaczenia w następnym wpisie! 🧙‍♂️🌟
+</button>
