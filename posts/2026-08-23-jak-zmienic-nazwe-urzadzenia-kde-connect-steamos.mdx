@@ -1,0 +1,66 @@
+---
+title: Dwa Steam Decki i jeden problem - jak zmienić nazwę urządzenia w KDE Connect na SteamOS 📱🪄
+description: 'Masz więcej niż jednego Steam Decka i aplikacja na telefonie wariuje? Zobacz, jak łatwo i szybko zmienić nazwę urządzenia w KDE Connect za pomocą konsoli na SteamOS. Krok po kroku z nano i terminalem!'
+summary: 'nano kill kdeconnect steamdeck'
+date: Sierpień August 23 2026
+slug: jak-zmienic-nazwe-urzadzenia-kde-connect-steamos
+---
+
+# Dwa Steam Decki i jeden problem - jak zmienić nazwę urządzenia w KDE Connect na SteamOS 📱🪄
+
+Czy znasz to uczucie, gdy patrzysz na telefon i widzisz dwa identyczne urządzenia, oba nazwane po prostu "steamdeck"? Jeśli masz więcej niż jedną konsolę od Valve w domu, KDE Connect na pewno zacznie sprawiać problemy z rozróżnieniem sprzętu. To potrafi zirytować, gdy chcesz szybko przesłać plik lub udostępnić schowek, a nie wiesz, w którą stronę poleci! 😤
+
+Ale bez obaw! Znalazłem rozwiązanie. Wystarczy odrobina terminalowej magii ✨, żeby przypisać unikalną nazwę każdemu urządzeniu. Zobacz, jak zmieniłem swojego drugiego decka na "steaMachine" w zaledwie kilka sekund! 🚀
+
+## Magiczny rytuał w Terminalu
+
+Odpal swój terminal na SteamOS (w trybie Pulpitu) i przygotuj się na rzucenie kilku zaklęć. Zrobimy to jak na prawdziwego hakera przystało – z linii komend! 💻
+
+### Krok 1. Otwieramy plik konfiguracyjny
+
+Konfiguracja KDE Connect jest ukryta w czeluściach Twojego katalogu domowego. Użyjemy edytora `nano`, aby się do niej dostać. Wpisz w terminalu:
+
+```bash
+nano ~/.config/kdeconnect/config
+```
+
+### Krok 2. Zmieniamy imię naszego Decka
+
+Na ekranie pokaże się zawartość pliku. Znajdź linijkę, która mówi:
+
+```ini
+name=steamdeck
+```
+
+Za pomocą strzałek na klawiaturze najedź na ten tekst, usuń `steamdeck` i wpisz nową, wymarzoną nazwę, na przykład:
+
+```ini
+name=steaMachine
+```
+
+Kiedy skończysz czarować, zapisz plik używając skrótu `Ctrl+O` (wciśnij Enter, aby potwierdzić), a następnie wyjdź z edytora wciskając `Ctrl+X`. 🧙‍♂️
+
+### Krok 3. Restartujemy usługi, aby zaklęcie zadziałało
+
+Sama zmiana w pliku to za mało. Musimy obudzić procesy KDE Connect, aby przeczytały nową nazwę. W SteamOS wystarczy zrestartować procesy. Wpisz w konsoli:
+
+```bash
+killall kdeconnectd kdeconnect-app
+```
+
+A następnie odpal usługę ponownie w tle (lub po prostu uruchom aplikację KDE Connect z systemowego menu!):
+
+```bash
+/usr/bin/kdeconnectd &
+```
+
+Voila! 🌟 Otwórz aplikację KDE Connect na swoim telefonie, a Twoim oczom ukaże się nowa, wspaniała nazwa urządzenia. Koniec z pomyłkami!
+
+## Podsumowanie
+
+I to by było na tyle! Ten prosty trik pozwoli Ci zapanować nad chaosem w urządzeniach i odzyskać kontrolę nad przepływem plików.
+
+<br/>
+<button onClick={() => alert("Dziękuję za przeczytanie artykułu o zmianie nazwy w KDE Connect na SteamOS 👍")}>
+  Mam nadzieję, że ten wpis uratował Ci popołudnie i przywrócił porządek w urządzeniach. Do zobaczenia w następnym wpisie! 🧙‍♂️🌟
+</button>
