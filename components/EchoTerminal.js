@@ -220,6 +220,11 @@ const EchoTerminal = () => {
   if (!isOpen) {
     return (
       <div className={`fixed ${isChristmas ? 'top-5' : 'bottom-5'} right-5 z-[9999] flex flex-col gap-3 items-center`}>
+        <a href="https://floss.social/@lmk" target="_blank" rel="me noopener noreferrer" className={iconClasses} title="Mastodon">
+          <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M23.268 5.313c-.35-2.583-2.617-5.205-7.164-5.312C13.473-.016 12.022 0 12.022 0h-.044c-.015 0-1.467-.016-4.082.016-4.547.107-6.814 2.73-7.164 5.312C.383 9.426.046 13.978.016 18.423 0 20.407 1.055 22.373 3.65 23.084c2.51.688 6.05 1.157 8.35 1.157 2.302 0 5.84-1.254 5.84-1.254l-.193-2.02s-2.126.963-4.59.963c-2.464 0-4.63-.506-4.836-2.55-.008-.083-.016-.168-.024-.253h9.805c3.226 0 6.643-1.637 7.026-6.425.105-1.32.227-3.955.24-6.388zM16.326 15.6h-2.906v-5.25c0-1.875-.765-2.83-2.296-2.83-1.678 0-2.517 1.107-2.517 3.32v3.085h-2.82V10.84c0-2.213-.84-3.32-2.517-3.32-1.53 0-2.296.955-2.296 2.83v5.25H1.67V10.19c0-1.85.495-3.344 1.487-4.482 1.01-1.154 2.37-1.73 4.08-1.73 1.956 0 3.42 1.002 4.4 3.004l.386.784.385-.784c.98-2.002 2.443-3.004 4.398-3.004 1.71 0 3.07.576 4.08 1.73.992 1.138 1.488 2.632 1.488 4.482v5.41z"/>
+          </svg>
+        </a>
         <a href="https://buycoffee.to/lmk.one" target="_blank" rel="noopener noreferrer" className={iconClasses} title="Kup kawę">☕</a>
         <div onClick={() => setIsOpen(true)} className={iconClasses + " font-bold"}>&gt;_</div>
       </div>
