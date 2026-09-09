@@ -153,6 +153,7 @@ const EchoTerminal = () => {
   open <slug> - Otwórz artykuł
   czytaj      - Tryb Lektora (PDF, TXT, MD)
   radio       - Radio (wpisz "radio help")
+  winamp      - Odtwarzacz z archive.org (np. winamp [url])
   date        - Pokazuje datę
   clear       - Czyść ekran
   exit        - Minimalizuj`, type: 'response' });
@@ -169,6 +170,137 @@ const EchoTerminal = () => {
             audioRef.current.src = RADIO_STATIONS[st]; audioRef.current.play();
         }
         break;
+      case 'winamp':
+      case 'webamp':
+      case 'amp': {
+        if (parts[1] === 'reset') {
+          localStorage.removeItem('webamp_layout');
+          h.push({ text: 'Zresetowano zapisany układ okien Winampa do ustawień domyślnych.', type: 'success' });
+          break;
+        }
+
+        let archiveId = 'TSK3241018'; // domyślna playlista
+        if (parts[1]) {
+          const match = parts[1].match(/details\/([^\/\?]+)/);
+          archiveId = match ? match[1] : parts[1];
+        }
+        h.push({ text: `Uruchamiam Webamp z archive.org (${archiveId})...`, type: 'info' });
+        
+        (async () => {
+          try {
+            if (!window.Webamp) {
+              setHistory(prev => [...prev, { text: 'Ładuję moduł Webamp z paczki NPM...', type: 'info' }]);
+              const WebampModule = await import('webamp');
+              window.Webamp = WebampModule.default || WebampModule;
+            }
+            
+            setHistory(prev => [...prev, { text: 'Pobieram metadane playlisty (sortowanie po dacie)...', type: 'info' }]);
+            
+            const res = await fetch(`https://archive.org/metadata/${archiveId}`);
+            const data = await res.json();
+            
+            if (!data || !data.files) throw new Error('Nie znaleziono plików w podanym archiwum.');
+            
+            const mp3s = data.files.filter(f => f.name.toLowerCase().endsWith('.mp3'));
+            // Sort by mtime (date modified) to maintain chronological order
+            mp3s.sort((a, b) => parseInt(a.mtime || 0) - parseInt(b.mtime || 0));
+            
+            if (mp3s.length === 0) throw new Error('Brak plików MP3 w podanym archiwum.');
+            
+            const getCreator = (creator) => {
+                if (!creator) return 'Nieznany';
+                return Array.isArray(creator) ? creator[0] : creator;
+            };
+
+            const tracks = mp3s.map(f => ({
+              metaData: {
+                artist: f.creator || getCreator(data.metadata?.creator),
+                title: f.title || f.name
+              },
+              url: `https://archive.org/download/${archiveId}/${f.name}`,
+              duration: f.length ? parseFloat(f.length) : undefined
+            }));
+            
+            let webampDom = document.getElementById('webamp-container');
+            if (webampDom) {
+              webampDom.remove();
+            }
+            
+            webampDom = document.createElement('div');
+            webampDom.id = 'webamp-container';
+            // Ustawiamy kontener jako fixed o zerowych wymiarach by nie psuł układu strony
+            webampDom.style.position = 'fixed';
+            webampDom.style.top = '0';
+            webampDom.style.left = '0';
+            webampDom.style.width = '0';
+            webampDom.style.height = '0';
+            webampDom.style.zIndex = '999999';
+            document.body.appendChild(webampDom);
+            
+            const startX = Math.max(0, window.innerWidth / 2 - 137);
+            const defaultLayout = {
+                main: { position: { x: startX, y: 50 } },
+                equalizer: { position: { x: startX, y: 166 } },
+                playlist: { position: { x: startX, y: 282 }, size: [0, 4] }
+            };
+            
+            let finalLayout = defaultLayout;
+            try {
+                const stored = localStorage.getItem('webamp_layout');
+                if (stored) {
+                    const parsed = JSON.parse(stored);
+                    if (parsed && Object.keys(parsed).length > 0) {
+                        finalLayout = parsed;
+                    }
+                }
+            } catch (e) {}
+
+            const webamp = new window.Webamp({
+              initialTracks: tracks,
+              zIndex: 999999,
+              __initialWindowLayout: finalLayout
+            });
+            
+            webamp.onClose(() => {
+              webamp.dispose();
+              webampDom.remove();
+            });
+            
+            await webamp.renderWhenReady(webampDom);
+            
+            // Zapisywanie stanu układu okien do localStorage
+            if (webamp.store) {
+              let timeout;
+              webamp.store.subscribe(() => {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                  try {
+                    const state = webamp.store.getState();
+                    if (state.windows && state.windows.genWindows) {
+                      const layoutToSave = {};
+                      for (const [key, windowData] of Object.entries(state.windows.genWindows)) {
+                         // genWindows trzyma pozycje jako tablice [x, y], a __initialWindowLayout wymaga obiektu {x, y}
+                         const pos = windowData.position;
+                         layoutToSave[key] = {
+                            position: Array.isArray(pos) ? { x: pos[0], y: pos[1] } : pos,
+                            size: windowData.size || [0,0]
+                         };
+                      }
+                      localStorage.setItem('webamp_layout', JSON.stringify(layoutToSave));
+                    }
+                  } catch (e) {}
+                }, 1000);
+              });
+            }
+            
+            setHistory(prev => [...prev, { text: `Webamp aktywny. Załadowano i posortowano ${tracks.length} utworów.`, type: 'success' }]);
+            
+          } catch (err) {
+            setHistory(prev => [...prev, { text: `Błąd Webamp: ${err.message}`, type: 'error' }]);
+          }
+        })();
+        break;
+      }
       case 'open':
         const slug = parts[1];
         if (!slug) {
