@@ -207,27 +207,32 @@ const EchoTerminal = () => {
             
             if (mp3s.length === 0) throw new Error('Brak plików MP3 w podanym archiwum.');
             
+            // Omijanie błędu CORS / Web Audio API przy 302 Redirect
+            // Pobieramy finalny URL dla pierwszego pliku, by ustalić docelowy węzeł CDN
+            let baseUrl = `https://archive.org/download/${archiveId}/`;
+            try {
+                const firstFile = mp3s[0].name;
+                const headRes = await fetch(`https://archive.org/download/${archiveId}/${firstFile}`, { method: 'HEAD' });
+                if (headRes.url) {
+                    baseUrl = headRes.url.substring(0, headRes.url.lastIndexOf('/') + 1);
+                }
+            } catch (e) {
+                console.warn("Nie udało się ustalić bezpośredniego serwera CDN", e);
+            }
+            
             const getCreator = (creator) => {
                 if (!creator) return 'Nieznany';
                 return Array.isArray(creator) ? creator[0] : creator;
             };
 
-            const tracks = mp3s.map(f => {
-              // Używamy bezpośredniego linku do serwera docelowego, omijając przekierowanie 302,
-              // które potrafi zablokować dźwięk z powodu restrykcyjnej polityki CORS w Web Audio API.
-              const directUrl = (data.server && data.dir)
-                  ? `https://${data.server}${data.dir}/${f.name}`
-                  : `https://archive.org/download/${archiveId}/${f.name}`;
-                  
-              return {
-                metaData: {
-                  artist: f.creator || getCreator(data.metadata?.creator),
-                  title: f.title || f.name
-                },
-                url: directUrl,
-                duration: f.length ? parseFloat(f.length) : undefined
-              };
-            });
+            const tracks = mp3s.map(f => ({
+              metaData: {
+                artist: f.creator || getCreator(data.metadata?.creator),
+                title: f.title || f.name
+              },
+              url: `${baseUrl}${f.name}`,
+              duration: f.length ? parseFloat(f.length) : undefined
+            }));
             
             let webampDom = document.getElementById('webamp-container');
             if (webampDom) {
