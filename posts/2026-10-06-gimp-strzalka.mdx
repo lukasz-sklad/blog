@@ -1,0 +1,42 @@
+---
+title: Reanimacja klasyka! Skrypt Rysuj Strzałkę powraca do żywych w GIMP 3.2.6
+description: 'Stary, niezastąpiony skrypt do rysowania strzałek w nowym GIMP 3 odmawiał posłuszeństwa. Zobacz, jak udało się go naprawić i tchnąć w niego drugie życie!'
+summary: 'gimp script-fu strzałka naprawa'
+date: Październik October 06 2026
+slug: reanimacja-skryptu-rysuj-strzalke-gimp-3
+---
+
+# Reanimacja klasyka! Skrypt Rysuj Strzałkę powraca do żywych w GIMP 3.2.6 🛠️✨
+
+Cześć! Dawno nic tutaj nie wrzucałem, ale dzisiaj przychodzę do Was z czymś mega konkretnym i szalenie praktycznym. Wielu z nas, przesiadając się na nowsze wydania GIMP-a (w moim przypadku GIMP 3.2.6 w wersji Flatpak), brutalnie zderzyło się ze ścianą – nasze ulubione, z trudem skonfigurowane stare skrypty Script-Fu z dnia na dzień po prostu przestały działać! 😱
+
+Jednym z takich absolutnych "must-have" w moim graficznym warsztacie jest niezastąpiony skrypt do szybkiego rysowania strzałek (znany w sieci jako ArrowV3). Niestety, w nowym GIMP 3.x pod maską programu zmieniło się bardzo wiele. Zniknęły stare komendy do odczytywania tablic (jak wysłużone `aref`), zmieniły się wymogi dotyczące parametrów przy tworzeniu nowych warstw, a główne funkcje odpowiadające za rysowanie pędzlem przestały rozumieć stare sposoby podawania współrzędnych. Efekt? Wyskakujące znikąd błędy o złych argumentach albo skrypt, który po cichu udawał, że rysuje, machając niewidzialną gumką czy ołówkiem. 🤦‍♂️
+
+## Magia naprawy kodu 🧙‍♂️💻
+
+Postanowiłem wziąć sprawy w swoje ręce, zakasać rękawy i dostosować ten klasyk do nowych, restrykcyjnych wymogów GIMP-a 3! Po zaktualizowaniu API, usunięciu starych narzutów z GIMP 2.x oraz wymuszeniu w kodzie, by skrypt zawsze twardo chwytał za Pędzel (Paintbrush) przed rozpoczęciem malowania, w końcu mogę ogłosić pełen sukces: **skrypt znowu pięknie rysuje!** 🎉
+
+![Narysowana strzałka w GIMP-ie](/images/strzalka.jpg)
+*Zrzut ekranu – dowód rzeczowy, że strzałka zmartwychwstała w GIMP 3.2.6!*
+
+## Jak to teraz śmiga w praktyce? 🤔
+
+Zasada jest banalnie prosta:
+1. Sięgamy po narzędzie **Ścieżki** (domyślny skrót klawiszowy to `B`).
+2. Stawiamy na obrazku minimum dwa punkty (albo wyginamy skomplikowaną krzywą), wyznaczając linię naszej przyszłej strzałki.
+3. Wchodzimy do menu i odpalamy nasz skrypt!
+
+I to wszystko! Program sam pokornie "idzie" po wyznaczonej trasie z pędzlem w dłoni, a na końcu idealnie i symetrycznie wykańcza ją grotem strzałki. Zero ręcznego celowania, zero żmudnych poprawek. Przy okazji skrypt został całkowicie spolszczony, co znacznie ułatwia dobieranie np. kąta rozwarcia czy grubości skrzydełek! 📐
+
+## Co dalej z tym małym arcydziełem? 🚀
+
+Na ten moment skrypt wyśmienicie działa, spełnia swoje zadanie i ratuje życie przy obrabianiu zrzutów ekranu i tworzeniu tutoriali. Traktuję go jednak jako pierwszą, zreanimowaną wersję roboczą, którą będę na bieżąco rozwijać i dopracowywać, żeby śmigał absolutnie perfekcyjnie w każdym zakamarku nowego środowiska GIMP 3.x. 
+
+Jeśli też tęskniliście za błyskawicznym rysowaniem strzałek, bądźcie na bieżąco z blogiem – przed nami kolejne szlify!
+
+![Link do skryptu](strzalka.scm)
+
+<br/>
+<button onClick={() => alert("Dziękuję za przeczytanie artykułu o naprawie skryptu GIMP-a 👍")}>
+  Ten zreanimowany skrypt uratował moje zrzuty ekranu i z pewnością uratuje też Wasze nerwy i czas! Będziemy go jeszcze dopracowywać. Do zobaczenia w następnym wpisie! 🧙‍♂️🌟
+</button>
