@@ -1,5 +1,5 @@
-# Wymuszenie trailing slash (aby relatywne ścieżki ./wasm i ./js działały w podkatalogu)
-/vectorcraft    /vectorcraft/                       301!
-/vectorcraft/*  https://vectorcraft.lmk.one/:splat  200!
-/photocraft     /photocraft/                        301!
-/photocraft/*   https://photocraft.lmk.one/:splat   200!
+# Przekierowania na dedykowane subdomeny Cloudflare
+/vectorcraft    https://vectorcraft.lmk.one/  301!
+/vectorcraft/*  https://vectorcraft.lmk.one/:splat  301!
+/photocraft     https://photocraft.lmk.one/   301!
+/photocraft/*   https://photocraft.lmk.one/:splat   301!
