@@ -10,8 +10,8 @@
 
 [[redirects]]
   from = "/vectorcraft"
-  to = "https://vectorcraft.lmk.one/"
-  status = 200
+  to = "/vectorcraft/"
+  status = 301
   force = true
 
 [[redirects]]
@@ -22,8 +22,8 @@
 
 [[redirects]]
   from = "/photocraft"
-  to = "https://photocraft.lmk.one/"
-  status = 200
+  to = "/photocraft/"
+  status = 301
   force = true
 
 [[redirects]]
