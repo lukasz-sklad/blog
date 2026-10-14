@@ -1,0 +1,5 @@
+# Przekierowania proxy (rewrite) dla VectorCraft i PhotoCraft
+/vectorcraft    https://vectorcraft.lmk.one/        200!
+/vectorcraft/*  https://vectorcraft.lmk.one/:splat  200!
+/photocraft     https://photocraft.lmk.one/         200!
+/photocraft/*   https://photocraft.lmk.one/:splat   200!

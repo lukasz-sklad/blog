@@ -7,3 +7,28 @@
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+
+[[redirects]]
+  from = "/vectorcraft"
+  to = "https://vectorcraft.lmk.one/"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/vectorcraft/*"
+  to = "https://vectorcraft.lmk.one/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/photocraft"
+  to = "https://photocraft.lmk.one/"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/photocraft/*"
+  to = "https://photocraft.lmk.one/:splat"
+  status = 200
+  force = true
+
