@@ -32,3 +32,16 @@
   status = 301
   force = true
 
+[[redirects]]
+  from = "/wordcraft"
+  to = "https://wordcraft.lmk.one/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/wordcraft/*"
+  to = "https://wordcraft.lmk.one/:splat"
+  status = 301
+  force = true
+
+
