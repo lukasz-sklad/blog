@@ -5,4 +5,7 @@
 /photocraft/*   https://photocraft.lmk.one/:splat   301!
 /wordcraft      https://wordcraft.lmk.one/    301!
 /wordcraft/*    https://wordcraft.lmk.one/:splat    301!
+/gridcraft      https://gridcraft.lmk.one/    301!
+/gridcraft/*    https://gridcraft.lmk.one/:splat    301!
+
 

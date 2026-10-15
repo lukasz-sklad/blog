@@ -44,4 +44,17 @@
   status = 301
   force = true
 
+[[redirects]]
+  from = "/gridcraft"
+  to = "https://gridcraft.lmk.one/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/gridcraft/*"
+  to = "https://gridcraft.lmk.one/:splat"
+  status = 301
+  force = true
+
+
 
