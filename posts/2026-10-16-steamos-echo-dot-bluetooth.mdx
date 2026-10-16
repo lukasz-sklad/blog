@@ -1,0 +1,100 @@
+---
+title: Gdy inteligentny głośnik myśli, że jest odwrotnie! Jak trwale zmusiłem Echo Dot do grania ze Steam Decka 🔊🎮
+description: 'Echo Dot zamiast grać dźwięk ze Steam Decka, traktował go jak swój głośnik zewnętrzny. Zobacz, jak prosta reguła w WirePlumber rozwiązała ten problem raz na zawsze!'
+summary: 'steamos echo dot bluetooth wireplumber pipewire fix'
+date: Październik October 16 2026
+slug: steamos-echo-dot-bluetooth-wireplumber-naprawa
+---
+
+# Gdy inteligentny głośnik myśli, że jest odwrotnie! Jak trwale zmusiłem Echo Dot do grania ze Steam Decka 🔊🎮
+
+Znacie to uczucie, gdy po całym dniu siadacie do ulubionej konsoli lub komputera, odpalacie głośnik Bluetooth, a z głośnika nie wydobywa się ani jeden dźwięk? Albo jeszcze lepiej – system raportuje, że urządzenie jest połączone, ale w ustawieniach dźwięku nie ma po nim śladu! 🤯
+
+Znowu dopadł mnie ten problem z moim **Echo Dot Max-0RH** na SteamOS. Co jakiś czas, po restarcie lub ponownym parowaniu, głośnik odmawiał posłuszeństwa. Zamiast cieszyć uszy soczystym audio z gier, witała mnie głucha cisza. Postanowiłem więc zanurzyć się pod maskę serwera dźwięku PipeWire i menedżera sesji WirePlumber, aby rozwiązać tę zagadkę raz na zawsze! 🕵️‍♂️✨
+
+---
+
+## Śledztwo w logach, czyli czeski film w wykonaniu Alexy 🔍
+
+Gdy połączyłem Echo Dot ze Steam Deckiem, w terminalu `bluetoothctl` wszystko wyglądało z pozoru niewinnie – `Connected: yes`. Ale gdy zajrzałem w logi systemowe (`journalctl -u bluetooth`), prawda okazała się szokująca:
+
+```text
+profiles/audio/a2dp.c:a2dp_select_capabilities() Unable to select SEP
+src/service.c:btd_service_connect() a2dp-source profile connect failed for 40:89:C6:B0:9A:A2: Device or resource busy
+```
+
+Co to oznacza po ludzku? 
+Echo Dot połączyło się ze Steam Deckiem, ale **w dokładnie odwrotną stronę**! 🤦‍♂️
+
+Amazon Echo to sprytne, ale i podstępne urządzenie. Potrafi działać w dwóch trybach:
+1. Jako **odbiornik audio** (zewnętrzny głośnik dla Twojego telefonu czy PC).
+2. Jako **nadajnik audio** (wysyłając głos Alexy na inny głośnik Bluetooth).
+
+Ponieważ SteamOS domyślnie rejestrował profile pozwalające konsoli być odbiornikiem audio (np. by móc puszczać muzykę z telefonu na głośniczki Decka), Echo Dot uznało: *„O, świetnie! Ten Steam Deck to mój nowy bezprzewodowy głośnik!”*. Alexa przechwytywała połączenie, zajmowała cały moduł Bluetooth i blokowała Steam Deckowi możliwość nadawania dźwięku (`Device or resource busy`). Efekt? Dźwięk z konsoli nie miał prawa popłynąć do głośnika!
+
+---
+
+## Trwałe rozwiązanie, czyli ustawiamy granice w WirePlumber 🛠️
+
+Żadne ponowne parowanie na dłuższą metę nie pomagało, bo przy kolejnej okazji Echo Dot znowu próbowało przejąć rolę nadajnika. Trzeba było powiedzieć systemowi wprost: **Steam Deck ma wyłącznie nadawać dźwięk do głośników, a nie udawać odbiornik!**
+
+W tym celu stworzyłem dedykowany plik konfiguracyjny dla menedżera sesji WirePlumber.
+
+### Ścieżka pliku:
+`~/.config/wireplumber/wireplumber.conf.d/99-bluetooth-roles.conf`
+
+### Zawartość pliku:
+```conf
+monitor.bluez.properties = {
+  bluez5.roles = "[ a2dp_source hfp_ag ]"
+}
+```
+
+### Co dokładnie robi ta konfiguracja?
+* **`bluez5.roles`**: Definiuje role Bluetooth, jakie WirePlumber ma zarejestrować w usłudze BlueZ.
+* **`a2dp_source`**: W nomenklaturze PipeWire/WirePlumber rola ta oznacza nadajnik A2DP – czyli pozwala Steam Deckowi przesyłać wysokiej jakości dźwięk stereo do bezprzewodowych głośników i słuchawek.
+* **`hfp_ag`**: Audio Gateway dla zestawów głośnomówiących (przydatne, jeśli podłączasz słuchawki z mikrofonem).
+* **Brak `a2dp_sink`**: To jest klucz do sukcesu! Usunięcie profilu `a2dp_sink` sprawia, że Steam Deck przestaje rozgłaszać w eterze, że potrafi odbierać dźwięk. Echo Dot nie ma już wyboru – jedyne co może zrobić, to poddać się i z pokorą przyjąć rolę naszego głośnika!
+
+### Jak to zastosować lub przeładować na wszelki wypadek?
+Gdybyś kiedykolwiek modyfikował ten plik lub chciał zrestartować podsystem audio bez restartu całej konsoli, wystarczy jedna komenda w terminalu:
+
+```bash
+systemctl --user restart wireplumber
+```
+
+---
+
+## Sukces! Dźwięk płynie pełną parą 🎉
+
+Po restarcie usługi i jednym kliknięciu w menu Bluetooth, Echo Dot natychmiast wskoczyło na swoje prawowite miejsce:
+
+```text
+Audio
+ ├─ Devices:
+ │      41. Echo Dot Max-0RH                    [bluez5]
+ │      99. HDMI / DisplayPort                  [alsa]
+ │  
+ ├─ Sinks:
+ │  *   37. Echo Dot Max-0RH                    [vol: 0.50]
+ │      65. HDMI / DisplayPort Cyfrowe stereo (HDMI) [vol: 0.83]
+```
+
+Gwiazdka `*` przy **Echo Dot Max-0RH** oznacza, że stał się on domyślnym odpływem dźwięku (Sink). Wszystkie gry, filmy z przeglądarki i muzyka trafiają bezpośrednio do kolumienki! 🎶🎮
+
+---
+
+## A co z uwolnieniem Alexy? Projekt TECHO5 Dot 🤖🔓
+
+Skoro już jesteśmy przy temacie wybryków urządzeń Amazonu, wpadł mi ostatnio w ręce niesamowity projekt na GitHubie: [HuskerMinion/techo5-dot](https://github.com/HuskerMinion/techo5-dot).
+
+### Czy da się to zrobić?
+**Jak najbardziej tak!** Projekt ten pozwala całkowicie usunąć fabryczny system Fire OS z głośnika **Echo Dot 2. generacji** (model z 2016 roku, nazwa kodowa `biscuit`) i zainstalować na nim czysty **Alpine Linux**. 
+Urządzenie zostaje wtedy uwolnione z chmury Amazona i staje się w 100% lokalnym satelitą głosowym dla Home Assistanta (z zachowaniem działania wszystkich 7 mikrofonów, pierścienia LED oraz trybu głośnika Bluetooth). Instalacja wymaga odblokowania przez exploit bootromu (`amonet`) po kablu microUSB. 
+
+Póki co nasza kolumienka dzielnie służy nam po prostu jako porządny głośnik do gier... i spokojnie, **nie zmodyfikowaliśmy jeszcze fizycznie kolumny hehe :D :)**, ale świadomość, że można tchnąć w te małe kulki drugie, w pełni wolne życie, jest mega ekscytująca! 🚀
+
+<br/>
+<button onClick={() => alert("Dziękuję za przeczytanie artykułu o konfiguracji Bluetooth i Echo Dot na Steam Decku 👍")}>
+  Dźwięk w końcu płynie tam, gdzie powinien, a Alexa wie, gdzie jej miejsce! Do zobaczenia w następnym wpisie! 🧙‍♂️🌟
+</button>
