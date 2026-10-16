@@ -68,5 +68,29 @@
   status = 301
   force = true
 
+[[redirects]]
+  from = "/powerpoint"
+  to = "https://powerpoint.lmk.one/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/powerpoint/*"
+  to = "https://powerpoint.lmk.one/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/deckcraft"
+  to = "https://powerpoint.lmk.one/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/deckcraft/*"
+  to = "https://powerpoint.lmk.one/:splat"
+  status = 301
+  force = true
+
 
 

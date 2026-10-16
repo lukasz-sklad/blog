@@ -9,5 +9,9 @@
 /gridcraft/*    https://gridcraft.lmk.one/:splat    301!
 /excel          https://excel.lmk.one/        301!
 /excel/*        https://excel.lmk.one/:splat        301!
+/powerpoint     https://powerpoint.lmk.one/   301!
+/powerpoint/*   https://powerpoint.lmk.one/:splat   301!
+/deckcraft      https://powerpoint.lmk.one/   301!
+/deckcraft/*    https://powerpoint.lmk.one/:splat   301!
 
 
