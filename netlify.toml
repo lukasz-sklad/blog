@@ -56,5 +56,17 @@
   status = 301
   force = true
 
+[[redirects]]
+  from = "/excel"
+  to = "https://excel.lmk.one/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/excel/*"
+  to = "https://excel.lmk.one/:splat"
+  status = 301
+  force = true
+
 
 
