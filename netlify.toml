@@ -92,5 +92,17 @@
   status = 301
   force = true
 
+[[redirects]]
+  from = "/corel"
+  to = "https://corel.lmk.one/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/corel/*"
+  to = "https://corel.lmk.one/:splat"
+  status = 301
+  force = true
+
 
 

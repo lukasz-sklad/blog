@@ -13,5 +13,7 @@
 /powerpoint/*   https://powerpoint.lmk.one/:splat   301!
 /deckcraft      https://powerpoint.lmk.one/   301!
 /deckcraft/*    https://powerpoint.lmk.one/:splat   301!
+/corel          https://corel.lmk.one/        301!
+/corel/*        https://corel.lmk.one/:splat  301!
 
 
