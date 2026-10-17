@@ -104,6 +104,30 @@
   status = 301
   force = true
 
+[[redirects]]
+  from = "/film"
+  to = "https://film.lmk.one/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/film/*"
+  to = "https://film.lmk.one/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/filmcraft"
+  to = "https://film.lmk.one/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/filmcraft/*"
+  to = "https://film.lmk.one/:splat"
+  status = 301
+  force = true
+
 [[headers]]
   for = "/*"
   [headers.values]

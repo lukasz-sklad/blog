@@ -15,5 +15,9 @@
 /deckcraft/*    https://powerpoint.lmk.one/:splat   301!
 /corel          https://corel.lmk.one/        301!
 /corel/*        https://corel.lmk.one/:splat  301!
+/film           https://film.lmk.one/         301!
+/film/*         https://film.lmk.one/:splat   301!
+/filmcraft      https://film.lmk.one/         301!
+/filmcraft/*    https://film.lmk.one/:splat   301!
 
 
