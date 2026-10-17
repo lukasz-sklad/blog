@@ -23,6 +23,10 @@
 /craft/*        https://craft.lmk.one/:splat  301!
 /pl             https://pl.lmk.one/           301!
 /pl/*           https://pl.lmk.one/:splat     301!
+/pdf            https://pdf.lmk.one/          301!
+/pdf/*          https://pdf.lmk.one/:splat    301!
+/pdfcraft       https://pdf.lmk.one/          301!
+/pdfcraft/*     https://pdf.lmk.one/:splat    301!
 
 
 

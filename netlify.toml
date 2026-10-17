@@ -152,10 +152,35 @@
   status = 301
   force = true
 
+[[redirects]]
+  from = "/pdf"
+  to = "https://pdf.lmk.one/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pdf/*"
+  to = "https://pdf.lmk.one/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pdfcraft"
+  to = "https://pdf.lmk.one/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pdfcraft/*"
+  to = "https://pdf.lmk.one/:splat"
+  status = 301
+  force = true
+
 [[headers]]
   for = "/*"
   [headers.values]
     Access-Control-Allow-Origin = "*"
+
 
 
 
