@@ -19,5 +19,10 @@
 /film/*         https://film.lmk.one/:splat   301!
 /filmcraft      https://film.lmk.one/         301!
 /filmcraft/*    https://film.lmk.one/:splat   301!
+/craft          https://craft.lmk.one/        301!
+/craft/*        https://craft.lmk.one/:splat  301!
+/pl             https://pl.lmk.one/           301!
+/pl/*           https://pl.lmk.one/:splat     301!
+
 
 

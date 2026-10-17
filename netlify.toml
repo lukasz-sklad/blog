@@ -128,6 +128,30 @@
   status = 301
   force = true
 
+[[redirects]]
+  from = "/craft"
+  to = "https://craft.lmk.one/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/craft/*"
+  to = "https://craft.lmk.one/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pl"
+  to = "https://pl.lmk.one/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pl/*"
+  to = "https://pl.lmk.one/:splat"
+  status = 301
+  force = true
+
 [[headers]]
   for = "/*"
   [headers.values]
