@@ -41,3 +41,11 @@
 /figcraft/*     https://fig.lmk.one/:splat    301!
 /figma          https://fig.lmk.one/          301!
 /figma/*        https://fig.lmk.one/:splat    301!
+/sound          https://sound.lmk.one/        301!
+/sound/*        https://sound.lmk.one/:splat  301!
+/soundcraft     https://sound.lmk.one/        301!
+/soundcraft/*   https://sound.lmk.one/:splat  301!
+/audio          https://sound.lmk.one/        301!
+/audio/*        https://sound.lmk.one/:splat  301!
+/protools       https://sound.lmk.one/        301!
+/protools/*     https://sound.lmk.one/:splat  301!

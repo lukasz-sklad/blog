@@ -260,6 +260,53 @@
   status = 301
   force = true
 
+[[redirects]]
+  from = "/sound"
+  to = "https://sound.lmk.one/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/sound/*"
+  to = "https://sound.lmk.one/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/soundcraft"
+  to = "https://sound.lmk.one/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/soundcraft/*"
+  to = "https://sound.lmk.one/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/audio"
+  to = "https://sound.lmk.one/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/audio/*"
+  to = "https://sound.lmk.one/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/protools"
+  to = "https://sound.lmk.one/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/protools/*"
+  to = "https://sound.lmk.one/:splat"
+  status = 301
+  force = true
 
 [[headers]]
   for = "/*"
