@@ -308,6 +308,42 @@
   status = 301
   force = true
 
+[[redirects]]
+  from = "/solid"
+  to = "https://solid.lmk.one/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/solid/*"
+  to = "https://solid.lmk.one/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/solidcraft"
+  to = "https://solid.lmk.one/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/solidcraft/*"
+  to = "https://solid.lmk.one/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/cad"
+  to = "https://solid.lmk.one/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/cad/*"
+  to = "https://solid.lmk.one/:splat"
+  status = 301
+  force = true
+
 [[headers]]
   for = "/*"
   [headers.values]

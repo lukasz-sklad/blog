@@ -49,3 +49,10 @@
 /audio/*        https://sound.lmk.one/:splat  301!
 /protools       https://sound.lmk.one/        301!
 /protools/*     https://sound.lmk.one/:splat  301!
+/solid          https://solid.lmk.one/        301!
+/solid/*        https://solid.lmk.one/:splat  301!
+/solidcraft     https://solid.lmk.one/        301!
+/solidcraft/*   https://solid.lmk.one/:splat  301!
+/cad            https://solid.lmk.one/        301!
+/cad/*          https://solid.lmk.one/:splat  301!
+
