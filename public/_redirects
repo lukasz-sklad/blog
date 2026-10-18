@@ -27,6 +27,11 @@
 /pdf/*          https://pdf.lmk.one/:splat    301!
 /pdfcraft       https://pdf.lmk.one/          301!
 /pdfcraft/*     https://pdf.lmk.one/:splat    301!
-
-
-
+/light          https://light.lmk.one/        301!
+/light/*        https://light.lmk.one/:splat  301!
+/lightcraft     https://light.lmk.one/        301!
+/lightcraft/*   https://light.lmk.one/:splat  301!
+/raw            https://light.lmk.one/        301!
+/raw/*          https://light.lmk.one/:splat  301!
+/lightroom      https://light.lmk.one/        301!
+/lightroom/*    https://light.lmk.one/:splat  301!

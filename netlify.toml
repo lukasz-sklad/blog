@@ -176,6 +176,54 @@
   status = 301
   force = true
 
+[[redirects]]
+  from = "/light"
+  to = "https://light.lmk.one/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/light/*"
+  to = "https://light.lmk.one/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/lightcraft"
+  to = "https://light.lmk.one/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/lightcraft/*"
+  to = "https://light.lmk.one/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/raw"
+  to = "https://light.lmk.one/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/raw/*"
+  to = "https://light.lmk.one/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/lightroom"
+  to = "https://light.lmk.one/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/lightroom/*"
+  to = "https://light.lmk.one/:splat"
+  status = 301
+  force = true
+
 [[headers]]
   for = "/*"
   [headers.values]
