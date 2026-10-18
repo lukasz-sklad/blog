@@ -224,6 +224,43 @@
   status = 301
   force = true
 
+[[redirects]]
+  from = "/fig"
+  to = "https://fig.lmk.one/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/fig/*"
+  to = "https://fig.lmk.one/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/figcraft"
+  to = "https://fig.lmk.one/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/figcraft/*"
+  to = "https://fig.lmk.one/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/figma"
+  to = "https://fig.lmk.one/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/figma/*"
+  to = "https://fig.lmk.one/:splat"
+  status = 301
+  force = true
+
+
 [[headers]]
   for = "/*"
   [headers.values]

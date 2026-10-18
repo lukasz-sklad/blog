@@ -35,3 +35,9 @@
 /raw/*          https://light.lmk.one/:splat  301!
 /lightroom      https://light.lmk.one/        301!
 /lightroom/*    https://light.lmk.one/:splat  301!
+/fig            https://fig.lmk.one/          301!
+/fig/*          https://fig.lmk.one/:splat    301!
+/figcraft       https://fig.lmk.one/          301!
+/figcraft/*     https://fig.lmk.one/:splat    301!
+/figma          https://fig.lmk.one/          301!
+/figma/*        https://fig.lmk.one/:splat    301!
