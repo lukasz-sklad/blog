@@ -33,10 +33,10 @@ export default function Index({ posts, globalData }) {
                 href={`/posts/[slug]`}
               >
                 <a className="py-6 lg:py-10 px-6 lg:px-16 block focus:outline-none focus:ring-4 transform-gpu will-change-transform">
-                  <div className="flex flex-wrap items-center gap-3 mb-3 relative z-10">
+                  <div className="flex flex-wrap items-center gap-2.5 mb-3 relative z-10">
                     {post.data.pinned && (
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-500/20 text-purple-600 dark:text-purple-300 text-xs font-semibold tracking-wider uppercase border border-purple-500/30">
-                        📌 Przypięty wpis
+                      <span title="Przypięty wpis" className="text-base select-none">
+                        📌
                       </span>
                     )}
                     {post.data.date && (
