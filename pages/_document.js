@@ -7,6 +7,7 @@ class MyDocument extends Document {
       <Html lang="en" className="theme-compiled">
         <Head>
           <link rel="icon" href="/favicon.ico" />
+          <meta name="google-site-verification" content="C70Kgu31V4hqMt-LNOmmKVnmlT8z4h7W80R75qsqwj4" />
           <meta httpEquiv="onion-location" content="http://lmkone2duyasmunviw4ydkt2blqyjfr5mrj5kcsmcv5oplnpcsws72ad.onion" />
           {/* Hotjar Tracking Code for https://www.lmk.one */}
           <script
