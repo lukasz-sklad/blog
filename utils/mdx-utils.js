@@ -15,6 +15,11 @@ export const postFilePaths = fs
 
 export const sortPostsByDate = (posts) => {
   return posts.sort((a, b) => {
+    const aPinned = Boolean(a.data && a.data.pinned);
+    const bPinned = Boolean(b.data && b.data.pinned);
+    if (aPinned && !bPinned) return -1;
+    if (!aPinned && bPinned) return 1;
+
     const aDate = new Date(a.data.date);
     const bDate = new Date(b.data.date);
     return bDate - aDate;
