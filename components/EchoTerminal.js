@@ -13,6 +13,29 @@ const RADIO_STATIONS = {
   '357': 'https://stream.rcs.revma.com/ye5kghkgcm0uv'
 };
 
+const CRAFT_APPS = {
+  'portal': { name: '*Craft Stacja', url: 'https://craft.lmk.one/', desc: 'Główny portal stacji roboczej' },
+  'photo': { name: 'PhotoCraft', url: 'https://photocraft.lmk.one/', desc: 'Edytor grafiki rastrowej (Photoshop / PSD)' },
+  'photocraft': { name: 'PhotoCraft', url: 'https://photocraft.lmk.one/', desc: 'Edytor grafiki rastrowej (Photoshop / PSD)' },
+  'vector': { name: 'VectorCraft', url: 'https://corel.lmk.one/', desc: 'Grafika wektorowa (CorelDRAW / Illustrator / CDR)' },
+  'vectorcraft': { name: 'VectorCraft', url: 'https://corel.lmk.one/', desc: 'Grafika wektorowa (CorelDRAW / Illustrator / CDR)' },
+  'corel': { name: 'VectorCraft', url: 'https://corel.lmk.one/', desc: 'Grafika wektorowa (CorelDRAW / Illustrator / CDR)' },
+  'sound': { name: 'SoundCraft', url: 'https://sound.lmk.one/', desc: 'Cyfrowa stacja audio DAW (Audacity / Pro Tools)' },
+  'soundcraft': { name: 'SoundCraft', url: 'https://sound.lmk.one/', desc: 'Cyfrowa stacja audio DAW (Audacity / Pro Tools)' },
+  'solid': { name: 'SolidCraft', url: 'https://solidcraft.lmk.one/', desc: 'Parametryczny CAD 3D & druk 3D (STL)' },
+  'solidcraft': { name: 'SolidCraft', url: 'https://solidcraft.lmk.one/', desc: 'Parametryczny CAD 3D & druk 3D (STL)' },
+  'cad': { name: 'SolidCraft', url: 'https://solidcraft.lmk.one/', desc: 'Parametryczny CAD 3D & druk 3D (STL)' },
+  'film': { name: 'FilmCraft', url: 'https://film.lmk.one/', desc: 'Montaż wideo online na osi czasu (WebGL)' },
+  'filmcraft': { name: 'FilmCraft', url: 'https://film.lmk.one/', desc: 'Montaż wideo online na osi czasu (WebGL)' },
+  'word': { name: 'WordCraft', url: 'https://wordcraft.lmk.one/', desc: 'Edytor tekstu (Word / DOCX)' },
+  'wordcraft': { name: 'WordCraft', url: 'https://wordcraft.lmk.one/', desc: 'Edytor tekstu (Word / DOCX)' },
+  'grid': { name: 'GridCraft', url: 'https://excel.lmk.one/', desc: 'Arkusz kalkulacyjny (Excel / XLSX)' },
+  'gridcraft': { name: 'GridCraft', url: 'https://excel.lmk.one/', desc: 'Arkusz kalkulacyjny (Excel / XLSX)' },
+  'excel': { name: 'GridCraft', url: 'https://excel.lmk.one/', desc: 'Arkusz kalkulacyjny (Excel / XLSX)' },
+  'deck': { name: 'DeckCraft', url: 'https://powerpoint.lmk.one/', desc: 'Prezentacje multimedialne (PowerPoint / PPTX)' },
+  'deckcraft': { name: 'DeckCraft', url: 'https://powerpoint.lmk.one/', desc: 'Prezentacje multimedialne (PowerPoint / PPTX)' }
+};
+
 const EchoTerminal = () => {
   const router = useRouter();
   const [posts, setPosts] = useState([]);
@@ -148,6 +171,7 @@ const EchoTerminal = () => {
     switch (parts[0]) {
       case 'help':
         h.push({ text: `Dostępne komendy:
+  craft [app] - *Craft Stacja (otwiera: photo, vector, sound, solid, film, word, grid, deck)
   ls          - Lista artykułów
   search <txt>- Szukaj (tytuł, data, miesiąc)
   open <slug> - Otwórz artykuł
@@ -158,6 +182,71 @@ const EchoTerminal = () => {
   clear       - Czyść ekran
   exit        - Minimalizuj`, type: 'response' });
         break;
+      case 'craft':
+      case '*craft':
+      case 'stacja': {
+        const sub = parts[1];
+        if (sub && CRAFT_APPS[sub]) {
+          const app = CRAFT_APPS[sub];
+          h.push({ text: `Uruchamiam ${app.name} (${app.url}) w nowej karcie... 🚀`, type: 'success' });
+          if (typeof window !== 'undefined') {
+            window.open(app.url, '_blank', 'noopener,noreferrer');
+          }
+        } else {
+          if (sub !== 'list' && typeof window !== 'undefined') {
+            window.open('https://craft.lmk.one/', '_blank', 'noopener,noreferrer');
+          }
+          h.push({ text: `*Craft Stacja (craft.lmk.one) — aplikacje w Twojej przeglądarce:`, type: 'info' });
+          const uniqueApps = [
+            { cmd: 'photo', name: 'PhotoCraft', desc: 'Edytor rastrowy (Photoshop / PSD)', url: 'https://photocraft.lmk.one/' },
+            { cmd: 'vector', name: 'VectorCraft', desc: 'Wektory (Corel / Illustrator / CDR)', url: 'https://corel.lmk.one/' },
+            { cmd: 'sound', name: 'SoundCraft', desc: 'Stacja audio DAW (Audacity / Pro Tools)', url: 'https://sound.lmk.one/' },
+            { cmd: 'solid', name: 'SolidCraft', desc: 'Parametryczny CAD 3D & druk 3D (STL)', url: 'https://solidcraft.lmk.one/' },
+            { cmd: 'film', name: 'FilmCraft', desc: 'Montaż wideo na osi czasu (WebGL)', url: 'https://film.lmk.one/' },
+            { cmd: 'word', name: 'WordCraft', desc: 'Edytor tekstu (Word / DOCX)', url: 'https://wordcraft.lmk.one/' },
+            { cmd: 'grid', name: 'GridCraft', desc: 'Arkusz kalkulacyjny (Excel / XLSX)', url: 'https://excel.lmk.one/' },
+            { cmd: 'deck', name: 'DeckCraft', desc: 'Prezentacje (PowerPoint / PPTX)', url: 'https://powerpoint.lmk.one/' }
+          ];
+          uniqueApps.forEach(a => {
+            h.push({ 
+              text: `${a.cmd.padEnd(7)} - ${a.name}`, 
+              desc: a.desc, 
+              url: a.url, 
+              type: 'external-link' 
+            });
+          });
+          h.push({ text: `Wpisz np. "solid" lub "craft photo", aby otworzyć program w nowej karcie.`, type: 'response' });
+        }
+        break;
+      }
+      case 'photo':
+      case 'photocraft':
+      case 'vector':
+      case 'vectorcraft':
+      case 'corel':
+      case 'sound':
+      case 'soundcraft':
+      case 'solid':
+      case 'solidcraft':
+      case 'cad':
+      case 'film':
+      case 'filmcraft':
+      case 'word':
+      case 'wordcraft':
+      case 'grid':
+      case 'gridcraft':
+      case 'excel':
+      case 'deck':
+      case 'deckcraft': {
+        const app = CRAFT_APPS[parts[0]];
+        if (app) {
+          h.push({ text: `Uruchamiam ${app.name} (${app.url}) w nowej karcie... 🚀`, type: 'success' });
+          if (typeof window !== 'undefined') {
+            window.open(app.url, '_blank', 'noopener,noreferrer');
+          }
+        }
+        break;
+      }
       case 'clear': setHistory([{ text: '[💀] SYSTEM READY. Knowledge is power. Type "help".', type: 'default' }]); setInput(''); return;
       case 'exit': setIsOpen(false); break;
       case 'czytaj': pdfInputRef.current.click(); break;
@@ -423,6 +512,22 @@ const EchoTerminal = () => {
                 >
                   {l.text.replace(' - ', '')}
                 </span>
+              </div>
+            );
+          }
+          if (l.type === 'external-link') {
+            return (
+              <div key={i} className="mb-1">
+                <span className="text-gray-400"> ➜ </span>
+                <a 
+                  href={l.url} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="cursor-pointer text-purple-400 hover:text-purple-300 hover:underline font-bold"
+                >
+                  {l.text}
+                </a>
+                {l.desc && <span className="text-gray-400 ml-2 font-normal">({l.desc})</span>}
               </div>
             );
           }
