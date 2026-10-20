@@ -55,4 +55,8 @@
 /solidcraft/*   https://solid.lmk.one/:splat  301!
 /cad            https://solid.lmk.one/        301!
 /cad/*          https://solid.lmk.one/:splat  301!
+/ai             https://ai.lmk.one/           301!
+/ai/*           https://ai.lmk.one/:splat     301!
+/craft-ai       https://ai.lmk.one/           301!
+/craft-ai/*     https://ai.lmk.one/:splat     301!
 

@@ -344,6 +344,30 @@
   status = 301
   force = true
 
+[[redirects]]
+  from = "/ai"
+  to = "https://ai.lmk.one/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/ai/*"
+  to = "https://ai.lmk.one/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/craft-ai"
+  to = "https://ai.lmk.one/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/craft-ai/*"
+  to = "https://ai.lmk.one/:splat"
+  status = 301
+  force = true
+
 [[headers]]
   for = "/*"
   [headers.values]
