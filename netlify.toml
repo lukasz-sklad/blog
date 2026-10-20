@@ -368,6 +368,42 @@
   status = 301
   force = true
 
+[[redirects]]
+  from = "/design"
+  to = "https://design.lmk.one/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/design/*"
+  to = "https://design.lmk.one/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/designcraft"
+  to = "https://design.lmk.one/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/designcraft/*"
+  to = "https://design.lmk.one/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/indesign"
+  to = "https://design.lmk.one/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/indesign/*"
+  to = "https://design.lmk.one/:splat"
+  status = 301
+  force = true
+
 [[headers]]
   for = "/*"
   [headers.values]

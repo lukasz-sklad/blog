@@ -59,4 +59,10 @@
 /ai/*           https://ai.lmk.one/:splat     301!
 /craft-ai       https://ai.lmk.one/           301!
 /craft-ai/*     https://ai.lmk.one/:splat     301!
+/design         https://design.lmk.one/       301!
+/design/*       https://design.lmk.one/:splat 301!
+/designcraft    https://design.lmk.one/       301!
+/designcraft/*  https://design.lmk.one/:splat 301!
+/indesign       https://design.lmk.one/       301!
+/indesign/*     https://design.lmk.one/:splat 301!
 
