@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kompas • Precyzyjny Cyfrowy Kompas dla Androida</title>
+  <meta name="description" content="Minimalistyczny, elegancki cyfrowy kompas na Androida. Motyw ciemny OLED, zero reklam, 100% prywatności.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%23111116'/><polygon points='50,15 62,50 50,50' fill='%23FF453A'/><polygon points='50,15 50,50 38,50' fill='%23D70015'/><polygon points='50,85 62,50 50,50' fill='%23E5E5EA'/><polygon points='50,85 50,50 38,50' fill='%238E8E93'/></svg>">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { background-color: #0c0c0e; color: #f4f4f5; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+    .card { background: #16161c; border: 1px solid #272732; }
+    .card:hover { border-color: #3f3f50; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-red-500 selection:text-white">
+
+  <!-- Navigation -->
+  <header class="border-b border-zinc-800/80 bg-zinc-950/60 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
+      <a href="https://lmk.one" class="flex items-center space-x-3 text-zinc-300 hover:text-white transition">
+        <span class="font-bold text-lg tracking-tight">lmk<span class="text-red-500">.one</span></span>
+        <span class="text-zinc-600">/</span>
+        <span class="text-zinc-400 font-medium text-sm">kompas</span>
+      </a>
+      <nav class="flex items-center space-x-6 text-sm">
+        <a href="#funkcje" class="text-zinc-400 hover:text-white transition">Funkcje</a>
+        <a href="#polityka-prywatnosci" class="text-zinc-400 hover:text-white transition">Prywatność</a>
+        <a href="#kontakt" class="px-3.5 py-1.5 rounded-full bg-zinc-800 text-zinc-200 hover:bg-zinc-700 hover:text-white transition text-xs font-semibold">Zgłoś uwagę</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <main class="max-w-4xl mx-auto px-4 py-16 flex-grow">
+    
+    <div class="text-center max-w-2xl mx-auto mb-16">
+      <!-- Icon Preview -->
+      <div class="w-24 h-24 mx-auto mb-6 rounded-3xl bg-zinc-900 border border-zinc-700/60 p-2 shadow-2xl flex items-center justify-center">
+        <svg viewBox="0 0 108 108" class="w-full h-full">
+          <circle cx="54" cy="54" r="50" fill="#111116"/>
+          <circle cx="54" cy="54" r="33" fill="none" stroke="#24242E" stroke-width="1.5"/>
+          <polygon points="54,16 57.5,21.5 50.5,21.5" fill="#FF453A"/>
+          <line x1="54" y1="86.5" x2="54" y2="91.5" stroke="#8E8E93" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="86.5" y1="54" x2="91.5" y2="54" stroke="#8E8E93" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="16.5" y1="54" x2="21.5" y2="54" stroke="#8E8E93" stroke-width="1.5" stroke-linecap="round"/>
+          <polygon points="54,23 46.5,54 54,54" fill="#FF453A"/>
+          <polygon points="54,23 54,54 61.5,54" fill="#D70015"/>
+          <polygon points="54,85 54,54 46.5,54" fill="#AEAEB2"/>
+          <polygon points="54,85 61.5,54 54,54" fill="#F2F2F7"/>
+          <circle cx="54" cy="54" r="6" fill="#18181F" stroke="#FFFFFF" stroke-width="1.5"/>
+          <circle cx="54" cy="54" r="3" fill="#FF453A"/>
+        </svg>
+      </div>
+
+      <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-semibold uppercase tracking-wider mb-4">
+        <span>Android 8.0 — 16 Ready</span>
+        <span>•</span>
+        <span>Pixel 9 Pro</span>
+      </div>
+
+      <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-white mb-4">
+        Kompas Cyfrowy
+      </h1>
+      <p class="text-lg text-zinc-400 leading-relaxed mb-8">
+        Minimalistyczny cyfrowy przyrząd nawigacyjny. Zoptymalizowany pod matryce OLED, bez reklam, bez zbędnych uprawnień i z zerowym zużyciem baterii.
+      </p>
+
+      <div class="flex flex-wrap justify-center gap-4">
+        <a href="#kontakt" class="px-6 py-3 rounded-xl bg-red-600 hover:bg-red-500 text-white font-semibold text-sm transition shadow-lg shadow-red-600/20 flex items-center space-x-2">
+          <span>✉️</span>
+          <span>Zgłoś uwagę / Kontakt</span>
+        </a>
+        <a href="#polityka-prywatnosci" class="px-6 py-3 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-semibold text-sm transition">
+          Polityka prywatności
+        </a>
+      </div>
+    </div>
+
+    <!-- Features Grid -->
+    <section id="funkcje" class="mb-20">
+      <h2 class="text-xl font-bold text-zinc-200 mb-6 text-center">Dlaczego Kompas?</h2>
+      <div class="grid md:grid-cols-3 gap-5">
+        <div class="card p-6 rounded-2xl">
+          <div class="text-2xl mb-3">🧭</div>
+          <h3 class="font-bold text-white mb-2">Sensor Wektora Rotacji</h3>
+          <p class="text-zinc-400 text-sm leading-relaxed">
+            Płynna igła 3D sprzężona bezpośrednio z hardware'owym żyroskopem i magnetometrem telefonu.
+          </p>
+        </div>
+
+        <div class="card p-6 rounded-2xl">
+          <div class="text-2xl mb-3">🔋</div>
+          <h3 class="font-bold text-white mb-2">Głęboka Czerń OLED</h3>
+          <p class="text-zinc-400 text-sm leading-relaxed">
+            Tło #101010 eliminuje biały błysk przy starcie i wyłącza piksele matrycy OLED, chroniąc baterię.
+          </p>
+        </div>
+
+        <div class="card p-6 rounded-2xl">
+          <div class="text-2xl mb-3">🔒</div>
+          <h3 class="font-bold text-white mb-2">100% Prywatności</h3>
+          <p class="text-zinc-400 text-sm leading-relaxed">
+            Zero reklam, zero analityki, brak uprawnień internetowych. Wszystkie obliczenia pozostają w urządzeniu.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Privacy Policy Section -->
+    <section id="polityka-prywatnosci" class="mb-20 card p-8 rounded-2xl">
+      <div class="flex items-center space-x-3 mb-6">
+        <span class="text-2xl">🛡️</span>
+        <div>
+          <h2 class="text-2xl font-bold text-white">Polityka Prywatności</h2>
+          <p class="text-xs text-zinc-400">Aplikacja Kompas (one.lmk.kompas) • Wersja 1.0.0</p>
+        </div>
+      </div>
+
+      <div class="space-y-4 text-sm text-zinc-300 leading-relaxed border-t border-zinc-800 pt-6">
+        <p>
+          Szanujemy prywatność użytkowników. Aplikacja <strong>Kompas</strong> została zaprojektowana w oparciu o zasadę pełnej lokalności działania:
+        </p>
+        <ul class="list-disc list-inside space-y-2 text-zinc-400">
+          <li><strong>Brak gromadzenia danych:</strong> Aplikacja nie zbiera, nie rejestruje, nie przetwarza ani nie przesyła żadnych danych osobowych, identyfikatorów urządzenia ani danych lokalizacyjnych.</li>
+          <li><strong>Dostęp do czujników:</strong> Odczyty z magnetometru i akcelerometru są przetwarzane wyłącznie w czasie rzeczywistym w pamięci urządzenia w celu poruszania igłą kompasu. Żadne odczyty nie są zapisywane na dysku.</li>
+          <li><strong>Brak połączeń sieciowych:</strong> Aplikacja nie wymaga uprawnień internetowych (<code class="text-zinc-300">android.permission.INTERNET</code>), nie wyświetla reklam ani nie zawiera zewnętrznych bibliotek śledzących (SDK).</li>
+          <li><strong>Zgodność z wytycznymi Google Play:</strong> Aplikacja spełnia rygorystyczne wymagania sekcji Data Safety sklepu Google Play.</li>
+        </ul>
+        <p class="text-xs text-zinc-500 pt-4">
+          W razie jakichkolwiek pytań dotyczących prywatności, prosimy o kontakt przez poniższy formularz.
+        </p>
+      </div>
+    </section>
+
+    <!-- Contact & Feedback Form -->
+    <section id="kontakt" class="card p-8 rounded-2xl max-w-2xl mx-auto">
+      <div class="text-center mb-6">
+        <h2 class="text-2xl font-bold text-white mb-2">Formularz zgłoszeń i kontaktu</h2>
+        <p class="text-sm text-zinc-400">
+          Masz propozycję funkcji, zauważyłeś błąd lub chcesz podzielić się opinią?
+        </p>
+      </div>
+
+      <!-- Netlify Forms Integration -->
+      <form name="kompas-feedback" method="POST" data-netlify="true" action="/kompas?sukces=1" class="space-y-4">
+        <input type="hidden" name="form-name" value="kompas-feedback" />
+        
+        <div>
+          <label class="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-2" for="name">Twoje imię / Nick</label>
+          <input type="text" id="name" name="name" required placeholder="np. Łukasz" class="w-full px-4 py-3 rounded-xl bg-zinc-900 border border-zinc-700/80 text-white placeholder-zinc-500 focus:outline-none focus:border-red-500 text-sm">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-2" for="email">E-mail (opcjonalny, do odpowiedzi)</label>
+          <input type="email" id="email" name="email" placeholder="twoj@email.com" class="w-full px-4 py-3 rounded-xl bg-zinc-900 border border-zinc-700/80 text-white placeholder-zinc-500 focus:outline-none focus:border-red-500 text-sm">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-2" for="topic">Rodzaj zgłoszenia</label>
+          <select id="topic" name="topic" class="w-full px-4 py-3 rounded-xl bg-zinc-900 border border-zinc-700/80 text-white focus:outline-none focus:border-red-500 text-sm">
+            <option value="opinia">Opinia o aplikacji</option>
+            <option value="pomysl">Propozycja ulepszenia / nowa funkcja</option>
+            <option value="blad">Zgłoszenie błędu (Bug report)</option>
+            <option value="inne">Inne</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-2" for="message">Wiadomość</label>
+          <textarea id="message" name="message" rows="4" required placeholder="Napisz swoją uwagę lub spostrzeżenia..." class="w-full px-4 py-3 rounded-xl bg-zinc-900 border border-zinc-700/80 text-white placeholder-zinc-500 focus:outline-none focus:border-red-500 text-sm"></textarea>
+        </div>
+
+        <button type="submit" class="w-full py-3.5 px-6 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-sm transition shadow-lg shadow-red-600/20">
+          Wyślij zgłoszenie
+        </button>
+      </form>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-zinc-800/80 py-8 text-center text-xs text-zinc-500">
+    <div class="max-w-4xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div>
+        © 2026 <a href="https://lmk.one" class="text-zinc-400 hover:text-white transition">lmk.one</a>. Wszystkie prawa zastrzeżone.
+      </div>
+      <div class="flex space-x-6">
+        <a href="https://craft.lmk.one" class="hover:text-zinc-300 transition">Ekosystem Craft</a>
+        <a href="https://github.com/lukasz-sklad" class="hover:text-zinc-300 transition">GitHub</a>
+        <a href="#polityka-prywatnosci" class="hover:text-zinc-300 transition">Polityka prywatności</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
