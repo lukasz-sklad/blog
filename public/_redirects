@@ -67,5 +67,11 @@
 /indesign/*     https://design.lmk.one/:splat 301!
 
 
+# Obsługa subdomeny kompas.lmk.one bezpośrednio na Netlify
+https://kompas.lmk.one/       /kompas.html   200!
+https://kompas.lmk.one/*      /kompas.html   200!
+http://kompas.lmk.one/*       https://kompas.lmk.one/:splat   301!
+
 # Strona aplikacji Kompas (Polityka prywatnosci i zgloszenia)
 /kompas    /kompas.html   200
+/kompas/*  /kompas.html   200

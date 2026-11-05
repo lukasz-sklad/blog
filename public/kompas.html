@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kompas • Precyzyjny Cyfrowy Kompas dla Androida</title>
   <meta name="description" content="Minimalistyczny, elegancki cyfrowy kompas na Androida. Motyw ciemny OLED, zero reklam, 100% prywatności.">
+  <link rel="canonical" href="https://kompas.lmk.one/">
+  <meta property="og:title" content="Kompas • Precyzyjny Cyfrowy Kompas dla Androida">
+  <meta property="og:description" content="Minimalistyczny, elegancki cyfrowy kompas na Androida. Motyw ciemny OLED, zero reklam, 100% prywatności.">
+  <meta property="og:url" content="https://kompas.lmk.one/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%23111116'/><polygon points='50,15 62,50 50,50' fill='%23FF453A'/><polygon points='50,15 50,50 38,50' fill='%23D70015'/><polygon points='50,85 62,50 50,50' fill='%23E5E5EA'/><polygon points='50,85 50,50 38,50' fill='%238E8E93'/></svg>">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
@@ -192,6 +196,18 @@
       </div>
     </div>
   </footer>
+
+  <script>
+    if (window.location.search.includes('sukces=1')) {
+      const alertBox = document.createElement('div');
+      alertBox.className = 'mb-6 p-4 rounded-xl bg-emerald-500/20 border border-emerald-500/50 text-emerald-200 text-sm text-center font-medium';
+      alertBox.innerHTML = '✓ Dziękujemy! Twoje zgłoszenie zostało pomyślnie wysłane.';
+      const formSection = document.getElementById('kontakt');
+      if (formSection) {
+        formSection.insertBefore(alertBox, formSection.children[1]);
+      }
+    }
+  </script>
 
 </body>
 </html>

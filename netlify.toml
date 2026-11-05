@@ -404,6 +404,37 @@
   status = 301
   force = true
 
+# Obsługa subdomeny kompas.lmk.one -> kompas.html (rewrite 200)
+[[redirects]]
+  from = "https://kompas.lmk.one/"
+  to = "/kompas.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "https://kompas.lmk.one/*"
+  to = "/kompas.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "http://kompas.lmk.one/*"
+  to = "https://kompas.lmk.one/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/kompas"
+  to = "/kompas.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/kompas/*"
+  to = "/kompas.html"
+  status = 200
+  force = true
+
 [[headers]]
   for = "/*"
   [headers.values]
