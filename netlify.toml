@@ -406,6 +406,11 @@
 
 # Obsługa subdomeny kompas.lmk.one -> kompas.html (rewrite 200)
 [[redirects]]
+  from = "https://kompas.lmk.one/__forms.html"
+  to = "/__forms.html"
+  status = 200
+
+[[redirects]]
   from = "https://kompas.lmk.one/"
   to = "/kompas.html"
   status = 200

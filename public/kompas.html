@@ -147,8 +147,11 @@
       </div>
 
       <!-- Netlify Forms Integration -->
-      <form name="kompas-feedback" method="POST" data-netlify="true" action="/kompas?sukces=1" class="space-y-4">
+      <form name="kompas-feedback" method="POST" netlify data-netlify="true" netlify-honeypot="bot-field" action="/?sukces=1" class="space-y-4" id="feedback-form">
         <input type="hidden" name="form-name" value="kompas-feedback" />
+        <p class="hidden">
+          <label>Nie wypełniaj tego pola: <input name="bot-field" /></label>
+        </p>
         
         <div>
           <label class="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-2" for="name">Twoje imię / Nick</label>
@@ -175,7 +178,7 @@
           <textarea id="message" name="message" rows="4" required placeholder="Napisz swoją uwagę lub spostrzeżenia..." class="w-full px-4 py-3 rounded-xl bg-zinc-900 border border-zinc-700/80 text-white placeholder-zinc-500 focus:outline-none focus:border-red-500 text-sm"></textarea>
         </div>
 
-        <button type="submit" class="w-full py-3.5 px-6 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-sm transition shadow-lg shadow-red-600/20">
+        <button type="submit" id="submit-btn" class="w-full py-3.5 px-6 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-sm transition shadow-lg shadow-red-600/20">
           Wyślij zgłoszenie
         </button>
       </form>
@@ -198,14 +201,87 @@
   </footer>
 
   <script>
-    if (window.location.search.includes('sukces=1')) {
+    const form = document.getElementById('feedback-form');
+    const submitBtn = document.getElementById('submit-btn');
+
+    function showSuccessAlert() {
+      const oldAlert = document.getElementById('status-alert');
+      if (oldAlert) oldAlert.remove();
+
       const alertBox = document.createElement('div');
+      alertBox.id = 'status-alert';
       alertBox.className = 'mb-6 p-4 rounded-xl bg-emerald-500/20 border border-emerald-500/50 text-emerald-200 text-sm text-center font-medium';
       alertBox.innerHTML = '✓ Dziękujemy! Twoje zgłoszenie zostało pomyślnie wysłane.';
       const formSection = document.getElementById('kontakt');
       if (formSection) {
         formSection.insertBefore(alertBox, formSection.children[1]);
       }
+    }
+
+    function showErrorAlert(msg) {
+      const oldAlert = document.getElementById('status-alert');
+      if (oldAlert) oldAlert.remove();
+
+      const alertBox = document.createElement('div');
+      alertBox.id = 'status-alert';
+      alertBox.className = 'mb-6 p-4 rounded-xl bg-red-500/20 border border-red-500/50 text-red-200 text-sm text-center font-medium';
+      alertBox.innerHTML = msg || 'Wystąpił błąd podczas wysyłania. Możesz też napisać bezpośrednio na: <a href="mailto:dev@lmk.one" class="underline font-bold text-white">dev@lmk.one</a>';
+      const formSection = document.getElementById('kontakt');
+      if (formSection) {
+        formSection.insertBefore(alertBox, formSection.children[1]);
+      }
+    }
+
+    // Fallback z URL jeśli ktoś wszedł z parametrem
+    if (window.location.search.includes('sukces=1')) {
+      showSuccessAlert();
+    }
+
+    if (form) {
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.innerText = 'Wysyłanie...';
+        }
+
+        const formData = new FormData(form);
+        const body = new URLSearchParams(formData).toString();
+
+        fetch('/__forms.html', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: body
+        })
+        .then(function(res) {
+          if (res.ok || res.status === 200 || res.status === 303 || res.type === 'opaqueredirect') {
+            showSuccessAlert();
+            form.reset();
+          } else {
+            return fetch('/', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+              body: body
+            }).then(function(res2) {
+              if (res2.ok || res2.status === 200 || res2.status === 303) {
+                showSuccessAlert();
+                form.reset();
+              } else {
+                showErrorAlert();
+              }
+            });
+          }
+        })
+        .catch(function() {
+          showErrorAlert();
+        })
+        .finally(function() {
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerText = 'Wyślij zgłoszenie';
+          }
+        });
+      });
     }
   </script>
 

@@ -68,6 +68,7 @@
 
 
 # Obsługa subdomeny kompas.lmk.one bezpośrednio na Netlify
+https://kompas.lmk.one/__forms.html  /__forms.html   200
 https://kompas.lmk.one/       /kompas.html   200!
 https://kompas.lmk.one/*      /kompas.html   200!
 http://kompas.lmk.one/*       https://kompas.lmk.one/:splat   301!

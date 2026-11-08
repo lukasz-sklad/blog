@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>Netlify Forms Blueprint</title>
+</head>
+<body>
+  <!-- Netlify Build Parser Form Blueprint for Next.js -->
+  <form name="kompas-feedback" netlify data-netlify="true" netlify-honeypot="bot-field" hidden>
+    <input type="hidden" name="form-name" value="kompas-feedback" />
+    <input type="text" name="bot-field" />
+    <input type="text" name="name" />
+    <input type="email" name="email" />
+    <select name="topic">
+      <option value="opinia">Opinia o aplikacji</option>
+      <option value="pomysl">Propozycja ulepszenia / nowa funkcja</option>
+      <option value="blad">Zgłoszenie błędu (Bug report)</option>
+      <option value="inne">Inne</option>
+    </select>
+    <textarea name="message"></textarea>
+  </form>
+</body>
+</html>
