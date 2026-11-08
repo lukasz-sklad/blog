@@ -248,7 +248,7 @@
         const formData = new FormData(form);
         const body = new URLSearchParams(formData).toString();
 
-        fetch('/__forms.html', {
+        fetch('/', {
           method: 'POST',
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
           body: body
@@ -258,18 +258,7 @@
             showSuccessAlert();
             form.reset();
           } else {
-            return fetch('/', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-              body: body
-            }).then(function(res2) {
-              if (res2.ok || res2.status === 200 || res2.status === 303) {
-                showSuccessAlert();
-                form.reset();
-              } else {
-                showErrorAlert();
-              }
-            });
+            showErrorAlert();
           }
         })
         .catch(function() {

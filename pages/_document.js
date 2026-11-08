@@ -30,6 +30,20 @@ class MyDocument extends Document {
         >
           <Main />
           <NextScript />
+          {/* Netlify Forms Detection Blueprint for Kompas */}
+          <form name="kompas-feedback" data-netlify="true" netlify-honeypot="bot-field" hidden>
+            <input type="hidden" name="form-name" value="kompas-feedback" />
+            <input type="hidden" name="bot-field" />
+            <input type="text" name="name" />
+            <input type="email" name="email" />
+            <select name="topic">
+              <option value="opinia">Opinia o aplikacji</option>
+              <option value="pomysl">Propozycja ulepszenia / nowa funkcja</option>
+              <option value="blad">Zgłoszenie błędu (Bug report)</option>
+              <option value="inne">Inne</option>
+            </select>
+            <textarea name="message"></textarea>
+          </form>
         </body>
       </Html>
     );
