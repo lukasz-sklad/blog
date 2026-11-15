@@ -65,6 +65,10 @@
 /designcraft/*  https://design.lmk.one/:splat 301!
 /indesign       https://design.lmk.one/       301!
 /indesign/*     https://design.lmk.one/:splat 301!
+/anything       https://anything.lmk.one/     301!
+/anything/*     https://anything.lmk.one/:splat 301!
+/craft-anything https://anything.lmk.one/     301!
+/craft-anything/* https://anything.lmk.one/:splat 301!
 
 
 # Obsługa subdomeny kompas.lmk.one bezpośrednio na Netlify
