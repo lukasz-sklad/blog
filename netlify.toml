@@ -334,13 +334,25 @@
 
 [[redirects]]
   from = "/cad"
-  to = "https://solid.lmk.one/"
+  to = "https://cad.lmk.one/"
   status = 301
   force = true
 
 [[redirects]]
   from = "/cad/*"
-  to = "https://solid.lmk.one/:splat"
+  to = "https://cad.lmk.one/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/cadcraft"
+  to = "https://cad.lmk.one/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/cadcraft/*"
+  to = "https://cad.lmk.one/:splat"
   status = 301
   force = true
 
