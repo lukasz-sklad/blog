@@ -71,6 +71,8 @@
 /anything/*     https://anything.lmk.one/:splat 301!
 /craft-anything https://anything.lmk.one/     301!
 /craft-anything/* https://anything.lmk.one/:splat 301!
+/tracedraw      https://tracedraw.lmk.one/    301!
+/tracedraw/*    https://tracedraw.lmk.one/:splat 301!
 
 
 # Obsługa subdomeny kompas.lmk.one bezpośrednio na Netlify
